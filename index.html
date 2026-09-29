@@ -359,6 +359,58 @@ body{background:radial-gradient(1200px 400px at 50% -120px,#DDE6F2 0%,transparen
 .empty{border-radius:18px;box-shadow:var(--shadow-sm)}
 .empty .big{font-size:40px;display:block;margin-bottom:6px}
 
+/* ===================== v4: carousel banner & pilihan kaca ===================== */
+.car{margin-top:14px}
+.car-stage{position:relative}
+.car-track{--sw:90%;--gap:10px;position:relative;display:flex;gap:var(--gap);overflow-x:auto;scroll-snap-type:x mandatory;scrollbar-width:none;padding:4px 0 12px;overscroll-behavior-x:contain}
+.car-track::-webkit-scrollbar{display:none}
+.car-track::before,.car-track::after{content:"";flex:0 0 calc((100% - var(--sw))/2 - var(--gap))}
+.car-track:focus-visible{outline:2.5px solid var(--amber);outline-offset:2px;border-radius:18px}
+.car-slide{all:unset;box-sizing:border-box;flex:0 0 var(--sw);scroll-snap-align:center;scroll-snap-stop:always;aspect-ratio:var(--ratio,12/5);border-radius:18px;overflow:hidden;cursor:pointer;background:linear-gradient(135deg,#1B2A3A,#2A3644);box-shadow:var(--shadow-md);opacity:.72;transform:scale(.965);transition:opacity .4s,transform .4s}
+.car-slide.on{opacity:1;transform:none}
+.car-slide:focus-visible{outline:2.5px solid var(--amber);outline-offset:2px}
+.car-slide img{width:100%;height:100%;object-fit:cover;display:block}
+.car-nav{all:unset;cursor:pointer;position:absolute;top:calc(50% - 6px);transform:translateY(-50%);width:42px;height:42px;border-radius:50%;background:rgba(255,255,255,.95);box-shadow:0 4px 14px rgba(15,24,34,.28);display:none;align-items:center;justify-content:center;font-size:26px;line-height:1;color:var(--ink);z-index:3;transition:transform .15s,background .15s}
+.car-nav:hover{background:#fff;transform:translateY(-50%) scale(1.08)}
+.car-nav:focus-visible{outline:2.5px solid var(--amber);outline-offset:2px}
+.car-nav.prev{left:10px}.car-nav.next{right:10px}
+@media (min-width:700px){ .car-nav{display:flex} }
+.car-dots{display:flex;justify-content:center;gap:7px;margin-top:0}
+.car-dots button{all:unset;cursor:pointer;width:8px;height:8px;border-radius:5px;background:#C3CBD6;transition:width .25s,background .25s}
+.car-dots button.on{width:24px;background:var(--blue)}
+.car-dots button:focus-visible{outline:2px solid var(--amber);outline-offset:2px}
+.car.car-ads .car-track{--sw:80%}
+@media (min-width:900px){ .car-track{--sw:66%} .car.car-ads .car-track{--sw:46%} }
+.car[data-n="1"] .car-track{--sw:100%;gap:0}
+.car[data-n="1"] .car-track::before,.car[data-n="1"] .car-track::after{display:none}
+.car[data-n="1"] .car-slide{opacity:1;transform:none}
+@media (prefers-reduced-motion:reduce){ .car-slide,.car-nav,.car-dots button{transition:none} }
+
+/* pilihan bagian kaca */
+.areas{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+@media (max-width:420px){ .areas{grid-template-columns:1fr} }
+.area{all:unset;cursor:pointer;box-sizing:border-box;display:grid;grid-template-columns:22px 1fr;grid-template-rows:auto auto;column-gap:10px;align-items:center;border:1.5px solid var(--line);border-radius:12px;padding:10px 12px;background:#fff;transition:border-color .12s,background .12s}
+.area .box{grid-row:1/3;width:22px;height:22px;border-radius:7px;border:2px solid #B9C3CF;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;color:#fff;background:#fff}
+.area .a-name{font-weight:700;font-size:13.5px;line-height:1.25}
+.area small{color:var(--muted);font-size:11.5px;font-weight:600}
+.area[aria-checked="true"]{border-color:var(--blue);background:var(--blue-soft)}
+.area[aria-checked="true"] .box{background:var(--blue);border-color:var(--blue)}
+.area:focus-visible{outline:2.5px solid var(--amber);outline-offset:2px}
+.areas-tools{display:flex;gap:14px;margin:8px 0 0}
+.areas-tools button{all:unset;cursor:pointer;font-size:12.5px;font-weight:700;color:var(--blue)}
+.areas-tools button:hover{text-decoration:underline}
+.opt-sub{font-size:12.5px;color:var(--muted);font-weight:600;margin:14px 0 8px}
+.size-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin-top:10px}
+@media (max-width:520px){ .size-strip{grid-template-columns:repeat(2,minmax(0,1fr))} }
+.size-strip div{min-width:0;background:#fff;border:1.5px solid var(--line);border-radius:10px;padding:7px 4px;text-align:center;font-size:11.5px;line-height:1.3}
+.size-strip b{display:block;font-size:11px;color:var(--muted);letter-spacing:.02em}
+.size-strip span{font-weight:800;font-size:12px}
+.size-strip div.on{border-color:var(--blue);background:var(--blue-soft)}
+.size-strip div.on b{color:var(--blue)}
+.buybar .tot b{font-size:15.5px;line-height:1.25;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.opt-label{flex-wrap:wrap}
+.stamp{display:block;margin-top:4px;font-size:11px;opacity:.7}
+
 </style>
 </head>
 <body>
@@ -440,6 +492,23 @@ function sizeOfLabel(label){
   for(const c of (CAT.cars||[])){ if(label.startsWith(c.brand+' ')){ const m = label.slice(c.brand.length+1); if((c.models||[]).includes(m)) return (c.sizes||{})[m] || ''; } }
   return '';
 }
+function areasOf(name){ return Object.values((CAT.film.packages||{})[name]||{}); }
+function filmPriceFor(b, size, areas){
+  if(!size || !areas || !areas.length) return 0;
+  const order = Object.values(CAT.film.sides||{}).map(x=>x.key); const idx = k=>order.indexOf(k);
+  let target = 0; for(const a of areas){ const i = idx(a); if(i<0) return 0; target |= 1<<i; }
+  const pr = (b.prices||{})[size] || {}; const items = [];
+  Object.keys(CAT.film.packages||{}).forEach(name=>{
+    const price = Number(pr[name]); if(!(price>0)) return;
+    let m = 0, ok = true; areasOf(name).forEach(a=>{ const i = idx(a); if(i<0) ok = false; else m |= 1<<i; });
+    if(ok && m) items.push({ m, price });
+  });
+  /* pilihan sama persis dengan satu paket → pakai harga paket itu; selain itu hitung kombinasi termurah */
+  const exact = items.find(it=>it.m===target); if(exact) return exact.price;
+  const best = new Array(1<<order.length).fill(Infinity); best[0] = 0;
+  for(let mask=1; mask<best.length; mask++){ for(const it of items){ if((it.m & mask)===it.m){ const c = best[mask ^ it.m] + it.price; if(c<best[mask]) best[mask] = c; } } }
+  return isFinite(best[target]) ? best[target] : 0;
+}
 function filmPriceList(b){ return Object.values(b.prices||{}).flatMap(o=>Object.values(o||{})).map(Number).filter(v=>v>0); }
 
 /* ---------- keranjang & kode promo ---------- */
@@ -447,7 +516,7 @@ let cart = LS.get('cart2', []);
 function saveCart(){ LS.set('cart2', cart); const n = cart.reduce((s,i)=>s+i.qty,0); ['cartCount','cartCount2'].forEach(id=>{ const el = document.getElementById(id); if(el) el.textContent = n||''; }); }
 function itemPrices(it){
   let normal = 0, deal = null;
-  if(it.kind==='film'){ const b = CAT.film.brands.find(x=>x.id===it.pid); if(b){ normal = Number(((b.prices||{})[sizeOfLabel(it.car)]||{})[it.pkg])||0; deal = b.deal; } }
+  if(it.kind==='film'){ const b = CAT.film.brands.find(x=>x.id===it.pid); if(b){ const ars = (it.areas && it.areas.length) ? it.areas : ((it.sides||[]).length ? it.sides.map(x=>x.side) : areasOf(it.pkg)); normal = filmPriceFor(b, sizeOfLabel(it.car), ars); deal = b.deal; } }
   else if(it.kind==='karpet'){ const c = CAT.carpets.find(x=>x.id===it.pid); if(c){ normal = Number((c.prices[it.car]||{})[it.pkg])||0; deal = c.deal; } }
   else { const x = CAT.products.find(y=>y.id===it.pid); if(x){ const v = (x.variants||[]).find(v=>v.name===it.variant); normal = v ? Number(v.price)||0 : 0; deal = x.deal; } }
   return { normal, price: applyDeal(normal, deal), deal: dealOn(deal) ? deal : null };
@@ -634,19 +703,46 @@ function bannerGo(link){
   else if(link.type==='page') location.hash = '#/'+(link.value==='deal'?'deal':'promo');
   else if(link.type==='url') window.open(link.value, '_blank', 'noopener');
 }
-function carousel(list){
+function carousel(list, kind, opt){
   if(!list.length) return '';
-  return `<section class="hero" aria-label="Promo"><div class="slides" id="slides">${list.map((b,i)=>`<button class="slide" data-i="${i}" aria-label="${esc(b.title||'Promo')}"><img data-img="${b.img}" alt="${esc(b.title||'')}" hidden></button>`).join('')}</div>
-    ${list.length>1?`<div class="dots" id="dots">${list.map((b,i)=>`<button aria-label="Slide ${i+1}" data-i="${i}" class="${i?'':'on'}"></button>`).join('')}</div>`:''}</section>`;
+  const o = Object.assign({ ratio:'12/5', label:'Promo', auto:true, cls:'' }, opt||{});
+  return `<section class="car ${o.cls}" data-kind="${kind}" data-auto="${o.auto?1:0}" data-n="${list.length}" style="--ratio:${o.ratio}" role="region" aria-roledescription="carousel" aria-label="${esc(o.label)}">
+    <div class="car-stage"><div class="car-track" tabindex="0">${list.map((b,i)=>`<button type="button" class="car-slide${i?'':' on'}" data-i="${i}" role="group" aria-roledescription="slide" aria-label="${i+1} dari ${list.length}: ${esc(b.title||o.label)}"><img data-img="${b.img}" alt="${esc(b.title||'')}" hidden></button>`).join('')}</div>
+    ${list.length>1?`<button type="button" class="car-nav prev" aria-label="Sebelumnya">‹</button><button type="button" class="car-nav next" aria-label="Berikutnya">›</button>`:''}</div>
+    ${list.length>1?`<div class="car-dots">${list.map((b,i)=>`<button type="button" data-i="${i}" aria-label="Slide ${i+1}" class="${i?'':'on'}"></button>`).join('')}</div>`:''}</section>`;
 }
-function bindCarousel(list){
-  app.querySelectorAll('.slide').forEach(el=>el.addEventListener('click', ()=>bannerGo(list[el.dataset.i].link)));
-  const slides = document.getElementById('slides'), dots = document.getElementById('dots');
-  if(!slides || !dots) return;
-  const go = i=>slides.scrollTo({ left:i*slides.clientWidth, behavior:'smooth' });
-  dots.querySelectorAll('button').forEach(d=>d.addEventListener('click', ()=>go(+d.dataset.i)));
-  slides.addEventListener('scroll', ()=>{ const i = Math.round(slides.scrollLeft/slides.clientWidth); dots.querySelectorAll('button').forEach((d,j)=>d.classList.toggle('on', i===j)); }, { passive:true });
-  if(!matchMedia('(prefers-reduced-motion: reduce)').matches) slideTimer = setInterval(()=>{ if(!document.body.contains(slides)) return clearInterval(slideTimer); const i = Math.round(slides.scrollLeft/slides.clientWidth); go((i+1)%list.length); }, 5000);
+function bindCarousels(lists){
+  const reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let anyAuto = false;
+  app.querySelectorAll('.car').forEach(car=>{
+    const list = lists[car.dataset.kind] || [];
+    const track = car.querySelector('.car-track'), slides = [...track.querySelectorAll('.car-slide')], dots = [...car.querySelectorAll('.car-dots button')];
+    const n = slides.length; let cur = 0;
+    slides.forEach(sl=>sl.addEventListener('click', ()=>{ const b = list[+sl.dataset.i]; if(b) bannerGo(b.link); }));
+    if(n<2) return;
+    const centerLeft = i=>{ const sl = slides[i]; return sl.offsetLeft + sl.offsetWidth/2 - track.clientWidth/2; };
+    const setOn = i=>{ cur = i; slides.forEach((sl,j)=>sl.classList.toggle('on', j===i)); dots.forEach((d,j)=>{ d.classList.toggle('on', j===i); if(j===i) d.setAttribute('aria-current','true'); else d.removeAttribute('aria-current'); }); };
+    const go = (i, smooth)=>{ i = (i+n)%n; track.scrollTo({ left:centerLeft(i), behavior: (smooth!==false && !reduced) ? 'smooth' : 'auto' }); setOn(i); };
+    let raf = 0;
+    track.addEventListener('scroll', ()=>{ cancelAnimationFrame(raf); raf = requestAnimationFrame(()=>{ const mid = track.scrollLeft + track.clientWidth/2; let best = 0, bd = 1e9; slides.forEach((sl,j)=>{ const d = Math.abs(sl.offsetLeft + sl.offsetWidth/2 - mid); if(d<bd){ bd = d; best = j; } }); if(best!==cur) setOn(best); }); }, { passive:true });
+    const prev = car.querySelector('.car-nav.prev'), next = car.querySelector('.car-nav.next');
+    if(prev) prev.onclick = ()=>go(cur-1); if(next) next.onclick = ()=>go(cur+1);
+    dots.forEach(d=>d.onclick = ()=>go(+d.dataset.i));
+    track.addEventListener('keydown', e=>{ if(e.key==='ArrowRight'){ e.preventDefault(); go(cur+1); } else if(e.key==='ArrowLeft'){ e.preventDefault(); go(cur-1); } });
+    car._n = n; car._next = ()=>go(cur+1); car._paused = false;
+    car.addEventListener('pointerenter', e=>{ if(e.pointerType==='mouse') car._paused = true; });
+    car.addEventListener('pointerleave', e=>{ if(e.pointerType==='mouse') car._paused = false; });
+    car.addEventListener('focusin', ()=>{ car._paused = true; }); car.addEventListener('focusout', ()=>{ car._paused = false; });
+    car.addEventListener('touchstart', ()=>{ car._paused = true; }, { passive:true });
+    car.addEventListener('touchend', ()=>{ setTimeout(()=>{ car._paused = false; }, 4500); }, { passive:true });
+    if(car.dataset.auto==='1') anyAuto = true;
+  });
+  clearInterval(slideTimer);
+  if(anyAuto && !reduced) slideTimer = setInterval(()=>{
+    const cars = [...document.querySelectorAll('#app .car[data-auto="1"]')];
+    if(!cars.length) return clearInterval(slideTimer);
+    cars.forEach(c=>{ if(c._n>1 && !c._paused && !document.hidden) c._next(); });
+  }, 5000);
 }
 
 /* ---------- beranda, kategori, promo, deal ---------- */
@@ -654,11 +750,11 @@ function viewHome(){
   const promo = CAT.banners.filter(b=>b.kind==='promo'), iklan = CAT.banners.filter(b=>b.kind==='iklan');
   const ps = products(); const deals = ps.filter(p=>p.deal);
   const sections = CAT.categories.map(c=>{ const list = ps.filter(p=>p.categoryId===c.id); return list.length ? `<div class="sec-head"><h2>${esc(c.name)}</h2><a href="#/c/${enc(c.id)}">Lihat semua</a></div><div class="grid">${list.slice(0,8).map(card).join('')}</div>` : ''; });
-  if(iklan.length && sections.length) sections.splice(1, 0, `<div class="ads">${iklan.map((b,i)=>`<button data-ad="${i}" aria-label="${esc(b.title||'Iklan')}"><img data-img="${b.img}" alt="${esc(b.title||'')}" hidden></button>`).join('')}</div>`);
+  if(iklan.length && sections.length) sections.splice(1, 0, carousel(iklan,'iklan',{ ratio:'8/3', label:'Iklan', auto:false, cls:'car-ads' }));
   const recentList = byKeys(recent).slice(0,10), favList = byKeys(favs).slice(0,10);
   const nama = profile && profile.nama ? profile.nama.split(' ')[0] : '';
   app.innerHTML = `<div class="hello"><div><b>${nama?`Halo, ${esc(nama)} 👋`:'Selamat datang 👋'}</b><span>${esc(CAT.store.tagline||'Aksesoris mobil, dipasang di rumah kamu')}</span></div>${user?`<a href="#/fav">🤍 Favorit</a>`:`<a href="#/login">Masuk</a>`}</div>
-    ${promo.length ? carousel(promo) : heroFallback()}
+    ${promo.length ? carousel(promo,'promo') : heroFallback()}
     ${trustStrip()}
     <div class="cat-grid">${CAT.categories.map(c=>`<a class="cat-tile" href="#/c/${enc(c.id)}"><span class="ico" aria-hidden="true">${esc(c.icon)}</span>${esc(c.name)}</a>`).join('')}
       <a class="cat-tile" href="#/deal"><span class="ico" aria-hidden="true">🔥</span>Deal</a></div>
@@ -666,9 +762,8 @@ function viewHome(){
     ${deals.length?`<div class="sec-head"><h2>🔥 Lagi Deal</h2><a href="#/deal">Lihat semua</a></div><div class="grid">${deals.slice(0,4).map(card).join('')}</div>`:''}
     ${sections.join('')}
     ${!ps.length?`<div class="empty"><h3>Katalog sedang disiapkan</h3>Produk akan tampil begitu admin mengisi harga.</div>`:''}
-    <p class="foot">${esc(CAT.store.name)}${CAT.store.area?' · Pemasangan di '+esc(CAT.store.area):''}${CAT.store.wa?` · <a href="${waLink(CAT.store.wa,'Halo, saya mau tanya produk')}" target="_blank" rel="noopener">Chat admin</a>`:''}</p>`;
-  hydrate(app); bindCarousel(promo);
-  app.querySelectorAll('[data-ad]').forEach(el=>el.addEventListener('click', ()=>bannerGo(iklan[el.dataset.ad].link)));
+    <p class="foot">${esc(CAT.store.name)}${CAT.store.area?' · Pemasangan di '+esc(CAT.store.area):''}${CAT.store.wa?` · <a href="${waLink(CAT.store.wa,'Halo, saya mau tanya produk')}" target="_blank" rel="noopener">Chat admin</a>`:''}<span class="stamp">Katalog v${CAT.v||1}${CAT.updatedAt?' · '+new Date(CAT.updatedAt).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span></p>`;
+  hydrate(app); bindCarousels({ promo, iklan });
 }
 let listSort = 'rek';
 function viewList(catId, q){
@@ -692,14 +787,14 @@ function viewList(catId, q){
 function viewPromo(){
   const promo = CAT.banners.filter(b=>b.kind==='promo'||b.kind==='iklan');
   const codes = (CAT.promos||[]).filter(p=>p.public && p.code);
-  app.innerHTML = `<h1 class="page-title">Promo</h1>${carousel(promo)}
+  app.innerHTML = `<h1 class="page-title">Promo</h1>${carousel(promo,'promo')}
     <div class="sec-head"><h2>Kode promo</h2></div>
     ${codes.length ? codes.map(p=>`<div class="pcode"><div><b>${esc(p.code)}</b><small>${esc(p.desc || (p.type==='persen'?`Diskon ${p.value}%`:`Potongan ${rp(p.value)}`))}${p.scope!=='all'?' · khusus '+esc(catOf(p.scope).name||''):''}${p.minSpend?` · min. ${rp(p.minSpend)}`:''}${p.until?` · s/d ${new Date(p.until+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'})}`:''}</small></div>
       <button class="btn amber" style="height:38px;padding:0 14px;font-size:13px" data-use="${esc(p.code)}">Pakai</button></div>`).join('')
       : '<div class="empty" style="margin-top:0">Belum ada kode promo publik saat ini.</div>'}
     <div class="sec-head"><h2>Produk lagi deal</h2><a href="#/deal">Lihat semua</a></div>
     <div class="grid">${products().filter(p=>p.deal).slice(0,8).map(card).join('') || ''}</div>`;
-  hydrate(app); bindCarousel(promo);
+  hydrate(app); bindCarousels({ promo });
   app.querySelectorAll('[data-use]').forEach(b=>b.onclick = ()=>{ promoState.code = b.dataset.use; LS.set('promo', promoState.code); toast(`Kode ${b.dataset.use} dipasang — potongan dihitung di keranjang`); });
 }
 function viewDeal(){
@@ -732,8 +827,7 @@ function viewProduct(kind, id){
   const d = p.data; const saved = LS.get('car', {});
   const allowedCars = kind==='generic' && Array.isArray(d.cars) ? d.cars : null;
   const carOk = c=>!allowedCars || allowedCars.includes(carLabel(c));
-  const st = { car: carOk(saved) && saved.brand ? { brand:saved.brand, model:saved.model } : { brand:'', model:'' }, mode:'', pkg:'', color:(d.colors||[])[0]||'', variant:'', qty:1, sides:{} };
-  let partials = [];
+  const st = { car: carOk(saved) && saved.brand ? { brand:saved.brand, model:saved.model } : { brand:'', model:'' }, areas:[], mode:'', pkg:'', color:(d.colors||[])[0]||'', variant:'', qty:1, sides:{} };
   if(kind==='karpet') st.pkg = d.packages[0];
   if(kind==='generic') st.variant = ((d.variants||[]).find(v=>v.price>0)||{}).name || '';
   const brands = (CAT.cars||[]).filter(c=>!allowedCars || c.models.some(m=>allowedCars.includes(`${c.brand} ${m}`)));
@@ -741,31 +835,29 @@ function viewProduct(kind, id){
     const y = window.scrollY;
     const label = carLabel(st.car);
     const size = kind==='film' ? sizeOfLabel(label) : '';
-    const sizePrices = kind==='film' && size ? (d.prices[size]||{}) : null;
-    const availPkg = k => kind==='film' && (sizePrices ? Number(sizePrices[k])>0 : Object.values(d.prices).some(o=>Number((o||{})[k])>0));
-    if(kind==='film'){
-      partials = Object.keys(CAT.film.packages).filter(k=>k!=='Full' && availPkg(k));
-      const hasFull = availPkg('Full');
-      if(st.mode==='Full' && !hasFull) st.mode = '';
-      if(st.mode==='Partial' && !partials.length) st.mode = '';
-      if(!st.mode) st.mode = hasFull ? 'Full' : (partials.length ? 'Partial' : '');
-      st.pkg = st.mode==='Full' ? 'Full' : st.mode==='Partial' ? (partials.includes(st.pkg) ? st.pkg : partials[0]) : '';
-    }
+    const sideList = kind==='film' ? Object.values(CAT.film.sides||{}) : [];
+    const sideKeys = sideList.map(x=>x.key);
+    const selAreas = sideKeys.filter(k=>st.areas.includes(k));
+    const PRESET_ORDER = ['Full','Samping Kiri Kanan Depan','Samping Kiri Kanan Belakang','Samping Kiri Kanan dan Belakang','Depan Saja','Belakang','Samping Kiri Kanan'];
+    const packNames = kind==='film' ? Object.keys(CAT.film.packages||{}).sort((a,b)=>{ const ia = PRESET_ORDER.indexOf(a), ib = PRESET_ORDER.indexOf(b); return (ia<0?99:ia)-(ib<0?99:ib); }) : [];
+    const activePreset = packNames.find(n=>{ const a = areasOf(n); return a.length===selAreas.length && a.every(x=>selAreas.includes(x)); }) || '';
+    const areaPrice = ars => (kind==='film' && size) ? filmPriceFor(d, size, ars) : 0;
     const sizeNote = kind!=='film' ? '' : !label ? `<div class="size-note">Harga kaca film menyesuaikan <b>ukuran mobil</b> (Small · Medium · Large · XL).</div>`
       : size ? `<div class="size-note ok">Ukuran kaca mobil kamu: <b>${esc(size)}</b></div>`
       : `<div class="size-note warn">Ukuran untuk ${esc(label)} belum diatur, jadi harganya belum bisa dihitung. Hubungi admin lewat WhatsApp untuk konfirmasi.</div>`;
     let normal = 0, ready = true, missing = '';
-    if(kind==='film') normal = sizePrices ? (Number(sizePrices[st.pkg])||0) : 0;
+    if(kind==='film') normal = areaPrice(selAreas);
     if(kind==='karpet') normal = label ? Number((d.prices[label]||{})[st.pkg])||0 : 0;
     if(kind==='generic') normal = Number(((d.variants||[]).find(v=>v.name===st.variant)||{}).price)||0;
     const price = applyDeal(normal, d.deal);
     const needCar = kind!=='generic' || !!allowedCars;
     if(needCar && !label){ ready=false; missing='Pilih mobil kamu'; }
     else if(kind==='film' && !size){ ready=false; missing='Ukuran mobil belum diatur'; }
-    else if(kind==='film' && !st.pkg){ ready=false; missing='Tidak tersedia utk '+size; }
+    else if(kind==='film' && !selAreas.length){ ready=false; missing='Pilih bagian kaca'; }
+    else if(kind==='film' && !normal){ ready=false; missing='Kombinasi belum tersedia'; }
     else if(kind==='karpet' && !normal){ ready=false; missing='Paket belum tersedia untuk '+label; }
-    const sides = kind==='film' ? (CAT.film.packages[st.pkg]||[]) : [];
-    if(ready) sides.forEach(s=>{ if(!st.sides[s] && ready){ ready=false; missing='Pilih kegelapan '+sideLabel(s); } });
+    const sides = kind==='film' ? selAreas : [];
+    if(ready) sides.forEach(s=>{ if(!st.sides[s] && ready){ ready=false; missing='Pilih kegelapan kaca'; } });
     const amount = price*st.qty, amountNormal = normal*st.qty;
     const models = st.car.brand ? ((CAT.cars||[]).find(c=>c.brand===st.car.brand)||{models:[]}).models.filter(m=>!allowedCars || allowedCars.includes(`${st.car.brand} ${m}`)) : [];
     app.innerHTML = `<button class="back" onclick="history.length>1?history.back():location.hash='#/'">‹ Kembali</button>
@@ -781,8 +873,13 @@ function viewProduct(kind, id){
             <div class="car-pick"><select class="inp" id="carBrand" aria-label="Merek mobil"><option value="">Merek</option>${brands.map(c=>`<option ${c.brand===st.car.brand?'selected':''}>${esc(c.brand)}</option>`).join('')}</select>
             <select class="inp" id="carModel" aria-label="Tipe mobil" ${st.car.brand?'':'disabled'}><option value="">Tipe</option>${models.map(m=>`<option ${m===st.car.model?'selected':''}>${esc(m)}</option>`).join('')}</select></div>${sizeNote}</div>
           ${kind==='film' ? `
-            <div class="opt"><div class="opt-label">Paket pemasangan</div>${chipRow('mode', [availPkg('Full')?'Full':null, partials.length?'Partial':null].filter(Boolean), st.mode, m=> m==='Full' ? (sizePrices ? rp(applyDeal(sizePrices.Full, d.deal)) : 'sesuai ukuran mobil') : 'pilih bagian kaca')}
-              ${st.mode==='Partial' ? `<div class="subchips"><div class="opt-label">Bagian yang dipasang</div>${chipRow('pkg', partials, st.pkg, k=> sizePrices ? rp(applyDeal(sizePrices[k], d.deal)) : 'sesuai ukuran mobil')}</div>` : ''}</div>
+            <div class="opt"><div class="opt-label">Paket pemasangan <span>pilih salah satu</span></div>
+              ${chipRow('preset', packNames, activePreset, n=>{ if(!size) return 'sesuai ukuran mobil'; const v = areaPrice(areasOf(n)); return v ? rp(applyDeal(v, d.deal)) : 'tidak tersedia'; }, n=>!!size && !areaPrice(areasOf(n)))}
+              <div class="opt-sub">Atau pilih bagian kaca sendiri</div>
+              <div class="areas" role="group" aria-label="Bagian kaca yang dipasang">${sideList.map(sd=>{ const on = st.areas.includes(sd.key); const v = areaPrice([sd.key]); return `<button type="button" class="area" role="checkbox" aria-checked="${on}" data-area="${esc(sd.key)}"><span class="box" aria-hidden="true">${on?'✓':''}</span><span class="a-name">${esc(sd.label)}</span><small>${size ? (v ? rp(applyDeal(v, d.deal)) : 'lewat paket') : 'sesuai ukuran mobil'}</small></button>`; }).join('')}</div>
+              <div class="areas-tools"><button type="button" data-areas-all>Pilih semua</button><button type="button" data-areas-clear>Kosongkan</button></div>
+              ${selAreas.length && label ? `<div class="opt-sub" style="margin-bottom:0">Harga untuk pilihanmu menurut ukuran mobil</div><div class="size-strip">${(CAT.film.sizes||[]).map(z=>{ const v = filmPriceFor(d, z, selAreas); return `<div class="${z===size?'on':''}"><b>${esc(z)}</b><span>${v ? rp(applyDeal(v, d.deal)) : '—'}</span></div>`; }).join('')}</div>` : ''}
+            </div>
             ${sides.length?`<div class="opt"><div class="opt-label">Kegelapan tiap sisi <span>semakin tinggi semakin gelap</span></div>
               <div class="tint">${tintSvg(st.sides, sides)}<div class="tint-legend">${sides.map(s=>`<span>${esc(sideLabel(s))}: <b>${esc(st.sides[s]||'—')}</b></span>`).join('')}</div></div>
               ${sides.map(s=>`<div class="opt" style="margin-top:12px"><div class="opt-label" style="font-weight:600">${esc(sideLabel(s))}</div>${chipRow('shade-'+s.toLowerCase(), d.shades[s]||[], st.sides[s])}</div>`).join('')}</div>`:''}`
@@ -806,7 +903,10 @@ function viewProduct(kind, id){
     app.querySelectorAll('[data-g]').forEach(b=>b.onclick = async ()=>{ app.querySelectorAll('[data-g]').forEach(x=>x.setAttribute('aria-current', x===b)); const m = document.getElementById('gMain'); if(m){ m.src = await imgSrc(b.dataset.g); m.hidden = false; } });
     document.getElementById('carBrand').onchange = e=>{ st.car = { brand:e.target.value, model:'' }; draw(); };
     document.getElementById('carModel').onchange = e=>{ st.car.model = e.target.value; LS.set('car', st.car); draw(); };
-    app.querySelectorAll('[data-mode]').forEach(b=>b.onclick = ()=>{ st.mode = b.dataset.mode; st.pkg = st.mode==='Full' ? 'Full' : (partials.includes(st.pkg) ? st.pkg : partials[0]); draw(); });
+    app.querySelectorAll('[data-preset]').forEach(b=>b.onclick = ()=>{ st.areas = (b.dataset.preset===activePreset) ? [] : areasOf(b.dataset.preset).slice(); draw(); });
+    app.querySelectorAll('[data-area]').forEach(b=>b.onclick = ()=>{ const k = b.dataset.area; st.areas = st.areas.includes(k) ? st.areas.filter(x=>x!==k) : [...st.areas, k]; draw(); });
+    const aAll = app.querySelector('[data-areas-all]'); if(aAll) aAll.onclick = ()=>{ st.areas = sideKeys.slice(); draw(); };
+    const aClr = app.querySelector('[data-areas-clear]'); if(aClr) aClr.onclick = ()=>{ st.areas = []; draw(); };
     app.querySelectorAll('[data-pkg]').forEach(b=>b.onclick = ()=>{ st.pkg = b.dataset.pkg; draw(); });
     app.querySelectorAll('[data-color]').forEach(b=>b.onclick = ()=>{ st.color = b.dataset.color; draw(); });
     app.querySelectorAll('[data-variant]').forEach(b=>b.onclick = ()=>{ st.variant = b.dataset.variant; draw(); });
@@ -815,7 +915,7 @@ function viewProduct(kind, id){
     if(qm){ qm.onclick = ()=>{ st.qty = Math.max(1, st.qty-1); draw(); }; qp.onclick = ()=>{ st.qty = Math.min(20, st.qty+1); draw(); }; }
     const add = ()=>{
       const it = { key:Date.now().toString(36)+Math.random().toString(36).slice(2,5), kind, pid:p.id, categoryId:p.categoryId, title:p.name, img:p.images[0]||'', car:label, qty:st.qty };
-      if(kind==='film'){ it.pkg = st.pkg; it.size = size; it.qty = 1; it.sides = sides.map(s=>({ side:s, label:sideLabel(s), shade:st.sides[s] })); }
+      if(kind==='film'){ it.pkg = activePreset || 'Custom'; it.areas = selAreas.slice(); it.size = size; it.qty = 1; it.sides = sides.map(s=>({ side:s, label:sideLabel(s), shade:st.sides[s] })); }
       if(kind==='karpet'){ it.pkg = st.pkg; it.color = st.color; }
       if(kind==='generic') it.variant = st.variant;
       cart.push(it); saveCart();
@@ -1111,12 +1211,8 @@ async function viewAccount(){
 }
 
 /* ---------- boot ---------- */
-async function boot(){
-  saveCart();
-  if(!DB){ app.innerHTML = `<div class="empty"><h3>Toko belum terhubung</h3><p>Isi <code>DB_URL</code> di file toko.html, atau buka toko lewat link dari admin.</p></div>`; return; }
-  app.innerHTML = `<div class="skel" style="aspect-ratio:12/5;margin-top:16px"></div><div class="grid" style="margin-top:20px">${'<div class="skel" style="aspect-ratio:3/4"></div>'.repeat(4)}</div>`;
-  try{ CAT = await api('pos/catalog'); }catch(e){ CAT = null; }
-  if(!CAT){ app.innerHTML = `<div class="empty"><h3>Katalog belum tersedia</h3><p>Toko sedang disiapkan. Coba beberapa saat lagi.</p><button class="btn" onclick="boot()">Coba lagi</button></div>`; return; }
+let catLoadedAt = 0;
+function prepCatalog(){
   CAT.film = CAT.film || { sides:[], packages:{}, brands:[] }; CAT.film.brands = CAT.film.brands||[];
   ['carpets','products','banners','promos','shipping','categories','cars'].forEach(k=>{ CAT[k] = CAT[k]||[]; });
   CAT.payments = CAT.payments||{}; CAT.store = CAT.store||{};
@@ -1129,6 +1225,26 @@ async function boot(){
   CAT.carpets.forEach(c=>{ c.prices = c.prices||{}; c.packages = c.packages||[]; c.colors = c.colors||[]; c.images = c.images||[]; });
   CAT.products.forEach(x=>{ x.variants = x.variants||[]; x.images = x.images||[]; });
   CAT.cars.forEach(c=>{ c.models = c.models||[]; });
+}
+async function refreshCatalog(){
+  try{
+    const c = await api('pos/catalog'); catLoadedAt = Date.now();
+    if(!c || (CAT && c.updatedAt===CAT.updatedAt)) return;
+    CAT = c; prepCatalog();
+    const first = (location.hash.replace(/^#/,'')||'/').split('/').filter(Boolean)[0] || '';
+    if(['','c','search','promo','deal','fav','cart'].includes(first)) route();
+    toast('Katalog toko diperbarui');
+  }catch(e){}
+}
+document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && CAT && Date.now()-catLoadedAt > 90000) refreshCatalog(); });
+
+async function boot(){
+  saveCart();
+  if(!DB){ app.innerHTML = `<div class="empty"><h3>Toko belum terhubung</h3><p>Isi <code>DB_URL</code> di file toko.html, atau buka toko lewat link dari admin.</p></div>`; return; }
+  app.innerHTML = `<div class="skel" style="aspect-ratio:12/5;margin-top:16px"></div><div class="grid" style="margin-top:20px">${'<div class="skel" style="aspect-ratio:3/4"></div>'.repeat(4)}</div>`;
+  try{ CAT = await api('pos/catalog'); }catch(e){ CAT = null; }
+  if(!CAT){ app.innerHTML = `<div class="empty"><h3>Katalog belum tersedia</h3><p>Toko sedang disiapkan. Coba beberapa saat lagi.</p><button class="btn" onclick="boot()">Coba lagi</button></div>`; return; }
+  prepCatalog(); catLoadedAt = Date.now();
   document.title = CAT.store.name || 'Toko Aksesoris Mobil';
   document.getElementById('storeName').textContent = CAT.store.name || 'Toko Aksesoris Mobil';
   if(CAT.store.logo){ const l = document.getElementById('logo'); l.dataset.img = CAT.store.logo; hydrate(document.querySelector('.top')); }
