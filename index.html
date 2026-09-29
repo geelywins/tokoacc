@@ -311,6 +311,9 @@ body{background:radial-gradient(1200px 400px at 50% -120px,#DDE6F2 0%,transparen
 .fav svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2}
 .fav[aria-pressed="true"] svg{fill:#E0431C;stroke:#E0431C}
 .tag.dark{top:8px}
+.size-note{margin-top:8px;font-size:12.5px;color:var(--ink-2);background:var(--blue-soft);border-radius:10px;padding:8px 11px}
+.size-note.ok{background:#E3F6EE;color:#0B6B47}
+.size-note.warn{background:var(--amber-soft);color:#8A5A00;font-weight:600}
 .pbody{padding:11px 12px 13px}
 .pprice{font-size:16px}
 
@@ -423,7 +426,7 @@ function products(){
     const p = prices.filter(v=>v>0); if(!p.length) return;
     const min = Math.min(...p); out.push({ kind, id, categoryId, name, brand, badge, images:images||[], fromNormal:min, from:applyDeal(min, deal), deal: dealOn(deal)?deal:null, data });
   };
-  CAT.film.brands.forEach(b=>push('film', b.id, 'cat_film', 'Kaca Film '+b.name, b.name, b.badge, b.images, Object.values(b.prices), b.deal, b));
+  CAT.film.brands.forEach(b=>push('film', b.id, 'cat_film', 'Kaca Film '+b.name, b.name, b.badge, b.images, filmPriceList(b), b.deal, b));
   CAT.carpets.forEach(c=>push('karpet', c.id, 'cat_karpet', 'Karpet Custom '+c.name, c.name, '', c.images, Object.values(c.prices).flatMap(m=>Object.values(m||{})), c.deal, c));
   CAT.products.forEach(x=>push('generic', x.id, x.categoryId, x.name, x.brand, '', x.images, (x.variants||[]).map(v=>Number(v.price)), x.deal, x));
   return out;
@@ -432,13 +435,19 @@ function productUrl(p){ return `#/p/${p.kind}/${enc(p.id)}`; }
 function shadeColor(pct){ const a = Math.min(.92, Number(String(pct).replace('%',''))/100); return `rgba(22,32,43,${a})`; }
 function sideLabel(k){ return ((CAT.film.sides||[]).find(s=>s.key===k)||{}).label || k; }
 function carLabel(c){ return c && c.brand && c.model ? `${c.brand} ${c.model}` : ''; }
+function sizeOfLabel(label){
+  if(!label) return '';
+  for(const c of (CAT.cars||[])){ if(label.startsWith(c.brand+' ')){ const m = label.slice(c.brand.length+1); if((c.models||[]).includes(m)) return (c.sizes||{})[m] || ''; } }
+  return '';
+}
+function filmPriceList(b){ return Object.values(b.prices||{}).flatMap(o=>Object.values(o||{})).map(Number).filter(v=>v>0); }
 
 /* ---------- keranjang & kode promo ---------- */
 let cart = LS.get('cart2', []);
 function saveCart(){ LS.set('cart2', cart); const n = cart.reduce((s,i)=>s+i.qty,0); ['cartCount','cartCount2'].forEach(id=>{ const el = document.getElementById(id); if(el) el.textContent = n||''; }); }
 function itemPrices(it){
   let normal = 0, deal = null;
-  if(it.kind==='film'){ const b = CAT.film.brands.find(x=>x.id===it.pid); if(b){ normal = Number(b.prices[it.pkg])||0; deal = b.deal; } }
+  if(it.kind==='film'){ const b = CAT.film.brands.find(x=>x.id===it.pid); if(b){ normal = Number(((b.prices||{})[sizeOfLabel(it.car)]||{})[it.pkg])||0; deal = b.deal; } }
   else if(it.kind==='karpet'){ const c = CAT.carpets.find(x=>x.id===it.pid); if(c){ normal = Number((c.prices[it.car]||{})[it.pkg])||0; deal = c.deal; } }
   else { const x = CAT.products.find(y=>y.id===it.pid); if(x){ const v = (x.variants||[]).find(v=>v.name===it.variant); normal = v ? Number(v.price)||0 : 0; deal = x.deal; } }
   return { normal, price: applyDeal(normal, deal), deal: dealOn(deal) ? deal : null };
@@ -585,7 +594,7 @@ function route(){
   const nav = !parts.length ? 'home' : parts[0]==='promo' ? 'promo' : parts[0]==='deal' ? 'deal' : parts[0]==='cart' ? 'cart' : (parts[0]==='orders'||parts[0]==='order') ? 'orders' : '';
   document.querySelectorAll('.bnav a').forEach(a=>{ if(a.dataset.nav===nav) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
   window.scrollTo(0,0);
-  app.classList.remove('fade'); void app.offsetWidth; app.classList.add('fade');
+  app.classList.remove('fade'); void app.offsetWidth; app.classList.add('fade'); clearTimeout(window.__fadeT); window.__fadeT = setTimeout(()=>app.classList.remove('fade'), 450);
   if(!CAT) return;
   mountFab();
   const [a, b, c] = parts;
@@ -724,22 +733,36 @@ function viewProduct(kind, id){
   const allowedCars = kind==='generic' && Array.isArray(d.cars) ? d.cars : null;
   const carOk = c=>!allowedCars || allowedCars.includes(carLabel(c));
   const st = { car: carOk(saved) && saved.brand ? { brand:saved.brand, model:saved.model } : { brand:'', model:'' }, mode:'', pkg:'', color:(d.colors||[])[0]||'', variant:'', qty:1, sides:{} };
-  const partials = kind==='film' ? Object.keys(CAT.film.packages).filter(k=>k!=='Full' && d.prices[k]>0) : [];
-  if(kind==='film'){ st.mode = d.prices.Full>0 ? 'Full' : 'Partial'; st.pkg = st.mode==='Full' ? 'Full' : (partials[0]||''); }
+  let partials = [];
   if(kind==='karpet') st.pkg = d.packages[0];
   if(kind==='generic') st.variant = ((d.variants||[]).find(v=>v.price>0)||{}).name || '';
   const brands = (CAT.cars||[]).filter(c=>!allowedCars || c.models.some(m=>allowedCars.includes(`${c.brand} ${m}`)));
   const draw = ()=>{
     const y = window.scrollY;
     const label = carLabel(st.car);
+    const size = kind==='film' ? sizeOfLabel(label) : '';
+    const sizePrices = kind==='film' && size ? (d.prices[size]||{}) : null;
+    const availPkg = k => kind==='film' && (sizePrices ? Number(sizePrices[k])>0 : Object.values(d.prices).some(o=>Number((o||{})[k])>0));
+    if(kind==='film'){
+      partials = Object.keys(CAT.film.packages).filter(k=>k!=='Full' && availPkg(k));
+      const hasFull = availPkg('Full');
+      if(st.mode==='Full' && !hasFull) st.mode = '';
+      if(st.mode==='Partial' && !partials.length) st.mode = '';
+      if(!st.mode) st.mode = hasFull ? 'Full' : (partials.length ? 'Partial' : '');
+      st.pkg = st.mode==='Full' ? 'Full' : st.mode==='Partial' ? (partials.includes(st.pkg) ? st.pkg : partials[0]) : '';
+    }
+    const sizeNote = kind!=='film' ? '' : !label ? `<div class="size-note">Harga kaca film menyesuaikan <b>ukuran mobil</b> (Small · Medium · Large · XL).</div>`
+      : size ? `<div class="size-note ok">Ukuran kaca mobil kamu: <b>${esc(size)}</b></div>`
+      : `<div class="size-note warn">Ukuran untuk ${esc(label)} belum diatur, jadi harganya belum bisa dihitung. Hubungi admin lewat WhatsApp untuk konfirmasi.</div>`;
     let normal = 0, ready = true, missing = '';
-    if(kind==='film') normal = Number(d.prices[st.pkg])||0;
+    if(kind==='film') normal = sizePrices ? (Number(sizePrices[st.pkg])||0) : 0;
     if(kind==='karpet') normal = label ? Number((d.prices[label]||{})[st.pkg])||0 : 0;
     if(kind==='generic') normal = Number(((d.variants||[]).find(v=>v.name===st.variant)||{}).price)||0;
     const price = applyDeal(normal, d.deal);
     const needCar = kind!=='generic' || !!allowedCars;
     if(needCar && !label){ ready=false; missing='Pilih mobil kamu'; }
-    else if(kind==='film' && !st.pkg){ ready=false; missing='Pilih paket pemasangan'; }
+    else if(kind==='film' && !size){ ready=false; missing='Ukuran mobil belum diatur'; }
+    else if(kind==='film' && !st.pkg){ ready=false; missing='Tidak tersedia utk '+size; }
     else if(kind==='karpet' && !normal){ ready=false; missing='Paket belum tersedia untuk '+label; }
     const sides = kind==='film' ? (CAT.film.packages[st.pkg]||[]) : [];
     if(ready) sides.forEach(s=>{ if(!st.sides[s] && ready){ ready=false; missing='Pilih kegelapan '+sideLabel(s); } });
@@ -756,10 +779,10 @@ function viewProduct(kind, id){
           ${p.deal?`<div class="vbadge">🔥 Deal ${esc(dealTag(p.deal))}${p.deal.until?` · s/d ${new Date(p.deal.until+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'})}`:''}</div>`:''}
           <div class="opt"><div class="opt-label">Mobil kamu ${needCar?'':'<span>opsional</span>'}</div>
             <div class="car-pick"><select class="inp" id="carBrand" aria-label="Merek mobil"><option value="">Merek</option>${brands.map(c=>`<option ${c.brand===st.car.brand?'selected':''}>${esc(c.brand)}</option>`).join('')}</select>
-            <select class="inp" id="carModel" aria-label="Tipe mobil" ${st.car.brand?'':'disabled'}><option value="">Tipe</option>${models.map(m=>`<option ${m===st.car.model?'selected':''}>${esc(m)}</option>`).join('')}</select></div></div>
+            <select class="inp" id="carModel" aria-label="Tipe mobil" ${st.car.brand?'':'disabled'}><option value="">Tipe</option>${models.map(m=>`<option ${m===st.car.model?'selected':''}>${esc(m)}</option>`).join('')}</select></div>${sizeNote}</div>
           ${kind==='film' ? `
-            <div class="opt"><div class="opt-label">Paket pemasangan</div>${chipRow('mode', [d.prices.Full>0?'Full':null, partials.length?'Partial':null].filter(Boolean), st.mode, m=> m==='Full' ? rp(applyDeal(d.prices.Full, d.deal)) : 'pilih bagian kaca')}
-              ${st.mode==='Partial' ? `<div class="subchips"><div class="opt-label">Bagian yang dipasang</div>${chipRow('pkg', partials, st.pkg, k=>rp(applyDeal(d.prices[k], d.deal)))}</div>` : ''}</div>
+            <div class="opt"><div class="opt-label">Paket pemasangan</div>${chipRow('mode', [availPkg('Full')?'Full':null, partials.length?'Partial':null].filter(Boolean), st.mode, m=> m==='Full' ? (sizePrices ? rp(applyDeal(sizePrices.Full, d.deal)) : 'sesuai ukuran mobil') : 'pilih bagian kaca')}
+              ${st.mode==='Partial' ? `<div class="subchips"><div class="opt-label">Bagian yang dipasang</div>${chipRow('pkg', partials, st.pkg, k=> sizePrices ? rp(applyDeal(sizePrices[k], d.deal)) : 'sesuai ukuran mobil')}</div>` : ''}</div>
             ${sides.length?`<div class="opt"><div class="opt-label">Kegelapan tiap sisi <span>semakin tinggi semakin gelap</span></div>
               <div class="tint">${tintSvg(st.sides, sides)}<div class="tint-legend">${sides.map(s=>`<span>${esc(sideLabel(s))}: <b>${esc(st.sides[s]||'—')}</b></span>`).join('')}</div></div>
               ${sides.map(s=>`<div class="opt" style="margin-top:12px"><div class="opt-label" style="font-weight:600">${esc(sideLabel(s))}</div>${chipRow('shade-'+s.toLowerCase(), d.shades[s]||[], st.sides[s])}</div>`).join('')}</div>`:''}`
@@ -792,7 +815,7 @@ function viewProduct(kind, id){
     if(qm){ qm.onclick = ()=>{ st.qty = Math.max(1, st.qty-1); draw(); }; qp.onclick = ()=>{ st.qty = Math.min(20, st.qty+1); draw(); }; }
     const add = ()=>{
       const it = { key:Date.now().toString(36)+Math.random().toString(36).slice(2,5), kind, pid:p.id, categoryId:p.categoryId, title:p.name, img:p.images[0]||'', car:label, qty:st.qty };
-      if(kind==='film'){ it.pkg = st.pkg; it.qty = 1; it.sides = sides.map(s=>({ side:s, label:sideLabel(s), shade:st.sides[s] })); }
+      if(kind==='film'){ it.pkg = st.pkg; it.size = size; it.qty = 1; it.sides = sides.map(s=>({ side:s, label:sideLabel(s), shade:st.sides[s] })); }
       if(kind==='karpet'){ it.pkg = st.pkg; it.color = st.color; }
       if(kind==='generic') it.variant = st.variant;
       cart.push(it); saveCart();
@@ -804,7 +827,7 @@ function viewProduct(kind, id){
 }
 function itemOptions(it){
   const o = [];
-  if(it.car) o.push(it.car);
+  if(it.car){ const sz = it.kind==='film' ? sizeOfLabel(it.car) : ''; o.push(sz ? `${it.car} (${sz})` : it.car); }
   if(it.kind==='film'){ o.push(it.pkg==='Full' ? 'Full' : 'Partial · '+it.pkg); (it.sides||[]).forEach(s=>o.push(`${s.label} ${s.shade}`)); }
   if(it.kind==='karpet'){ o.push(it.pkg); if(it.color) o.push('Warna '+it.color); }
   if(it.kind==='generic' && it.variant && it.variant!=='Standar') o.push(it.variant);
@@ -1097,7 +1120,12 @@ async function boot(){
   CAT.film = CAT.film || { sides:[], packages:{}, brands:[] }; CAT.film.brands = CAT.film.brands||[];
   ['carpets','products','banners','promos','shipping','categories','cars'].forEach(k=>{ CAT[k] = CAT[k]||[]; });
   CAT.payments = CAT.payments||{}; CAT.store = CAT.store||{};
+  CAT.film.sizes = CAT.film.sizes || ['Small','Medium','Large','XL'];
+  CAT.cars.forEach(c=>{ c.sizes = c.sizes||{}; });
   CAT.film.brands.forEach(b=>{ b.prices = b.prices||{}; b.shades = b.shades||{}; b.images = b.images||[]; });
+  /* katalog lama (sebelum ada ukuran): satu harga untuk semua ukuran */
+  CAT.film.brands.forEach(b=>{ const keys = Object.keys(b.prices); if(keys.some(k=>!CAT.film.sizes.includes(k))){ const flat = {}; keys.forEach(k=>{ if(!CAT.film.sizes.includes(k)) flat[k] = b.prices[k]; }); b.prices = {}; CAT.film.sizes.forEach(z=>{ b.prices[z] = Object.assign({}, flat); }); } });
+  if(!(CAT.v>=3)) CAT.cars.forEach(c=>(c.models||[]).forEach(m=>{ if(!c.sizes[m]) c.sizes[m] = CAT.film.sizes[0]; }));
   CAT.carpets.forEach(c=>{ c.prices = c.prices||{}; c.packages = c.packages||[]; c.colors = c.colors||[]; c.images = c.images||[]; });
   CAT.products.forEach(x=>{ x.variants = x.variants||[]; x.images = x.images||[]; });
   CAT.cars.forEach(c=>{ c.models = c.models||[]; });
