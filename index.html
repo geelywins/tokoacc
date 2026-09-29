@@ -41,8 +41,8 @@ a{color:inherit}
 .count:empty{display:none}
 @media (max-width:640px){ .brand-name{display:none} .top .wrap{gap:8px} }
 
-main{min-height:calc(100vh - 62px);padding-bottom:90px}
-@media (min-width:900px){ main{padding-bottom:40px} }
+main{min-height:calc(100vh - 62px)}
+#app{padding-bottom:var(--bottom-space, calc(110px + env(safe-area-inset-bottom,0px)))}
 
 /* home */
 .hero{margin:16px 0 0;position:relative}
@@ -204,7 +204,7 @@ textarea.inp{resize:vertical;min-height:70px}
 
 /* v2 additions */
 .top .acct{color:#fff}
-@media (max-width:899px){ .detail{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))} }
+
 .subchips{margin-top:10px;padding:12px;border:1px dashed var(--line);border-radius:12px;background:#FAFBFD}
 .subchips .opt-label{font-weight:600}
 .car-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
@@ -232,6 +232,130 @@ textarea.inp{resize:vertical;min-height:70px}
 .cat-tile{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:12px;font-weight:700;line-height:1.25}
 .cat-tile .ico{width:54px;height:54px;border-radius:16px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:24px}
 .cat-tile:hover .ico{border-color:var(--blue)}
+/* ===================== v3: tampilan baru ===================== */
+:root{ --shadow-sm:0 1px 2px rgba(22,32,43,.06),0 2px 8px rgba(22,32,43,.05); --shadow-md:0 10px 28px rgba(22,32,43,.12); --grad-ink:linear-gradient(135deg,#0F1822 0%,#1B2A3A 55%,#243B57 100%); }
+body{background:radial-gradient(1200px 400px at 50% -120px,#DDE6F2 0%,transparent 70%),var(--bg)}
+.top{background:var(--grad-ink);box-shadow:0 4px 18px rgba(15,24,34,.25)}
+.top::after{content:"";position:absolute;left:0;right:0;bottom:0;height:2px;background:linear-gradient(90deg,var(--amber),#FF7A45 45%,var(--blue));opacity:.9}
+.search{border-radius:12px;height:42px;box-shadow:inset 0 0 0 1.5px transparent;transition:box-shadow .15s}
+.search:focus-within{box-shadow:inset 0 0 0 2px var(--amber)}
+.search-wrap{position:relative;flex:1;min-width:0;display:flex}
+.suggest{position:absolute;left:0;right:0;top:48px;background:#fff;border-radius:14px;box-shadow:var(--shadow-md);overflow:hidden;z-index:40;color:var(--ink)}
+.suggest a{display:flex;align-items:center;gap:10px;padding:10px 14px;text-decoration:none;border-top:1px solid var(--line)}
+.suggest a:first-child{border-top:0}
+.suggest a:hover,.suggest a:focus{background:var(--blue-soft);outline:none}
+.suggest .s-ico{width:34px;height:34px;border-radius:9px;background:var(--bg);display:flex;align-items:center;justify-content:center;flex:none;overflow:hidden}
+.suggest .s-ico img{width:100%;height:100%;object-fit:cover}
+.suggest .s-name{font-weight:700;font-size:13.5px;flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.suggest .s-price{font-weight:800;color:var(--price);font-size:13px;white-space:nowrap}
+.suggest .s-all{justify-content:center;font-weight:700;color:var(--blue);font-size:13px}
+
+@keyframes fadeUp{from{opacity:0}to{opacity:1}}
+#app.fade>*{animation:fadeUp .32s ease both}
+#app.fade>*:nth-child(2){animation-delay:.04s} #app.fade>*:nth-child(3){animation-delay:.08s} #app.fade>*:nth-child(4){animation-delay:.12s}
+@media (prefers-reduced-motion:reduce){ #app.fade>*{animation:none} }
+
+/* sapaan + hero */
+.hello{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:16px 0 0}
+.hello b{font-size:18px;letter-spacing:-.015em}
+.hello span{color:var(--muted);font-size:13px;display:block}
+.hello a{font-size:12.5px;font-weight:700;text-decoration:none;background:#fff;border:1px solid var(--line);border-radius:20px;padding:7px 12px;white-space:nowrap}
+.slides{box-shadow:var(--shadow-md)}
+.hero-fb{margin-top:14px;border-radius:20px;background:var(--grad-ink);color:#fff;padding:22px 20px;position:relative;overflow:hidden;box-shadow:var(--shadow-md);display:grid;grid-template-columns:1.15fr 1fr;gap:10px;align-items:center;min-height:190px}
+.hero-fb::before{content:"";position:absolute;right:-60px;top:-60px;width:240px;height:240px;border-radius:50%;background:radial-gradient(circle,rgba(255,176,32,.35),transparent 65%)}
+.hero-fb h1{margin:6px 0 8px;font-size:clamp(21px,5.2vw,32px);line-height:1.12;letter-spacing:-.03em;font-weight:800}
+.hero-fb h1 em{font-style:normal;background:linear-gradient(90deg,var(--amber),#FF8A4C);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hero-fb p{margin:0 0 14px;color:#C9D3DE;font-size:13px;max-width:34ch}
+.hero-fb .kicker{display:inline-block;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--amber);background:rgba(255,176,32,.12);border:1px solid rgba(255,176,32,.35);padding:4px 9px;border-radius:20px}
+.hero-fb .btn{height:42px;font-size:14px}
+.hero-fb svg{width:100%;height:auto;position:relative;z-index:1;filter:drop-shadow(0 10px 18px rgba(0,0,0,.35))}
+.hero-fb .hero-car .glass{animation:tint 6s ease-in-out infinite}
+.hero-fb .hero-car .glass:nth-of-type(2){animation-delay:.6s} .hero-fb .hero-car .glass:nth-of-type(3){animation-delay:1.2s} .hero-fb .hero-car .glass:nth-of-type(4){animation-delay:1.8s}
+@keyframes tint{0%,100%{fill-opacity:.25}50%{fill-opacity:.9}}
+@media (prefers-reduced-motion:reduce){ .hero-fb .hero-car .glass{animation:none;fill-opacity:.7} }
+@media (max-width:520px){ .hero-fb{grid-template-columns:1fr;padding:20px 18px 12px} .hero-fb svg{max-width:300px;margin:0 auto -6px} }
+
+/* trust strip */
+.trust{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.trust div{background:#fff;border-radius:14px;padding:10px;display:flex;gap:8px;align-items:center;box-shadow:var(--shadow-sm);font-size:11.5px;line-height:1.3;color:var(--ink-2)}
+.trust b{display:block;font-size:12.5px;color:var(--ink)}
+.trust i{font-style:normal;width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;flex:none;font-size:15px}
+@media (max-width:560px){ .trust{grid-template-columns:1fr 1fr 1fr} .trust div{flex-direction:column;text-align:center;padding:10px 6px} }
+
+/* kategori */
+.cat-grid{display:flex;gap:10px;overflow-x:auto;scrollbar-width:none;margin:18px -16px 4px;padding:2px 16px 6px}
+.cat-grid::-webkit-scrollbar{display:none}
+.cat-tile{min-width:74px;flex:none}
+.cat-tile .ico{width:60px;height:60px;border-radius:18px;border:0;box-shadow:var(--shadow-sm);font-size:26px;transition:transform .15s}
+.cat-tile:nth-child(4n+1) .ico{background:linear-gradient(145deg,#E6EDFC,#fff)}
+.cat-tile:nth-child(4n+2) .ico{background:linear-gradient(145deg,#FFF1D6,#fff)}
+.cat-tile:nth-child(4n+3) .ico{background:linear-gradient(145deg,#E1F5EC,#fff)}
+.cat-tile:nth-child(4n+4) .ico{background:linear-gradient(145deg,#FDE6DF,#fff)}
+.cat-tile:hover .ico{transform:translateY(-2px)}
+
+/* judul seksi */
+.sec-head h2{display:flex;align-items:center;gap:8px}
+.sec-head h2::before{content:"";width:4px;height:18px;border-radius:2px;background:linear-gradient(var(--amber),#FF7A45)}
+.sec-head a{background:var(--blue-soft);padding:5px 10px;border-radius:20px;font-size:12px}
+
+/* kartu produk */
+.pcard{border-radius:16px;box-shadow:var(--shadow-sm);border:0;transition:transform .15s,box-shadow .15s;position:relative}
+.pcard:hover{transform:translateY(-3px);box-shadow:var(--shadow-md);border:0}
+.pimg{background:linear-gradient(160deg,#E4EAF1,#D3DCE6)}
+.pimg img{transition:transform .35s ease}
+.pcard:hover .pimg img{transform:scale(1.05)}
+.tag{border-radius:8px;box-shadow:0 2px 6px rgba(0,0,0,.12)}
+.deal-tag{background:linear-gradient(135deg,#E0431C,#FF7A45)}
+.fav{all:unset;cursor:pointer;position:absolute;right:8px;bottom:8px;width:34px;height:34px;border-radius:50%;background:rgba(255,255,255,.92);display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(0,0,0,.15);z-index:2;transition:transform .12s}
+.fav:active{transform:scale(.88)}
+.fav svg{width:18px;height:18px;stroke:var(--ink);fill:none;stroke-width:2}
+.fav[aria-pressed="true"] svg{fill:#E0431C;stroke:#E0431C}
+.tag.dark{top:8px}
+.pbody{padding:11px 12px 13px}
+.pprice{font-size:16px}
+
+/* sort & filter */
+.sortbar{display:flex;gap:8px;overflow-x:auto;scrollbar-width:none;margin:-2px -16px 14px;padding:2px 16px}
+.sortbar::-webkit-scrollbar{display:none}
+.sortbar button{all:unset;cursor:pointer;white-space:nowrap;background:#fff;border-radius:20px;padding:7px 13px;font-size:12.5px;font-weight:700;box-shadow:var(--shadow-sm);color:var(--ink-2)}
+.sortbar button[aria-pressed="true"]{background:var(--ink);color:#fff}
+.sortbar .sep{width:1px;background:var(--line);flex:none;margin:4px 2px}
+.count-note{color:var(--muted);font-size:12.5px;margin:-6px 0 12px}
+
+/* detail produk */
+.panel{border-radius:18px;box-shadow:var(--shadow-sm)}
+.d-actions{display:flex;gap:8px;margin:2px 0 6px}
+.d-actions button{all:unset;cursor:pointer;display:inline-flex;align-items:center;gap:6px;font-size:12.5px;font-weight:700;border:1.5px solid var(--line);border-radius:20px;padding:6px 12px;background:#fff}
+.d-actions svg{width:16px;height:16px;fill:none;stroke:currentColor;stroke-width:2}
+.d-actions button[aria-pressed="true"]{color:#E0431C;border-color:#F4B5A3;background:#FFF1EC}
+.d-actions button[aria-pressed="true"] svg{fill:#E0431C;stroke:#E0431C}
+.chip{border-radius:12px;transition:border-color .12s,background .12s}
+.chip[aria-pressed="true"]{box-shadow:0 0 0 3px rgba(31,79,209,.12)}
+.buybar{box-shadow:0 -8px 24px rgba(22,32,43,.08)}
+.btn{border-radius:12px;transition:filter .12s,transform .08s}
+.btn:active{transform:scale(.98)}
+.btn:not(.line):not(.amber){background:linear-gradient(135deg,#1F4FD1,#3A6BF0)}
+.btn.amber{background:linear-gradient(135deg,#FFB020,#FF9A3C)}
+
+/* bottom nav */
+.bnav{backdrop-filter:saturate(1.4) blur(10px);background:rgba(255,255,255,.94);box-shadow:0 -6px 20px rgba(22,32,43,.07)}
+.bnav a{transition:color .15s}
+.bnav a[aria-current="page"]::before{content:"";position:absolute;top:0;left:30%;right:30%;height:3px;border-radius:0 0 3px 3px;background:var(--blue)}
+.bnav a[aria-current="page"] svg{transform:translateY(-1px)}
+
+/* WhatsApp mengambang */
+.fab-wa{position:fixed;right:16px;bottom:calc(var(--bottom-space,90px) - 12px);z-index:22;width:52px;height:52px;border-radius:50%;background:#25D366;display:flex;align-items:center;justify-content:center;box-shadow:0 8px 22px rgba(37,211,102,.45);text-decoration:none;transition:transform .15s}
+.fab-wa:hover{transform:scale(1.06)}
+.fab-wa svg{width:28px;height:28px;fill:#fff}
+.hide-bnav .fab-wa,.no-fab .fab-wa{display:none}
+
+/* strip horizontal (baru dilihat) */
+.hstrip{display:flex;gap:12px;overflow-x:auto;scrollbar-width:none;margin:0 -16px;padding:2px 16px 8px;scroll-snap-type:x proximity}
+.hstrip::-webkit-scrollbar{display:none}
+.hstrip .pcard{flex:0 0 150px;scroll-snap-align:start}
+.empty{border-radius:18px;box-shadow:var(--shadow-sm)}
+.empty .big{font-size:40px;display:block;margin-bottom:6px}
+
 </style>
 </head>
 <body>
@@ -377,6 +501,81 @@ function requireLogin(next){ if(user) return true; location.hash = '#/login/' + 
 /* ---------- routing ---------- */
 const app = document.getElementById('app');
 let slideTimer = null;
+/* ===================== v3: favorit, baru dilihat, saran pencarian, WA ===================== */
+const pkey = p=>`${p.kind}:${p.id}`;
+let favs = LS.get('fav', []);
+let recent = LS.get('recent', []);
+function isFav(k){ return favs.includes(k); }
+function toggleFav(k){ favs = isFav(k) ? favs.filter(x=>x!==k) : [k, ...favs]; LS.set('fav', favs); return isFav(k); }
+function pushRecent(k){ recent = [k, ...recent.filter(x=>x!==k)].slice(0, 12); LS.set('recent', recent); }
+function byKeys(keys){ const all = products(); return keys.map(k=>all.find(p=>pkey(p)===k)).filter(Boolean); }
+const HEART = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-9.3-9.2C1.5 8 3.6 4.5 7.2 4.5c2 0 3.5 1.1 4.8 2.8 1.3-1.7 2.8-2.8 4.8-2.8 3.6 0 5.7 3.5 4.5 6.8-1.8 4.6-9.3 9.2-9.3 9.2z"/></svg>';
+const SHARE = '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="18" cy="5" r="2.5"/><circle cx="6" cy="12" r="2.5"/><circle cx="18" cy="19" r="2.5"/><path d="m8.2 10.8 7.6-4.4M8.2 13.2l7.6 4.4"/></svg>';
+document.addEventListener('click', e=>{
+  const f = e.target.closest('[data-fav]');
+  if(f){ e.preventDefault(); e.stopPropagation(); const on = toggleFav(f.dataset.fav);
+    document.querySelectorAll(`[data-fav="${CSS.escape(f.dataset.fav)}"]`).forEach(x=>{ x.setAttribute('aria-pressed', on); if(x.dataset.label) x.querySelector('span').textContent = on ? 'Difavoritkan' : 'Favorit'; });
+    toast(on ? 'Disimpan ke favorit' : 'Dihapus dari favorit'); return; }
+  const s = e.target.closest('[data-share]');
+  if(s){ e.preventDefault(); const url = location.href, title = s.dataset.share;
+    if(navigator.share) navigator.share({ title, url }).catch(()=>{});
+    else if(navigator.clipboard) navigator.clipboard.writeText(url).then(()=>toast('Link produk disalin')); }
+}, true);
+
+/* saran pencarian */
+(function(){
+  const q = document.getElementById('q'); const label = q.closest('.search');
+  const wrap = document.createElement('div'); wrap.className = 'search-wrap'; label.parentNode.insertBefore(wrap, label); wrap.appendChild(label);
+  const box = document.createElement('div'); box.className = 'suggest'; box.hidden = true; box.setAttribute('role','listbox'); wrap.appendChild(box);
+  const close = ()=>{ box.hidden = true; };
+  q.addEventListener('input', ()=>{
+    const v = q.value.trim().toLowerCase();
+    if(!CAT || v.length<2){ close(); return; }
+    const hits = products().filter(p=>(p.name+' '+(p.brand||'')+' '+(catOf(p.categoryId).name||'')).toLowerCase().includes(v)).slice(0,6);
+    box.innerHTML = hits.map(p=>`<a href="${productUrl(p)}" role="option"><span class="s-ico">${p.images[0]?`<img data-img="${p.images[0]}" alt="" hidden>`:esc(catOf(p.categoryId).icon||'🛒')}</span><span class="s-name">${esc(p.name)}</span><span class="s-price">${rp(p.from)}</span></a>`).join('')
+      + `<a class="s-all" href="#/search/${enc(q.value.trim())}">Lihat semua hasil “${esc(q.value.trim())}”</a>`;
+    box.hidden = false; hydrate(box);
+  });
+  box.addEventListener('click', ()=>{ close(); q.blur(); });
+  document.addEventListener('click', e=>{ if(!wrap.contains(e.target)) close(); });
+  q.addEventListener('keydown', e=>{ if(e.key==='Escape') close(); if(e.key==='Enter') close(); });
+  window.addEventListener('hashchange', close);
+})();
+
+/* tombol WhatsApp mengambang */
+function mountFab(){
+  if(!CAT || !CAT.store.wa || document.querySelector('.fab-wa')) return;
+  const a = document.createElement('a'); a.className = 'fab-wa'; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('aria-label','Chat admin via WhatsApp');
+  a.href = waLink(CAT.store.wa, `Halo ${CAT.store.name||'admin'}, saya mau tanya produk aksesoris.`);
+  a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
+  document.body.appendChild(a);
+}
+
+/* hero bawaan kalau admin belum pasang banner promo */
+function heroFallback(){
+  const film = products().find(p=>p.kind==='film');
+  return `<section class="hero-fb">
+    <div><span class="kicker">Pasang di rumah kamu</span>
+      <h1>Kabin adem,<br><em>tampilan makin gagah</em></h1>
+      <p>Kaca film dan aksesoris untuk mobil kamu. Teknisi datang ke alamat${CAT.store.area?` di ${esc(CAT.store.area)}`:''}.</p>
+      <a class="btn amber" href="${film?productUrl(film):'#/c/cat_film'}">Pilih kaca film</a></div>
+    <div class="hero-car">${tintSvg({depan:'40%',sampingDepan:'60%',sampingBelakang:'80%',belakang:'80%'}, ['depan','sampingDepan','sampingBelakang','belakang'])}</div>
+  </section>`;
+}
+function trustStrip(){
+  const pays = paymentOptions().map(p=>p.label).join(' · ') || 'Cash · Transfer · QRIS';
+  return `<div class="trust">
+    <div><i style="background:#E6EDFC">🏠</i><span><b>Pasang di rumah</b>${esc(CAT.store.area||'Teknisi datang')}</span></div>
+    <div><i style="background:#FFF1D6">💳</i><span><b>Bayar mudah</b>${esc(pays)}</span></div>
+    <div><i style="background:#E1F5EC">🏷️</i><span><b>Kode promo</b>Hemat di keranjang</span></div>
+  </div>`;
+}
+function viewFav(){
+  const list = byKeys(favs);
+  app.innerHTML = `<h1 class="page-title">Favorit saya</h1>${list.length?`<div class="grid">${list.map(card).join('')}</div>`:'<div class="empty"><span class="big">🤍</span><h3>Belum ada favorit</h3>Tap ikon hati di produk untuk menyimpannya di sini.</div>'}`;
+  hydrate(app);
+}
+
 function route(){
   clearInterval(slideTimer);
   const h = location.hash.replace(/^#/,'') || '/';
@@ -386,7 +585,9 @@ function route(){
   const nav = !parts.length ? 'home' : parts[0]==='promo' ? 'promo' : parts[0]==='deal' ? 'deal' : parts[0]==='cart' ? 'cart' : (parts[0]==='orders'||parts[0]==='order') ? 'orders' : '';
   document.querySelectorAll('.bnav a').forEach(a=>{ if(a.dataset.nav===nav) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
   window.scrollTo(0,0);
+  app.classList.remove('fade'); void app.offsetWidth; app.classList.add('fade');
   if(!CAT) return;
+  mountFab();
   const [a, b, c] = parts;
   if(!a) return viewHome();
   if(a==='c') return viewList(b);
@@ -402,6 +603,7 @@ function route(){
   if(a==='register') return viewRegister(b||'');
   if(a==='forgot') return viewForgot();
   if(a==='account') return viewAccount();
+  if(a==='fav') return viewFav();
   viewHome();
 }
 window.addEventListener('hashchange', route);
@@ -412,7 +614,8 @@ function card(p){
   const swatch = p.kind==='film' ? `<div class="swatch" aria-hidden="true">${[...new Set(Object.values(p.data.shades||{}).flat())].sort((a,b)=>parseInt(a)-parseInt(b)).map(s=>`<span style="background:${shadeColor(s)}"></span>`).join('')}</div>` : '';
   return `<a class="pcard" href="${productUrl(p)}">
     <div class="pimg">${p.images[0]?`<img data-img="${p.images[0]}" alt="" hidden>`:''}<div class="ph" aria-hidden="true">${esc(catOf(p.categoryId).icon||'🛒')}</div>
-      ${p.deal?`<span class="tag deal-tag">${esc(dealTag(p.deal))}</span>`:''}${p.badge?`<span class="tag dark">${esc(p.badge)}</span>`:''}</div>
+      ${p.deal?`<span class="tag deal-tag">${esc(dealTag(p.deal))}</span>`:''}${p.badge?`<span class="tag dark">${esc(p.badge)}</span>`:''}
+      <button class="fav" data-fav="${esc(pkey(p))}" aria-pressed="${isFav(pkey(p))}" aria-label="Favorit">${HEART}</button></div>
     <div class="pbody"><span class="pcat">${esc(catOf(p.categoryId).name||'')}</span><span class="pname">${esc(p.name)}</span>${swatch}
       <span class="pprice"><small>mulai dari</small>${rp(p.from)}${p.deal?`<s>${rp(p.fromNormal)}</s>`:''}</span></div></a>`;
 }
@@ -443,9 +646,14 @@ function viewHome(){
   const ps = products(); const deals = ps.filter(p=>p.deal);
   const sections = CAT.categories.map(c=>{ const list = ps.filter(p=>p.categoryId===c.id); return list.length ? `<div class="sec-head"><h2>${esc(c.name)}</h2><a href="#/c/${enc(c.id)}">Lihat semua</a></div><div class="grid">${list.slice(0,8).map(card).join('')}</div>` : ''; });
   if(iklan.length && sections.length) sections.splice(1, 0, `<div class="ads">${iklan.map((b,i)=>`<button data-ad="${i}" aria-label="${esc(b.title||'Iklan')}"><img data-img="${b.img}" alt="${esc(b.title||'')}" hidden></button>`).join('')}</div>`);
-  app.innerHTML = `${carousel(promo)}
+  const recentList = byKeys(recent).slice(0,10), favList = byKeys(favs).slice(0,10);
+  const nama = profile && profile.nama ? profile.nama.split(' ')[0] : '';
+  app.innerHTML = `<div class="hello"><div><b>${nama?`Halo, ${esc(nama)} 👋`:'Selamat datang 👋'}</b><span>${esc(CAT.store.tagline||'Aksesoris mobil, dipasang di rumah kamu')}</span></div>${user?`<a href="#/fav">🤍 Favorit</a>`:`<a href="#/login">Masuk</a>`}</div>
+    ${promo.length ? carousel(promo) : heroFallback()}
+    ${trustStrip()}
     <div class="cat-grid">${CAT.categories.map(c=>`<a class="cat-tile" href="#/c/${enc(c.id)}"><span class="ico" aria-hidden="true">${esc(c.icon)}</span>${esc(c.name)}</a>`).join('')}
       <a class="cat-tile" href="#/deal"><span class="ico" aria-hidden="true">🔥</span>Deal</a></div>
+    ${recentList.length?`<div class="sec-head"><h2>Terakhir kamu lihat</h2></div><div class="hstrip">${recentList.map(card).join('')}</div>`:''}
     ${deals.length?`<div class="sec-head"><h2>🔥 Lagi Deal</h2><a href="#/deal">Lihat semua</a></div><div class="grid">${deals.slice(0,4).map(card).join('')}</div>`:''}
     ${sections.join('')}
     ${!ps.length?`<div class="empty"><h3>Katalog sedang disiapkan</h3>Produk akan tampil begitu admin mengisi harga.</div>`:''}
@@ -453,13 +661,24 @@ function viewHome(){
   hydrate(app); bindCarousel(promo);
   app.querySelectorAll('[data-ad]').forEach(el=>el.addEventListener('click', ()=>bannerGo(iklan[el.dataset.ad].link)));
 }
+let listSort = 'rek';
 function viewList(catId, q){
   let ps = products();
   if(catId) ps = ps.filter(p=>p.categoryId===catId);
   if(q){ const s = q.toLowerCase(); ps = ps.filter(p=>(p.name+' '+(p.brand||'')+' '+(p.data.desc||'')).toLowerCase().includes(s)); document.getElementById('q').value = q; }
   const title = q ? `Hasil untuk “${esc(q)}”` : catId ? esc(catOf(catId).name||'Kategori') : 'Semua Produk';
-  app.innerHTML = `<h1 class="page-title">${title}</h1>${ps.length?`<div class="grid">${ps.map(card).join('')}</div>`:`<div class="empty"><h3>Produk tidak ditemukan</h3>Coba kata kunci lain.</div>`}`;
+  const sorters = { rek:null, murah:(a,b)=>a.from-b.from, mahal:(a,b)=>b.from-a.from, diskon:(a,b)=>((b.fromNormal-b.from)/b.fromNormal)-((a.fromNormal-a.from)/a.fromNormal) };
+  if(sorters[listSort]) ps = ps.slice().sort(sorters[listSort]);
+  const cats = CAT.categories.filter(c=>products().some(p=>p.categoryId===c.id));
+  app.innerHTML = `<h1 class="page-title">${title}</h1>
+    <div class="sortbar" role="toolbar" aria-label="Urutkan">
+      ${[['rek','Rekomendasi'],['murah','Termurah'],['mahal','Termahal'],['diskon','Diskon terbesar']].map(([k,l])=>`<button data-sort="${k}" aria-pressed="${listSort===k}">${l}</button>`).join('')}
+      ${!q && cats.length>1 ? `<span class="sep"></span>${cats.map(c=>`<button data-cat="${esc(c.id)}" aria-pressed="${c.id===catId}">${esc(c.icon||'')} ${esc(c.name)}</button>`).join('')}` : ''}
+    </div>
+    ${ps.length?`<p class="count-note">${ps.length} produk</p><div class="grid">${ps.map(card).join('')}</div>`:`<div class="empty"><span class="big">🔍</span><h3>Produk tidak ditemukan</h3>Coba kata kunci lain.</div>`}`;
   hydrate(app);
+  app.querySelectorAll('[data-sort]').forEach(b=>b.onclick = ()=>{ listSort = b.dataset.sort; viewList(catId, q); });
+  app.querySelectorAll('[data-cat]').forEach(b=>b.onclick = ()=>{ location.hash = '#/c/'+enc(b.dataset.cat === catId ? '' : b.dataset.cat); });
 }
 function viewPromo(){
   const promo = CAT.banners.filter(b=>b.kind==='promo'||b.kind==='iklan');
@@ -500,6 +719,7 @@ function chipRow(attr, list, sel, sub, disabled){ return `<div class="chips" rol
 function viewProduct(kind, id){
   const p = products().find(x=>x.kind===kind && x.id===id);
   if(!p){ app.innerHTML = `<div class="empty"><h3>Produk tidak tersedia</h3><a href="#/">Kembali ke beranda</a></div>`; return; }
+  pushRecent(pkey(p));
   const d = p.data; const saved = LS.get('car', {});
   const allowedCars = kind==='generic' && Array.isArray(d.cars) ? d.cars : null;
   const carOk = c=>!allowedCars || allowedCars.includes(carLabel(c));
@@ -531,6 +751,7 @@ function viewProduct(kind, id){
         <div class="panel">
           <div class="pcat">${esc(catOf(p.categoryId).name||'')}${p.brand?' · '+esc(p.brand):''}</div>
           <h1 class="d-title">${esc(p.name)}</h1>
+          <div class="d-actions"><button data-fav="${esc(pkey(p))}" data-label="1" aria-pressed="${isFav(pkey(p))}">${HEART}<span>${isFav(pkey(p))?'Difavoritkan':'Favorit'}</span></button><button data-share="${esc(p.name)}">${SHARE}<span>Bagikan</span></button></div>
           <div><span class="d-price">${normal ? rp(amount) : 'mulai '+rp(p.from)}</span>${normal && d.deal && amountNormal>amount ? `<span class="d-strike">${rp(amountNormal)}</span>`:''}</div>
           ${p.deal?`<div class="vbadge">🔥 Deal ${esc(dealTag(p.deal))}${p.deal.until?` · s/d ${new Date(p.deal.until+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'})}`:''}</div>`:''}
           <div class="opt"><div class="opt-label">Mobil kamu ${needCar?'':'<span>opsional</span>'}</div>
@@ -857,6 +1078,7 @@ async function viewAccount(){
       <button class="btn" id="asave">Simpan</button></div>
     <div class="panel" style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
       <a class="btn line block" href="#/orders">Riwayat pembelian</a>
+      <a class="btn line block" href="#/fav">🤍 Favorit saya</a>
       <button class="btn line block" id="alogout" style="color:var(--price);border-color:var(--price)">Keluar</button></div>`;
   document.getElementById('asave').onclick = async ()=>{
     const wa = document.getElementById('aw').value.trim(), alamat = document.getElementById('aa').value.trim();
@@ -889,6 +1111,29 @@ async function boot(){
 }
 boot();
 
+
+/* Ruang bawah otomatis: konten tidak pernah tertutup menu bawah / bar harga */
+(function(){
+  let raf = 0;
+  function measure(){
+    raf = 0;
+    let h = 0;
+    document.querySelectorAll('.bnav, .buybar, .checkout-bar, .sticky-bottom').forEach(el=>{
+      const cs = getComputedStyle(el);
+      if(cs.display==='none' || cs.visibility==='hidden' || cs.position!=='fixed') return;
+      const r = el.getBoundingClientRect();
+      if(r.height && r.bottom >= window.innerHeight - 2) h = Math.max(h, r.height);
+    });
+    const space = Math.max(40, Math.ceil(h) + 28);
+    document.documentElement.style.setProperty('--bottom-space', space + 'px');
+  }
+  function schedule(){ if(!raf) raf = requestAnimationFrame(measure); }
+  window.addEventListener('resize', schedule);
+  window.addEventListener('hashchange', ()=>setTimeout(schedule, 0));
+  new MutationObserver(schedule).observe(document.body, { childList:true, subtree:true, attributes:true, attributeFilter:['class','style'] });
+  if(window.ResizeObserver){ const ro = new ResizeObserver(schedule); document.querySelectorAll('.bnav').forEach(el=>ro.observe(el)); }
+  schedule();
+})();
 </script>
 </body>
 </html>
