@@ -3,11 +3,13 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>Toko Aksesoris</title>
+<title>Toko Aksesoris Mobil</title>
 <meta name="theme-color" content="#16202B">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
 <style>
 :root{
   --ink:#16202B; --ink-2:#2A3644; --blue:#1F4FD1; --blue-soft:#E6EDFC; --amber:#FFB020; --amber-soft:#FFF4DC;
@@ -199,496 +201,694 @@ textarea.inp{resize:vertical;min-height:70px}
 @keyframes sk{to{background-position:-200% 0}}
 @media (prefers-reduced-motion:reduce){ .skel{animation:none} }
 .foot{color:var(--muted);font-size:12.5px;text-align:center;padding:30px 0 10px}
+
+/* v2 additions */
+.top .acct{color:#fff}
+@media (max-width:899px){ .detail{padding-bottom:calc(120px + env(safe-area-inset-bottom,0px))} }
+.subchips{margin-top:10px;padding:12px;border:1px dashed var(--line);border-radius:12px;background:#FAFBFD}
+.subchips .opt-label{font-weight:600}
+.car-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.deal-tag{background:var(--price);color:#fff}
+.pprice s{display:block;color:var(--muted);font-weight:600;font-size:12px}
+.promo-box{display:flex;gap:8px;margin-top:12px}
+.promo-box input{flex:1;text-transform:uppercase;letter-spacing:.05em}
+.promo-box .btn{height:44px}
+.promo-ok{display:flex;justify-content:space-between;align-items:center;gap:8px;background:#E3F6EE;border:1px solid #BFE8D5;color:#0B6B47;border-radius:10px;padding:9px 12px;font-weight:700;font-size:13px;margin-top:12px}
+.pcode{border:1.5px dashed var(--amber);background:var(--amber-soft);border-radius:var(--r-md);padding:14px 16px;display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:10px}
+.pcode b{font-family:ui-monospace,Menlo,monospace;font-size:17px;letter-spacing:.06em}
+.pcode small{display:block;color:#8A5A00;font-weight:600}
+.auth-card{max-width:440px;margin:24px auto 0}
+.auth-card h1{font-size:23px;letter-spacing:-.02em;margin:0 0 4px}
+.auth-card p.sub{color:var(--muted);margin:0 0 18px}
+.auth-alt{text-align:center;margin-top:14px;font-size:13.5px;color:var(--muted)}
+.auth-alt a{color:var(--blue);font-weight:700;text-decoration:none}
+.pw{position:relative}
+.pw button{all:unset;cursor:pointer;position:absolute;right:10px;top:50%;transform:translateY(-50%);font-size:12px;font-weight:700;color:var(--blue)}
+.ok-msg{background:#E3F6EE;color:#0B6B47;border-radius:10px;padding:12px 14px;font-weight:600}
+.acct-head{display:flex;gap:14px;align-items:center;background:var(--ink);color:#fff;border-radius:var(--r-lg);padding:18px;margin-top:16px}
+.avatar{width:52px;height:52px;border-radius:50%;background:var(--amber);color:var(--ink);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:20px;flex:none}
+.cat-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:18px 0 6px}
+@media (max-width:640px){ .cat-grid{grid-template-columns:repeat(4,1fr);gap:8px} }
+.cat-tile{all:unset;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:6px;text-align:center;font-size:12px;font-weight:700;line-height:1.25}
+.cat-tile .ico{width:54px;height:54px;border-radius:16px;background:var(--card);border:1px solid var(--line);display:flex;align-items:center;justify-content:center;font-size:24px}
+.cat-tile:hover .ico{border-color:var(--blue)}
 </style>
 </head>
 <body>
 <header class="top">
   <div class="wrap">
-    <a class="brand" href="#/" id="brand"><img id="logo" alt="" hidden><span class="brand-name" id="storeName">Toko Aksesoris</span></a>
+    <a class="brand" href="#/" id="brand"><img id="logo" alt="" hidden><span class="brand-name" id="storeName">Toko Aksesoris Mobil</span></a>
     <label class="search"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
       <input id="q" type="search" placeholder="Cari kaca film, karpet..." aria-label="Cari produk"></label>
     <a class="icon-btn" href="#/cart" aria-label="Keranjang"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.5L21 8H6"/><circle cx="10" cy="20" r="1.4"/><circle cx="18" cy="20" r="1.4"/></svg><span class="count" id="cartCount"></span></a>
+    <a class="icon-btn acct" href="#/account" id="acctBtn" aria-label="Masuk"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/></svg></a>
   </div>
 </header>
 <main id="app" class="wrap" aria-live="polite"></main>
 <nav class="bnav" id="bnav" aria-label="Navigasi">
   <a href="#/" data-nav="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
-  <a href="#/c/film" data-nav="film"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="M3 15 9 9l5 5 3-3 4 4" /></svg>Kaca Film</a>
-  <a href="#/c/karpet" data-nav="karpet"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="3" width="16" height="18" rx="3"/><path d="M8 7h8M8 11h8M8 15h5"/></svg>Karpet</a>
+  <a href="#/promo" data-nav="promo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Promo</a>
+  <a href="#/deal" data-nav="deal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5.5 2 1.5 3 3 3-1-3 0-6 0-8.5z"/></svg>Deal</a>
   <a href="#/cart" data-nav="cart"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.5L21 8H6"/></svg>Keranjang<span class="count" id="cartCount2"></span></a>
   <a href="#/orders" data-nav="orders"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Pesanan</a>
 </nav>
-
 <script>
 /* =====================================================================
-   Toko aksesoris — front end.
-   Katalog, harga, banner, pembayaran & pengiriman diatur dari Drive Desk
-   (menu Toko Online) dan dibaca dari Firebase Realtime Database.
+   Toko aksesoris mobil — front end (independen, pemasangan di alamat pembeli).
+   Katalog, harga, kode promo, banner, pembayaran diatur dari Drive Desk
+   (menu Toko Online) lewat Firebase Realtime Database.
    Isi DB_URL di bawah, atau buka toko dengan ?db=<database URL>.
    ===================================================================== */
 const DB_URL = '';
 
 const LS = { get:(k,d)=>{ try{ const v = localStorage.getItem('toko:'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
-             set:(k,v)=>{ try{ localStorage.setItem('toko:'+k, JSON.stringify(v)); }catch(e){} } };
-function dbUrl(){
-  const qp = new URLSearchParams(location.search).get('db');
-  if(qp){ LS.set('db', qp); }
-  return (DB_URL || qp || LS.get('db','') || '').replace(/\/+$/,'');
-}
+             set:(k,v)=>{ try{ localStorage.setItem('toko:'+k, JSON.stringify(v)); }catch(e){} },
+             del:k=>{ try{ localStorage.removeItem('toko:'+k); }catch(e){} } };
+function dbUrl(){ const qp = new URLSearchParams(location.search).get('db'); if(qp) LS.set('db', qp); return (DB_URL || qp || LS.get('db','') || '').replace(/\/+$/,''); }
 const DB = dbUrl();
-async function api(path, opts){
-  const r = await fetch(`${DB}/${path}.json`, Object.assign({ headers:{'Content-Type':'application/json'} }, opts||{}));
+let auth = null, user = null, profile = null;
+async function api(path, opts, needAuth){
+  let q = '';
+  if(needAuth){ if(!user) throw new Error('not-signed-in'); q = '?auth=' + encodeURIComponent(await user.getIdToken()); }
+  const r = await fetch(`${DB}/${path}.json${q}`, Object.assign({ headers:{'Content-Type':'application/json'} }, opts||{}));
   if(!r.ok) throw new Error('HTTP '+r.status);
   return r.json();
 }
 
 let CAT = null;
 const imgCache = {};
-async function imgSrc(id){
-  if(!id) return '';
-  if(imgCache[id]) return imgCache[id];
-  imgCache[id] = api('pos/images/'+id).then(v=>v||'').catch(()=>'');
-  return imgCache[id];
-}
-function hydrate(root){ (root||document).querySelectorAll('img[data-img]').forEach(async el=>{ const s = await imgSrc(el.dataset.img); if(s){ el.src = s; el.hidden = false; const ph = el.parentElement.querySelector('.ph'); if(ph) ph.remove(); } }); }
-
+function imgSrc(id){ if(!id) return Promise.resolve(''); if(!imgCache[id]) imgCache[id] = api('pos/images/'+id).then(v=>v||'').catch(()=>''); return imgCache[id]; }
+function hydrate(root){ (root||document).querySelectorAll('img[data-img]').forEach(async el=>{ const s = await imgSrc(el.dataset.img); if(s){ el.src = s; el.hidden = false; const ph = el.parentElement && el.parentElement.querySelector('.ph'); if(ph) ph.remove(); } }); }
 const esc = v => String(v==null?'':v).replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const rp = n => 'Rp' + Math.round(Number(n)||0).toLocaleString('id-ID');
 const enc = v => encodeURIComponent(v);
-function toast(msg){ const t = document.createElement('div'); t.className='toast'; t.role='status'; t.textContent = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2600); }
+const today = ()=>{ const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`; };
+function toast(msg){ const t = document.createElement('div'); t.className='toast'; t.setAttribute('role','status'); t.textContent = msg; document.body.appendChild(t); setTimeout(()=>t.remove(), 2800); }
 function waLink(phone, text){ let n = String(phone||'').replace(/\D/g,''); if(n.startsWith('0')) n = '62'+n.slice(1); return `https://wa.me/${n}?text=${encodeURIComponent(text||'')}`; }
+async function sha(text){ const b = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(text)); return [...new Uint8Array(b)].map(x=>x.toString(16).padStart(2,'0')).join(''); }
 
-/* ---------- produk dari katalog ---------- */
+/* ---------- produk ---------- */
+function dealOn(d){ return !!(d && d.value>0 && (!d.until || d.until>=today())); }
+function applyDeal(price, d){ if(!dealOn(d)) return price; return d.type==='persen' ? Math.round(price*(1-d.value/100)) : Math.max(0, price-d.value); }
+function dealTag(d){ return d.type==='persen' ? `-${d.value}%` : `Hemat ${rp(d.value)}`; }
+function catOf(id){ return (CAT.categories||[]).find(c=>c.id===id) || {}; }
 function products(){
   if(!CAT) return [];
   const out = [];
-  (CAT.film && CAT.film.brands || []).forEach(b=>{
-    const prices = Object.values(b.prices||{}).filter(v=>v>0);
-    out.push({ kind:'film', id:b.name, name:'Kaca Film '+b.name, brand:b.name, badge:b.badge, images:b.images||[], from:Math.min(...prices), data:b });
-  });
-  (CAT.carpets||[]).forEach(c=>{
-    const prices = Object.values(c.prices||{}).flatMap(m=>Object.values(m||{})).filter(v=>v>0);
-    out.push({ kind:'karpet', id:c.id, name:'Karpet Custom '+c.name, brand:c.name, images:c.images||[], from:Math.min(...prices), data:c });
-  });
+  const push = (kind, id, categoryId, name, brand, badge, images, prices, deal, data)=>{
+    const p = prices.filter(v=>v>0); if(!p.length) return;
+    const min = Math.min(...p); out.push({ kind, id, categoryId, name, brand, badge, images:images||[], fromNormal:min, from:applyDeal(min, deal), deal: dealOn(deal)?deal:null, data });
+  };
+  CAT.film.brands.forEach(b=>push('film', b.id, 'cat_film', 'Kaca Film '+b.name, b.name, b.badge, b.images, Object.values(b.prices), b.deal, b));
+  CAT.carpets.forEach(c=>push('karpet', c.id, 'cat_karpet', 'Karpet Custom '+c.name, c.name, '', c.images, Object.values(c.prices).flatMap(m=>Object.values(m||{})), c.deal, c));
+  CAT.products.forEach(x=>push('generic', x.id, x.categoryId, x.name, x.brand, '', x.images, (x.variants||[]).map(v=>Number(v.price)), x.deal, x));
   return out;
 }
-function vouchersFor(kind, brand){
-  const scope = kind==='film' ? 'kacafilm' : 'karpet';
-  return (CAT.vouchers||[]).filter(v=>v.scope===scope && (!v.vendor || v.vendor===brand));
-}
-function cut(price, v){ if(!v) return 0; const d = v.type==='persen' ? price*v.value/100 : v.value; return Math.max(0, Math.min(price, Math.round(d))); }
-function vTag(v){ return v.type==='persen' ? `Diskon ${v.value}%` : `Potongan ${rp(v.value)}`; }
-function bestVoucher(kind, brand, amount){ let best=null, bc=0; vouchersFor(kind,brand).forEach(v=>{ const c = cut(amount,v); if(c>bc){ bc=c; best=v; } }); return best; }
-function productUrl(p){ return p.kind==='film' ? `#/film/${enc(p.id)}` : `#/karpet/${enc(p.id)}`; }
+function productUrl(p){ return `#/p/${p.kind}/${enc(p.id)}`; }
 function shadeColor(pct){ const a = Math.min(.92, Number(String(pct).replace('%',''))/100); return `rgba(22,32,43,${a})`; }
+function sideLabel(k){ return ((CAT.film.sides||[]).find(s=>s.key===k)||{}).label || k; }
+function carLabel(c){ return c && c.brand && c.model ? `${c.brand} ${c.model}` : ''; }
 
-/* ---------- cart ---------- */
-let cart = LS.get('cart', []);
-function saveCart(){ LS.set('cart', cart); const n = cart.reduce((s,i)=>s+i.qty,0); ['cartCount','cartCount2'].forEach(id=>document.getElementById(id).textContent = n||''); }
-function itemPrice(it){
-  // harga selalu dihitung ulang dari katalog terbaru
-  if(it.kind==='film'){ const b = (CAT.film.brands||[]).find(x=>x.name===it.brand); return b ? Number(b.prices[it.pkg])||0 : 0; }
-  const c = (CAT.carpets||[]).find(x=>x.id===it.pid); return c ? Number((c.prices[it.model]||{})[it.pkg])||0 : 0;
+/* ---------- keranjang & kode promo ---------- */
+let cart = LS.get('cart2', []);
+function saveCart(){ LS.set('cart2', cart); const n = cart.reduce((s,i)=>s+i.qty,0); ['cartCount','cartCount2'].forEach(id=>{ const el = document.getElementById(id); if(el) el.textContent = n||''; }); }
+function itemPrices(it){
+  let normal = 0, deal = null;
+  if(it.kind==='film'){ const b = CAT.film.brands.find(x=>x.id===it.pid); if(b){ normal = Number(b.prices[it.pkg])||0; deal = b.deal; } }
+  else if(it.kind==='karpet'){ const c = CAT.carpets.find(x=>x.id===it.pid); if(c){ normal = Number((c.prices[it.car]||{})[it.pkg])||0; deal = c.deal; } }
+  else { const x = CAT.products.find(y=>y.id===it.pid); if(x){ const v = (x.variants||[]).find(v=>v.name===it.variant); normal = v ? Number(v.price)||0 : 0; deal = x.deal; } }
+  return { normal, price: applyDeal(normal, deal), deal: dealOn(deal) ? deal : null };
 }
-function itemVoucher(it){ if(!it.voucherId) return null; return vouchersFor(it.kind, it.brand).find(v=>v.id===it.voucherId) || null; }
+let promoState = { code: LS.get('promo',''), promo:null, error:'' };
+async function resolvePromo(){
+  promoState.promo = null; promoState.error = '';
+  const code = (promoState.code||'').trim().toUpperCase(); if(!code) return;
+  const h = await sha(code);
+  const p = (CAT.promos||[]).find(x=>x.hash===h && (!x.until || x.until>=today()));
+  if(!p){ promoState.error = 'Kode promo tidak ditemukan atau sudah berakhir.'; return; }
+  promoState.promo = Object.assign({}, p, { code });
+}
+function totals(){
+  let sub = 0, eligible = 0;
+  const lines = cart.map(it=>{ const pr = itemPrices(it); const amount = pr.price*it.qty; sub += amount;
+    const p = promoState.promo; if(p && (p.scope==='all' || p.scope===it.categoryId)) eligible += amount; return Object.assign({ it, amount }, pr); });
+  let disc = 0, promoMsg = '';
+  const p = promoState.promo;
+  if(p){
+    if(!eligible) promoMsg = `Kode ${p.code} hanya berlaku untuk ${esc(catOf(p.scope).name||'produk tertentu')}.`;
+    else if(p.minSpend && eligible < p.minSpend) promoMsg = `Kode ${p.code} butuh minimal belanja ${rp(p.minSpend)}.`;
+    else disc = p.type==='persen' ? Math.round(eligible*p.value/100) : Math.min(p.value, eligible);
+  }
+  return { lines, sub, disc, promoMsg };
+}
+
+/* ---------- auth ---------- */
+function initAuth(){
+  if(typeof firebase==='undefined' || !CAT.auth || !CAT.auth.apiKey) return;
+  try{
+    const app = firebase.apps.length ? firebase.app() : firebase.initializeApp({ apiKey:CAT.auth.apiKey, authDomain:CAT.auth.authDomain, projectId:CAT.auth.projectId, databaseURL:CAT.auth.databaseURL, appId:CAT.auth.appId });
+    auth = app.auth(); auth.languageCode = 'id';
+    auth.onAuthStateChanged(async u=>{
+      user = u;
+      if(u){ try{ const pr = await api('shop/customers/'+u.uid, null, true); if(pr) profile = pr; }catch(e){} } else profile = null;
+      updateAcctIcon();
+      const h = location.hash;
+      if(authWaiters.length){ authWaiters.splice(0).forEach(f=>f()); }
+      else if(booted && !/^#\/(login|register|forgot)/.test(h)) route();
+    });
+  }catch(e){ console.error('auth init', e); }
+}
+let booted = false; const authWaiters = [];
+function authReady(){ return new Promise(r=>{ if(!auth || booted) return r(); authWaiters.push(r); setTimeout(r, 4000); }); }
+function updateAcctIcon(){ const a = document.getElementById('acctBtn'); if(a) a.setAttribute('aria-label', user ? 'Akun saya' : 'Masuk'); }
+function authErr(e){
+  const c = (e && e.code)||'';
+  if(c.includes('invalid-credential')||c.includes('wrong-password')||c.includes('user-not-found')) return 'Email atau password salah.';
+  if(c.includes('email-already-in-use')) return 'Email ini sudah terdaftar. Silakan masuk.';
+  if(c.includes('weak-password')) return 'Password minimal 6 karakter.';
+  if(c.includes('invalid-email')) return 'Format email tidak valid.';
+  if(c.includes('too-many-requests')) return 'Terlalu banyak percobaan. Coba lagi beberapa menit lagi.';
+  if(c.includes('network')) return 'Koneksi internet bermasalah.';
+  if(c.includes('operation-not-allowed')) return 'Login email belum diaktifkan oleh admin toko.';
+  return 'Terjadi kesalahan. Coba lagi.';
+}
+function requireLogin(next){ if(user) return true; location.hash = '#/login/' + enc(next||''); return false; }
 
 /* ---------- routing ---------- */
 const app = document.getElementById('app');
+let slideTimer = null;
 function route(){
+  clearInterval(slideTimer);
   const h = location.hash.replace(/^#/,'') || '/';
   const parts = h.split('/').filter(Boolean).map(decodeURIComponent);
-  document.body.classList.remove('hide-bnav');
-  const nav = parts[0]==='c' ? parts[1] : parts[0]==='cart' ? 'cart' : (parts[0]==='orders'||parts[0]==='order') ? 'orders' : parts.length ? '' : 'home';
+  const hideNav = ['p','checkout','login','register','forgot'].includes(parts[0]);
+  document.body.classList.toggle('hide-bnav', hideNav);
+  const nav = !parts.length ? 'home' : parts[0]==='promo' ? 'promo' : parts[0]==='deal' ? 'deal' : parts[0]==='cart' ? 'cart' : (parts[0]==='orders'||parts[0]==='order') ? 'orders' : '';
   document.querySelectorAll('.bnav a').forEach(a=>{ if(a.dataset.nav===nav) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
   window.scrollTo(0,0);
   if(!CAT) return;
-  if(!parts.length) return viewHome();
-  if(parts[0]==='c') return viewList(parts[1]);
-  if(parts[0]==='search') return viewList('', parts[1]||'');
-  if(parts[0]==='film' || parts[0]==='karpet') return viewProduct(parts[0], parts[1]);
-  if(parts[0]==='cart') return viewCart();
-  if(parts[0]==='checkout'){ document.body.classList.add('hide-bnav'); return viewCheckout(); }
-  if(parts[0]==='order') return viewOrder(parts[1]);
-  if(parts[0]==='orders') return viewOrders();
+  const [a, b, c] = parts;
+  if(!a) return viewHome();
+  if(a==='c') return viewList(b);
+  if(a==='search') return viewList('', b||'');
+  if(a==='promo') return viewPromo();
+  if(a==='deal') return viewDeal();
+  if(a==='p') return viewProduct(b, c);
+  if(a==='cart') return viewCart();
+  if(a==='checkout') return viewCheckout();
+  if(a==='order') return viewOrder(b);
+  if(a==='orders') return viewOrders();
+  if(a==='login') return viewLogin(b||'');
+  if(a==='register') return viewRegister(b||'');
+  if(a==='forgot') return viewForgot();
+  if(a==='account') return viewAccount();
   viewHome();
 }
 window.addEventListener('hashchange', route);
 document.getElementById('q').addEventListener('keydown', e=>{ if(e.key==='Enter'){ const v = e.target.value.trim(); location.hash = v ? '#/search/'+enc(v) : '#/'; e.target.blur(); } });
 
-/* ---------- views ---------- */
+/* ---------- kartu produk ---------- */
 function card(p){
-  const v = vouchersFor(p.kind, p.brand).sort((a,b)=>cut(p.from,b)-cut(p.from,a))[0];
   const swatch = p.kind==='film' ? `<div class="swatch" aria-hidden="true">${[...new Set(Object.values(p.data.shades||{}).flat())].sort((a,b)=>parseInt(a)-parseInt(b)).map(s=>`<span style="background:${shadeColor(s)}"></span>`).join('')}</div>` : '';
   return `<a class="pcard" href="${productUrl(p)}">
-    <div class="pimg">${p.images[0]?`<img data-img="${p.images[0]}" alt="" hidden>`:''}<div class="ph" aria-hidden="true">${p.kind==='film'?'🪟':'🧶'}</div>
-      ${v?`<span class="tag">${esc(vTag(v))}</span>`:''}${p.badge?`<span class="tag dark">${esc(p.badge)}</span>`:''}</div>
-    <div class="pbody"><span class="pcat">${p.kind==='film'?'Kaca Film':'Karpet Custom'}</span><span class="pname">${esc(p.name)}</span>${swatch}
-      <span class="pprice"><small>mulai dari</small>${rp(p.from)}</span></div></a>`;
+    <div class="pimg">${p.images[0]?`<img data-img="${p.images[0]}" alt="" hidden>`:''}<div class="ph" aria-hidden="true">${esc(catOf(p.categoryId).icon||'🛒')}</div>
+      ${p.deal?`<span class="tag deal-tag">${esc(dealTag(p.deal))}</span>`:''}${p.badge?`<span class="tag dark">${esc(p.badge)}</span>`:''}</div>
+    <div class="pbody"><span class="pcat">${esc(catOf(p.categoryId).name||'')}</span><span class="pname">${esc(p.name)}</span>${swatch}
+      <span class="pprice"><small>mulai dari</small>${rp(p.from)}${p.deal?`<s>${rp(p.fromNormal)}</s>`:''}</span></div></a>`;
 }
 function bannerGo(link){
   if(!link || link.type==='none') return;
-  if(link.type==='cat') location.hash = '#/c/'+link.value;
-  else if(link.type==='film') location.hash = '#/film/'+enc(link.value);
-  else if(link.type==='karpet') location.hash = '#/karpet/'+enc(link.value);
+  if(link.type==='cat') location.hash = '#/c/'+enc(link.value);
+  else if(link.type==='page') location.hash = '#/'+(link.value==='deal'?'deal':'promo');
   else if(link.type==='url') window.open(link.value, '_blank', 'noopener');
 }
-let slideTimer = null;
-function viewHome(){
-  const promo = (CAT.banners||[]).filter(b=>b.kind==='promo');
-  const iklan = (CAT.banners||[]).filter(b=>b.kind==='iklan');
-  const ps = products();
-  const film = ps.filter(p=>p.kind==='film'), karpet = ps.filter(p=>p.kind==='karpet');
-  app.innerHTML = `
-    ${promo.length ? `<section class="hero" aria-label="Promo"><div class="slides" id="slides">${promo.map((b,i)=>`<button class="slide" data-i="${i}" aria-label="${esc(b.title||'Promo')}"><img data-img="${b.img}" alt="${esc(b.title||'')}" hidden></button>`).join('')}</div>
-      ${promo.length>1?`<div class="dots" id="dots">${promo.map((b,i)=>`<button aria-label="Slide ${i+1}" data-i="${i}" class="${i?'':'on'}"></button>`).join('')}</div>`:''}</section>` : ''}
-    <div class="cats" role="list">
-      <a class="cat" href="#/c/film" role="listitem"><span class="ico" style="background:#E6EDFC">🪟</span>Kaca Film</a>
-      <a class="cat" href="#/c/karpet" role="listitem"><span class="ico" style="background:#FFF4DC">🧶</span>Karpet Custom</a>
-      <a class="cat" href="#/orders" role="listitem"><span class="ico" style="background:#E3F6EE">🧾</span>Cek Pesanan</a>
-    </div>
-    ${film.length?`<div class="sec-head"><h2>Kaca Film</h2><a href="#/c/film">Lihat semua</a></div><div class="grid">${film.map(card).join('')}</div>`:''}
-    ${iklan.length?`<div class="ads">${iklan.map((b,i)=>`<button data-ad="${i}" aria-label="${esc(b.title||'Iklan')}"><img data-img="${b.img}" alt="${esc(b.title||'')}" hidden></button>`).join('')}</div>`:''}
-    ${karpet.length?`<div class="sec-head"><h2>Karpet Custom</h2><a href="#/c/karpet">Lihat semua</a></div><div class="grid">${karpet.map(card).join('')}</div>`:''}
-    ${!ps.length?`<div class="empty"><h3>Katalog sedang disiapkan</h3>Produk akan tampil begitu admin mengisi harga di Drive Desk.</div>`:''}
-    <p class="foot">${esc(CAT.store.name)}${CAT.store.address?' · '+esc(CAT.store.address):''}${CAT.store.wa?` · <a href="${waLink(CAT.store.wa,'Halo, saya mau tanya produk aksesoris')}" target="_blank" rel="noopener">Chat admin</a>`:''}</p>`;
-  hydrate(app);
-  app.querySelectorAll('.slide').forEach(el=>el.addEventListener('click', ()=>bannerGo(promo[el.dataset.i].link)));
-  app.querySelectorAll('[data-ad]').forEach(el=>el.addEventListener('click', ()=>bannerGo(iklan[el.dataset.ad].link)));
-  const slides = document.getElementById('slides'), dots = document.getElementById('dots');
-  clearInterval(slideTimer);
-  if(slides && dots){
-    const go = i=>slides.scrollTo({ left: i*slides.clientWidth, behavior:'smooth' });
-    dots.querySelectorAll('button').forEach(d=>d.addEventListener('click', ()=>go(+d.dataset.i)));
-    slides.addEventListener('scroll', ()=>{ const i = Math.round(slides.scrollLeft/slides.clientWidth); dots.querySelectorAll('button').forEach((d,j)=>d.classList.toggle('on', i===j)); }, { passive:true });
-    if(!matchMedia('(prefers-reduced-motion: reduce)').matches){
-      slideTimer = setInterval(()=>{ if(!document.body.contains(slides)) return clearInterval(slideTimer); const i = Math.round(slides.scrollLeft/slides.clientWidth); go((i+1)%promo.length); }, 5000);
-    }
-  }
+function carousel(list){
+  if(!list.length) return '';
+  return `<section class="hero" aria-label="Promo"><div class="slides" id="slides">${list.map((b,i)=>`<button class="slide" data-i="${i}" aria-label="${esc(b.title||'Promo')}"><img data-img="${b.img}" alt="${esc(b.title||'')}" hidden></button>`).join('')}</div>
+    ${list.length>1?`<div class="dots" id="dots">${list.map((b,i)=>`<button aria-label="Slide ${i+1}" data-i="${i}" class="${i?'':'on'}"></button>`).join('')}</div>`:''}</section>`;
 }
-function viewList(kind, q){
-  clearInterval(slideTimer);
+function bindCarousel(list){
+  app.querySelectorAll('.slide').forEach(el=>el.addEventListener('click', ()=>bannerGo(list[el.dataset.i].link)));
+  const slides = document.getElementById('slides'), dots = document.getElementById('dots');
+  if(!slides || !dots) return;
+  const go = i=>slides.scrollTo({ left:i*slides.clientWidth, behavior:'smooth' });
+  dots.querySelectorAll('button').forEach(d=>d.addEventListener('click', ()=>go(+d.dataset.i)));
+  slides.addEventListener('scroll', ()=>{ const i = Math.round(slides.scrollLeft/slides.clientWidth); dots.querySelectorAll('button').forEach((d,j)=>d.classList.toggle('on', i===j)); }, { passive:true });
+  if(!matchMedia('(prefers-reduced-motion: reduce)').matches) slideTimer = setInterval(()=>{ if(!document.body.contains(slides)) return clearInterval(slideTimer); const i = Math.round(slides.scrollLeft/slides.clientWidth); go((i+1)%list.length); }, 5000);
+}
+
+/* ---------- beranda, kategori, promo, deal ---------- */
+function viewHome(){
+  const promo = CAT.banners.filter(b=>b.kind==='promo'), iklan = CAT.banners.filter(b=>b.kind==='iklan');
+  const ps = products(); const deals = ps.filter(p=>p.deal);
+  const sections = CAT.categories.map(c=>{ const list = ps.filter(p=>p.categoryId===c.id); return list.length ? `<div class="sec-head"><h2>${esc(c.name)}</h2><a href="#/c/${enc(c.id)}">Lihat semua</a></div><div class="grid">${list.slice(0,8).map(card).join('')}</div>` : ''; });
+  if(iklan.length && sections.length) sections.splice(1, 0, `<div class="ads">${iklan.map((b,i)=>`<button data-ad="${i}" aria-label="${esc(b.title||'Iklan')}"><img data-img="${b.img}" alt="${esc(b.title||'')}" hidden></button>`).join('')}</div>`);
+  app.innerHTML = `${carousel(promo)}
+    <div class="cat-grid">${CAT.categories.map(c=>`<a class="cat-tile" href="#/c/${enc(c.id)}"><span class="ico" aria-hidden="true">${esc(c.icon)}</span>${esc(c.name)}</a>`).join('')}
+      <a class="cat-tile" href="#/deal"><span class="ico" aria-hidden="true">🔥</span>Deal</a></div>
+    ${deals.length?`<div class="sec-head"><h2>🔥 Lagi Deal</h2><a href="#/deal">Lihat semua</a></div><div class="grid">${deals.slice(0,4).map(card).join('')}</div>`:''}
+    ${sections.join('')}
+    ${!ps.length?`<div class="empty"><h3>Katalog sedang disiapkan</h3>Produk akan tampil begitu admin mengisi harga.</div>`:''}
+    <p class="foot">${esc(CAT.store.name)}${CAT.store.area?' · Pemasangan di '+esc(CAT.store.area):''}${CAT.store.wa?` · <a href="${waLink(CAT.store.wa,'Halo, saya mau tanya produk')}" target="_blank" rel="noopener">Chat admin</a>`:''}</p>`;
+  hydrate(app); bindCarousel(promo);
+  app.querySelectorAll('[data-ad]').forEach(el=>el.addEventListener('click', ()=>bannerGo(iklan[el.dataset.ad].link)));
+}
+function viewList(catId, q){
   let ps = products();
-  if(kind) ps = ps.filter(p=>p.kind===kind);
-  if(q){ const s = q.toLowerCase(); ps = ps.filter(p=>(p.name+' '+(p.data.desc||'')).toLowerCase().includes(s)); document.getElementById('q').value = q; }
-  const title = q ? `Hasil untuk “${esc(q)}”` : kind==='film' ? 'Kaca Film' : kind==='karpet' ? 'Karpet Custom' : 'Semua Produk';
-  app.innerHTML = `<h1 class="page-title">${title}</h1>${ps.length?`<div class="grid">${ps.map(card).join('')}</div>`:`<div class="empty"><h3>Produk tidak ditemukan</h3>Coba kata kunci lain, misalnya "film" atau "karpet".</div>`}`;
+  if(catId) ps = ps.filter(p=>p.categoryId===catId);
+  if(q){ const s = q.toLowerCase(); ps = ps.filter(p=>(p.name+' '+(p.brand||'')+' '+(p.data.desc||'')).toLowerCase().includes(s)); document.getElementById('q').value = q; }
+  const title = q ? `Hasil untuk “${esc(q)}”` : catId ? esc(catOf(catId).name||'Kategori') : 'Semua Produk';
+  app.innerHTML = `<h1 class="page-title">${title}</h1>${ps.length?`<div class="grid">${ps.map(card).join('')}</div>`:`<div class="empty"><h3>Produk tidak ditemukan</h3>Coba kata kunci lain.</div>`}`;
+  hydrate(app);
+}
+function viewPromo(){
+  const promo = CAT.banners.filter(b=>b.kind==='promo'||b.kind==='iklan');
+  const codes = (CAT.promos||[]).filter(p=>p.public && p.code);
+  app.innerHTML = `<h1 class="page-title">Promo</h1>${carousel(promo)}
+    <div class="sec-head"><h2>Kode promo</h2></div>
+    ${codes.length ? codes.map(p=>`<div class="pcode"><div><b>${esc(p.code)}</b><small>${esc(p.desc || (p.type==='persen'?`Diskon ${p.value}%`:`Potongan ${rp(p.value)}`))}${p.scope!=='all'?' · khusus '+esc(catOf(p.scope).name||''):''}${p.minSpend?` · min. ${rp(p.minSpend)}`:''}${p.until?` · s/d ${new Date(p.until+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'})}`:''}</small></div>
+      <button class="btn amber" style="height:38px;padding:0 14px;font-size:13px" data-use="${esc(p.code)}">Pakai</button></div>`).join('')
+      : '<div class="empty" style="margin-top:0">Belum ada kode promo publik saat ini.</div>'}
+    <div class="sec-head"><h2>Produk lagi deal</h2><a href="#/deal">Lihat semua</a></div>
+    <div class="grid">${products().filter(p=>p.deal).slice(0,8).map(card).join('') || ''}</div>`;
+  hydrate(app); bindCarousel(promo);
+  app.querySelectorAll('[data-use]').forEach(b=>b.onclick = ()=>{ promoState.code = b.dataset.use; LS.set('promo', promoState.code); toast(`Kode ${b.dataset.use} dipasang — potongan dihitung di keranjang`); });
+}
+function viewDeal(){
+  const ds = products().filter(p=>p.deal).sort((a,b)=>(b.fromNormal-b.from)-(a.fromNormal-a.from));
+  app.innerHTML = `<h1 class="page-title">🔥 Deal</h1>${ds.length?`<div class="grid">${ds.map(card).join('')}</div>`:'<div class="empty"><h3>Belum ada deal</h3>Cek lagi nanti atau lihat kode promo di menu Promo.</div>'}`;
   hydrate(app);
 }
 
-/* tint preview SVG — mobil tampak samping, kaca mengikuti kegelapan tiap sisi */
+/* ---------- detail produk ---------- */
 function tintSvg(sel, active){
   const glass = (k, d)=>{ const on = active.includes(k); const pct = on && sel[k] ? Number(sel[k].replace('%',''))/100 : 0;
     return `<path class="glass" d="${d}" fill="${on?'#16202B':'#9FC3DE'}" fill-opacity="${on ? (sel[k] ? Math.min(.93, .08+pct) : .15) : .55}" stroke="#16202B" stroke-opacity=".25"/>`; };
   return `<svg viewBox="0 0 360 150" role="img" aria-label="Pratinjau kegelapan kaca">
     <ellipse cx="180" cy="134" rx="160" ry="6" fill="#16202B" opacity=".08"/>
     <path d="M16 116 V94 Q18 82 36 78 L78 72 L116 40 Q124 33 137 33 H262 Q277 33 287 43 L320 76 Q340 80 344 96 V116 Z" fill="#fff" stroke="#16202B" stroke-width="2"/>
-    ${glass('depan','M84 71 L119 41 L131 41 L100 71 Z')}
-    ${glass('sampingDepan','M108 71 L136 42 L196 42 L196 71 Z')}
-    ${glass('sampingBelakang','M204 71 V42 H260 Q269 42 276 50 L293 71 Z')}
-    ${glass('belakang','M299 71 L282 47 Q286 43 290 46 L316 72 Z')}
+    ${glass('depan','M84 71 L119 41 L131 41 L100 71 Z')}${glass('sampingDepan','M108 71 L136 42 L196 42 L196 71 Z')}
+    ${glass('sampingBelakang','M204 71 V42 H260 Q269 42 276 50 L293 71 Z')}${glass('belakang','M299 71 L282 47 Q286 43 290 46 L316 72 Z')}
     <path d="M200 42 V110" stroke="#16202B" stroke-opacity=".25"/>
-    <circle cx="84" cy="116" r="19" fill="#16202B"/><circle cx="84" cy="116" r="8" fill="#B8C2CD"/>
-    <circle cx="282" cy="116" r="19" fill="#16202B"/><circle cx="282" cy="116" r="8" fill="#B8C2CD"/>
-  </svg>`;
+    <circle cx="84" cy="116" r="19" fill="#16202B"/><circle cx="84" cy="116" r="8" fill="#B8C2CD"/><circle cx="282" cy="116" r="19" fill="#16202B"/><circle cx="282" cy="116" r="8" fill="#B8C2CD"/></svg>`;
 }
-
 function gallery(images, ph){
-  return `<div class="gallery panel" style="padding:12px"><div class="main">${images[0]?`<img id="gMain" data-img="${images[0]}" alt="" hidden>`:''}<div class="ph" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px;color:#97A3B0">${ph}</div></div>
+  return `<div class="gallery panel" style="padding:12px"><div class="main">${images[0]?`<img id="gMain" data-img="${images[0]}" alt="" hidden>`:''}<div class="ph" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:60px;color:#97A3B0">${esc(ph)}</div></div>
     ${images.length>1?`<div class="thumbs">${images.map((id,i)=>`<button data-g="${id}" aria-current="${i===0}" aria-label="Foto ${i+1}"><img data-img="${id}" alt="" hidden></button>`).join('')}</div>`:''}</div>`;
 }
-function bindGallery(){
-  app.querySelectorAll('[data-g]').forEach(b=>b.addEventListener('click', async ()=>{
-    app.querySelectorAll('[data-g]').forEach(x=>x.setAttribute('aria-current', x===b)); const m = document.getElementById('gMain'); if(m){ m.src = await imgSrc(b.dataset.g); m.hidden=false; }
-  }));
-}
-function chipRow(name, list, sel, sub){ return `<div class="chips" role="group">${list.map(x=>`<button class="chip" data-${name}="${esc(x)}" aria-pressed="${x===sel}">${esc(x)}${sub?`<small>${sub(x)}</small>`:''}</button>`).join('')}</div>`; }
-
+function chipRow(attr, list, sel, sub, disabled){ return `<div class="chips" role="group">${list.map(x=>`<button class="chip" data-${attr}="${esc(x)}" aria-pressed="${x===sel}" ${disabled&&disabled(x)?'disabled':''}>${esc(x)}${sub?`<small>${sub(x)}</small>`:''}</button>`).join('')}</div>`; }
 function viewProduct(kind, id){
-  clearInterval(slideTimer);
   const p = products().find(x=>x.kind===kind && x.id===id);
   if(!p){ app.innerHTML = `<div class="empty"><h3>Produk tidak tersedia</h3><a href="#/">Kembali ke beranda</a></div>`; return; }
-  document.body.classList.add('hide-bnav');
-  const d = p.data; const models = CAT.models||[];
-  const st = { model:'', pkg:'', color:'', qty:1, sides:{} };
-  if(kind==='film'){ const pk = Object.keys(d.prices).filter(k=>d.prices[k]>0); st.pkg = pk.includes('Full') ? 'Full' : pk[0]; }
-  else { st.pkg = d.packages[0]; st.color = (d.colors||[])[0]||''; }
-
+  const d = p.data; const saved = LS.get('car', {});
+  const allowedCars = kind==='generic' && Array.isArray(d.cars) ? d.cars : null;
+  const carOk = c=>!allowedCars || allowedCars.includes(carLabel(c));
+  const st = { car: carOk(saved) && saved.brand ? { brand:saved.brand, model:saved.model } : { brand:'', model:'' }, mode:'', pkg:'', color:(d.colors||[])[0]||'', variant:'', qty:1, sides:{} };
+  const partials = kind==='film' ? Object.keys(CAT.film.packages).filter(k=>k!=='Full' && d.prices[k]>0) : [];
+  if(kind==='film'){ st.mode = d.prices.Full>0 ? 'Full' : 'Partial'; st.pkg = st.mode==='Full' ? 'Full' : (partials[0]||''); }
+  if(kind==='karpet') st.pkg = d.packages[0];
+  if(kind==='generic') st.variant = ((d.variants||[]).find(v=>v.price>0)||{}).name || '';
+  const brands = (CAT.cars||[]).filter(c=>!allowedCars || c.models.some(m=>allowedCars.includes(`${c.brand} ${m}`)));
   const draw = ()=>{
-    let price = 0, ready = true, missing = '';
-    if(kind==='film'){
-      price = Number(d.prices[st.pkg])||0;
-      const sides = CAT.film.packages[st.pkg]||[];
-      sides.forEach(s=>{ if(!st.sides[s]) { ready=false; missing = missing || 'Pilih kegelapan '+sideLabel(s); } });
-    } else {
-      price = st.model ? Number((d.prices[st.model]||{})[st.pkg])||0 : 0;
-      if(!st.model){ ready=false; missing='Pilih seri mobil'; } else if(!price){ ready=false; missing='Paket ini belum tersedia untuk '+st.model; }
-    }
-    if(!st.model && kind==='film'){ ready=false; missing = missing || 'Pilih seri mobil'; }
-    const amount = price*st.qty; const v = bestVoucher(kind, p.brand, amount || p.from); const c = cut(amount, v);
+    const y = window.scrollY;
+    const label = carLabel(st.car);
+    let normal = 0, ready = true, missing = '';
+    if(kind==='film') normal = Number(d.prices[st.pkg])||0;
+    if(kind==='karpet') normal = label ? Number((d.prices[label]||{})[st.pkg])||0 : 0;
+    if(kind==='generic') normal = Number(((d.variants||[]).find(v=>v.name===st.variant)||{}).price)||0;
+    const price = applyDeal(normal, d.deal);
+    const needCar = kind!=='generic' || !!allowedCars;
+    if(needCar && !label){ ready=false; missing='Pilih mobil kamu'; }
+    else if(kind==='film' && !st.pkg){ ready=false; missing='Pilih paket pemasangan'; }
+    else if(kind==='karpet' && !normal){ ready=false; missing='Paket belum tersedia untuk '+label; }
     const sides = kind==='film' ? (CAT.film.packages[st.pkg]||[]) : [];
+    if(ready) sides.forEach(s=>{ if(!st.sides[s] && ready){ ready=false; missing='Pilih kegelapan '+sideLabel(s); } });
+    const amount = price*st.qty, amountNormal = normal*st.qty;
+    const models = st.car.brand ? ((CAT.cars||[]).find(c=>c.brand===st.car.brand)||{models:[]}).models.filter(m=>!allowedCars || allowedCars.includes(`${st.car.brand} ${m}`)) : [];
     app.innerHTML = `<button class="back" onclick="history.length>1?history.back():location.hash='#/'">‹ Kembali</button>
       <div class="detail">
-        ${gallery(p.images, kind==='film'?'🪟':'🧶')}
+        ${gallery(p.images, catOf(p.categoryId).icon||'🛒')}
         <div class="panel">
-          <div class="pcat">${kind==='film'?'Kaca Film':'Karpet Custom'} · ${esc(p.brand)}</div>
+          <div class="pcat">${esc(catOf(p.categoryId).name||'')}${p.brand?' · '+esc(p.brand):''}</div>
           <h1 class="d-title">${esc(p.name)}</h1>
-          <div><span class="d-price">${price ? rp(amount-c) : 'mulai '+rp(p.from)}</span>${price && c ? `<span class="d-strike">${rp(amount)}</span>`:''}</div>
-          ${v?`<div class="vbadge">🎟️ ${esc(v.name)} · ${esc(vTag(v))}</div>`:''}
-          <div class="opt"><div class="opt-label">Seri mobil kamu</div>
-            <select class="inp" id="model"><option value="">Pilih seri Geely</option>${models.map(m=>`<option ${m===st.model?'selected':''}>${esc(m)}</option>`).join('')}</select></div>
+          <div><span class="d-price">${normal ? rp(amount) : 'mulai '+rp(p.from)}</span>${normal && d.deal && amountNormal>amount ? `<span class="d-strike">${rp(amountNormal)}</span>`:''}</div>
+          ${p.deal?`<div class="vbadge">🔥 Deal ${esc(dealTag(p.deal))}${p.deal.until?` · s/d ${new Date(p.deal.until+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'short'})}`:''}</div>`:''}
+          <div class="opt"><div class="opt-label">Mobil kamu ${needCar?'':'<span>opsional</span>'}</div>
+            <div class="car-pick"><select class="inp" id="carBrand" aria-label="Merek mobil"><option value="">Merek</option>${brands.map(c=>`<option ${c.brand===st.car.brand?'selected':''}>${esc(c.brand)}</option>`).join('')}</select>
+            <select class="inp" id="carModel" aria-label="Tipe mobil" ${st.car.brand?'':'disabled'}><option value="">Tipe</option>${models.map(m=>`<option ${m===st.car.model?'selected':''}>${esc(m)}</option>`).join('')}</select></div></div>
           ${kind==='film' ? `
-            <div class="opt"><div class="opt-label">Paket pemasangan</div>${chipRow('pkg', Object.keys(CAT.film.packages).filter(k=>d.prices[k]>0), st.pkg, k=>rp(d.prices[k]))}</div>
-            <div class="opt"><div class="opt-label">Kegelapan tiap sisi <span>semakin tinggi semakin gelap</span></div>
-              <div class="tint">${tintSvg(st.sides, sides)}
-                <div class="tint-legend">${sides.map(s=>`<span>${esc(sideLabel(s))}: <b>${esc(st.sides[s]||'—')}</b></span>`).join('')}</div></div>
-              ${sides.map(s=>`<div class="opt" style="margin-top:12px"><div class="opt-label" style="font-weight:600">${esc(sideLabel(s))}</div>${chipRow('shade-'+s, d.shades[s]||[], st.sides[s])}</div>`).join('')}
-            </div>` : `
-            <div class="opt"><div class="opt-label">Paket</div>${chipRow('pkg', d.packages, st.pkg, k=> st.model ? ((d.prices[st.model]||{})[k] ? rp(d.prices[st.model][k]) : 'tidak tersedia') : '')}</div>
+            <div class="opt"><div class="opt-label">Paket pemasangan</div>${chipRow('mode', [d.prices.Full>0?'Full':null, partials.length?'Partial':null].filter(Boolean), st.mode, m=> m==='Full' ? rp(applyDeal(d.prices.Full, d.deal)) : 'pilih bagian kaca')}
+              ${st.mode==='Partial' ? `<div class="subchips"><div class="opt-label">Bagian yang dipasang</div>${chipRow('pkg', partials, st.pkg, k=>rp(applyDeal(d.prices[k], d.deal)))}</div>` : ''}</div>
+            ${sides.length?`<div class="opt"><div class="opt-label">Kegelapan tiap sisi <span>semakin tinggi semakin gelap</span></div>
+              <div class="tint">${tintSvg(st.sides, sides)}<div class="tint-legend">${sides.map(s=>`<span>${esc(sideLabel(s))}: <b>${esc(st.sides[s]||'—')}</b></span>`).join('')}</div></div>
+              ${sides.map(s=>`<div class="opt" style="margin-top:12px"><div class="opt-label" style="font-weight:600">${esc(sideLabel(s))}</div>${chipRow('shade-'+s.toLowerCase(), d.shades[s]||[], st.sides[s])}</div>`).join('')}</div>`:''}`
+          : kind==='karpet' ? `
+            <div class="opt"><div class="opt-label">Paket</div>${chipRow('pkg', d.packages, st.pkg, k=> label ? ((d.prices[label]||{})[k] ? rp(applyDeal(d.prices[label][k], d.deal)) : 'tidak tersedia') : '', k=> !!label && !(d.prices[label]||{})[k])}</div>
             ${(d.colors||[]).length?`<div class="opt"><div class="opt-label">Warna</div>${chipRow('color', d.colors, st.color)}</div>`:''}
+            <div class="opt"><div class="opt-label">Jumlah</div><div class="qty"><button id="qm" aria-label="Kurangi">−</button><span>${st.qty}</span><button id="qp" aria-label="Tambah">+</button></div></div>`
+          : `
+            ${(d.variants||[]).length>1||((d.variants||[])[0]||{}).name!=='Standar' ? `<div class="opt"><div class="opt-label">Variasi</div>${chipRow('variant', d.variants.filter(v=>v.price>0).map(v=>v.name), st.variant, n=>rp(applyDeal((d.variants.find(v=>v.name===n)||{}).price, d.deal)))}</div>`:''}
             <div class="opt"><div class="opt-label">Jumlah</div><div class="qty"><button id="qm" aria-label="Kurangi">−</button><span>${st.qty}</span><button id="qp" aria-label="Tambah">+</button></div></div>`}
           ${d.desc?`<div class="opt"><div class="opt-label">Deskripsi</div><p class="desc">${esc(d.desc)}</p></div>`:''}
           <div class="buybar">
-            <div class="tot"><small>${ready?'Total':'Belum lengkap'}</small><b>${ready ? rp(amount-c) : esc(missing)}</b></div>
+            <div class="tot"><small>${ready?'Total':'Belum lengkap'}</small><b>${ready ? rp(amount) : esc(missing)}</b></div>
             <button class="btn line" id="addCart" aria-label="Tambah ke keranjang" ${ready?'':'disabled'}>+ Keranjang</button>
             <button class="btn" id="buyNow" ${ready?'':'disabled'}>Beli</button>
           </div>
         </div>
       </div>`;
-    hydrate(app); bindGallery();
-    document.getElementById('model').addEventListener('change', e=>{ st.model = e.target.value; draw(); });
-    app.querySelectorAll('[data-pkg]').forEach(b=>b.addEventListener('click', ()=>{ st.pkg = b.dataset.pkg; draw(); }));
-    app.querySelectorAll('[data-color]').forEach(b=>b.addEventListener('click', ()=>{ st.color = b.dataset.color; draw(); }));
-    sides.forEach(s=>app.querySelectorAll(`[data-shade-${s.toLowerCase()}]`).forEach(b=>b.addEventListener('click', ()=>{ st.sides[s] = b.getAttribute('data-shade-'+s.toLowerCase()); draw(); })));
+    hydrate(app);
+    window.scrollTo(0, y);
+    app.querySelectorAll('[data-g]').forEach(b=>b.onclick = async ()=>{ app.querySelectorAll('[data-g]').forEach(x=>x.setAttribute('aria-current', x===b)); const m = document.getElementById('gMain'); if(m){ m.src = await imgSrc(b.dataset.g); m.hidden = false; } });
+    document.getElementById('carBrand').onchange = e=>{ st.car = { brand:e.target.value, model:'' }; draw(); };
+    document.getElementById('carModel').onchange = e=>{ st.car.model = e.target.value; LS.set('car', st.car); draw(); };
+    app.querySelectorAll('[data-mode]').forEach(b=>b.onclick = ()=>{ st.mode = b.dataset.mode; st.pkg = st.mode==='Full' ? 'Full' : (partials.includes(st.pkg) ? st.pkg : partials[0]); draw(); });
+    app.querySelectorAll('[data-pkg]').forEach(b=>b.onclick = ()=>{ st.pkg = b.dataset.pkg; draw(); });
+    app.querySelectorAll('[data-color]').forEach(b=>b.onclick = ()=>{ st.color = b.dataset.color; draw(); });
+    app.querySelectorAll('[data-variant]').forEach(b=>b.onclick = ()=>{ st.variant = b.dataset.variant; draw(); });
+    sides.forEach(s=>app.querySelectorAll(`[data-shade-${s.toLowerCase()}]`).forEach(b=>b.onclick = ()=>{ st.sides[s] = b.getAttribute('data-shade-'+s.toLowerCase()); draw(); }));
     const qm = document.getElementById('qm'), qp = document.getElementById('qp');
-    if(qm){ qm.onclick = ()=>{ st.qty = Math.max(1, st.qty-1); draw(); }; qp.onclick = ()=>{ st.qty = Math.min(10, st.qty+1); draw(); }; }
+    if(qm){ qm.onclick = ()=>{ st.qty = Math.max(1, st.qty-1); draw(); }; qp.onclick = ()=>{ st.qty = Math.min(20, st.qty+1); draw(); }; }
     const add = ()=>{
-      const it = { key: Date.now().toString(36)+Math.random().toString(36).slice(2,5), kind, brand:p.brand, pid:p.id, title:p.name, img:p.images[0]||'', model:st.model, pkg:st.pkg, qty:st.qty };
-      if(kind==='film'){ it.sides = sides.map(s=>({ side:s, label:sideLabel(s), shade:st.sides[s] })); }
-      else it.color = st.color;
-      const bv = bestVoucher(kind, p.brand, price*st.qty); it.voucherId = bv ? bv.id : '';
-      cart.push(it); saveCart(); return it;
+      const it = { key:Date.now().toString(36)+Math.random().toString(36).slice(2,5), kind, pid:p.id, categoryId:p.categoryId, title:p.name, img:p.images[0]||'', car:label, qty:st.qty };
+      if(kind==='film'){ it.pkg = st.pkg; it.qty = 1; it.sides = sides.map(s=>({ side:s, label:sideLabel(s), shade:st.sides[s] })); }
+      if(kind==='karpet'){ it.pkg = st.pkg; it.color = st.color; }
+      if(kind==='generic') it.variant = st.variant;
+      cart.push(it); saveCart();
     };
     document.getElementById('addCart').onclick = ()=>{ add(); toast('Ditambahkan ke keranjang'); };
     document.getElementById('buyNow').onclick = ()=>{ add(); location.hash = '#/cart'; };
   };
   draw();
 }
-function sideLabel(k){ return ((CAT.film.sides||[]).find(s=>s.key===k)||{}).label || k; }
 function itemOptions(it){
   const o = [];
-  if(it.model) o.push(it.model);
-  o.push(it.pkg);
-  if(it.kind==='film') (it.sides||[]).forEach(s=>o.push(`${s.label} ${s.shade}`));
-  if(it.color) o.push('Warna '+it.color);
+  if(it.car) o.push(it.car);
+  if(it.kind==='film'){ o.push(it.pkg==='Full' ? 'Full' : 'Partial · '+it.pkg); (it.sides||[]).forEach(s=>o.push(`${s.label} ${s.shade}`)); }
+  if(it.kind==='karpet'){ o.push(it.pkg); if(it.color) o.push('Warna '+it.color); }
+  if(it.kind==='generic' && it.variant && it.variant!=='Standar') o.push(it.variant);
   return o;
 }
-function totals(){
-  let sub = 0, disc = 0;
-  const lines = cart.map(it=>{ const price = itemPrice(it); const amount = price*it.qty; const v = itemVoucher(it); const c = cut(amount, v); sub += amount; disc += c; return { it, price, amount, v, c }; });
-  return { lines, sub, disc };
-}
 
-function viewCart(){
-  clearInterval(slideTimer);
-  cart = cart.filter(it=>itemPrice(it)>0); saveCart();
-  if(!cart.length){ app.innerHTML = `<h1 class="page-title">Keranjang</h1><div class="empty"><h3>Keranjang masih kosong</h3><p>Pilih kaca film atau karpet custom untuk mobil Geely kamu.</p><a class="btn" href="#/">Mulai belanja</a></div>`; return; }
+/* ---------- keranjang ---------- */
+async function viewCart(){
+  cart = cart.filter(it=>itemPrices(it).normal>0); saveCart();
+  if(!cart.length){ app.innerHTML = `<h1 class="page-title">Keranjang</h1><div class="empty"><h3>Keranjang masih kosong</h3><p>Yuk pilih kaca film atau karpet untuk mobil kamu.</p><a class="btn" href="#/">Mulai belanja</a></div>`; return; }
+  await resolvePromo();
   const t = totals();
   app.innerHTML = `<h1 class="page-title">Keranjang</h1>
-    <div class="cols"><div class="panel">${t.lines.map(({it,price,amount,v,c})=>{
-      const vs = vouchersFor(it.kind, it.brand);
-      return `<div class="citem"><div class="cimg">${it.img?`<img data-img="${it.img}" alt="" hidden>`:''}</div>
+    <div class="cols"><div class="panel">${t.lines.map(({it,amount,normal,deal})=>`<div class="citem"><div class="cimg">${it.img?`<img data-img="${it.img}" alt="" hidden>`:''}</div>
         <div><div class="cname">${esc(it.title)}</div><div class="copts">${esc(itemOptions(it).join(' · '))}</div>
-          <div class="crow"><div>${c?`<span class="d-strike" style="margin:0 6px 0 0">${rp(amount)}</span>`:''}<b style="color:var(--price)">${rp(amount-c)}</b></div>
-            <div style="display:flex;gap:12px;align-items:center">${it.kind==='karpet'?`<div class="qty"><button data-dec="${it.key}" aria-label="Kurangi">−</button><span>${it.qty}</span><button data-inc="${it.key}" aria-label="Tambah">+</button></div>`:''}
-            <button class="link-btn" data-rm="${it.key}">Hapus</button></div></div>
-          ${vs.length?`<select class="inp" data-v="${it.key}" style="margin-top:8px;padding:8px 10px;font-size:13px" aria-label="Voucher"><option value="">Tanpa voucher</option>${vs.map(x=>`<option value="${x.id}" ${x.id===it.voucherId?'selected':''}>🎟️ ${esc(x.name)} — ${esc(vTag(x))}</option>`).join('')}</select>`:''}
-        </div></div>`; }).join('')}</div>
-      <div class="panel sticky"><div class="sum-row"><span>Subtotal</span><span>${rp(t.sub)}</span></div>
-        ${t.disc?`<div class="sum-row disc"><span>Potongan voucher</span><span>− ${rp(t.disc)}</span></div>`:''}
+          <div class="crow"><div>${deal?`<span class="d-strike" style="margin:0 6px 0 0">${rp(normal*it.qty)}</span>`:''}<b style="color:var(--price)">${rp(amount)}</b></div>
+            <div style="display:flex;gap:12px;align-items:center">${it.kind!=='film'?`<div class="qty"><button data-dec="${it.key}" aria-label="Kurangi">−</button><span>${it.qty}</span><button data-inc="${it.key}" aria-label="Tambah">+</button></div>`:''}
+            <button class="link-btn" data-rm="${it.key}">Hapus</button></div></div></div></div>`).join('')}</div>
+      <div class="panel sticky">
+        <label for="promoIn" style="font-weight:700;font-size:13px">Kode promo</label>
+        ${promoState.promo && !t.promoMsg ? `<div class="promo-ok"><span>🏷️ ${esc(promoState.promo.code)} terpasang</span><button class="link-btn" id="promoRm">Hapus</button></div>` :
+          `<div class="promo-box"><input class="inp" id="promoIn" value="${esc(promoState.code)}" placeholder="Masukkan kode" autocomplete="off"><button class="btn line" id="promoApply">Pakai</button></div>`}
+        ${promoState.error || t.promoMsg ? `<div class="err">${esc(promoState.error || t.promoMsg)}</div>` : ''}
+        <div class="sum-row" style="margin-top:14px"><span>Subtotal</span><span>${rp(t.sub)}</span></div>
+        ${t.disc?`<div class="sum-row disc"><span>Kode promo ${esc(promoState.promo.code)}</span><span>− ${rp(t.disc)}</span></div>`:''}
         <div class="sum-row total"><span>Total belanja</span><span>${rp(t.sub-t.disc)}</span></div>
         <a class="btn block" href="#/checkout" style="margin-top:14px">Lanjut ke checkout</a></div></div>`;
   hydrate(app);
   const find = k=>cart.find(i=>i.key===k);
   app.querySelectorAll('[data-rm]').forEach(b=>b.onclick = ()=>{ cart = cart.filter(i=>i.key!==b.dataset.rm); saveCart(); viewCart(); });
-  app.querySelectorAll('[data-inc]').forEach(b=>b.onclick = ()=>{ const i = find(b.dataset.inc); i.qty = Math.min(10,i.qty+1); saveCart(); viewCart(); });
+  app.querySelectorAll('[data-inc]').forEach(b=>b.onclick = ()=>{ const i = find(b.dataset.inc); i.qty = Math.min(20,i.qty+1); saveCart(); viewCart(); });
   app.querySelectorAll('[data-dec]').forEach(b=>b.onclick = ()=>{ const i = find(b.dataset.dec); i.qty = Math.max(1,i.qty-1); saveCart(); viewCart(); });
-  app.querySelectorAll('[data-v]').forEach(s=>s.onchange = ()=>{ find(s.dataset.v).voucherId = s.value; saveCart(); viewCart(); });
+  const ap = document.getElementById('promoApply');
+  if(ap){ const go = ()=>{ promoState.code = document.getElementById('promoIn').value.trim().toUpperCase(); LS.set('promo', promoState.code); viewCart(); }; ap.onclick = go; document.getElementById('promoIn').onkeydown = e=>{ if(e.key==='Enter') go(); }; }
+  const rm = document.getElementById('promoRm'); if(rm) rm.onclick = ()=>{ promoState.code = ''; LS.del('promo'); viewCart(); };
 }
 
-function shippingOptions(){
-  const kinds = [...new Set(cart.map(i=>i.kind))];
-  return (CAT.shipping||[]).filter(s=>s.applies==='all' || !s.applies || kinds.every(k=>k===s.applies));
-}
+/* ---------- checkout ---------- */
+function shippingOptions(){ const cats = [...new Set(cart.map(i=>i.categoryId))]; return (CAT.shipping||[]).filter(s=>!s.applies || s.applies==='all' || cats.every(c=>c===s.applies)); }
 function paymentOptions(){
   const p = CAT.payments||{}; const out = [];
-  if((p.banks||[]).length) out.push({ key:'transfer', label:'Transfer Bank', sub:(p.banks||[]).map(b=>b.bank).join(', ') });
+  if(p.cash!==false) out.push({ key:'cash', label:'Cash', sub:'Bayar tunai ke teknisi saat pemasangan / ke kurir' });
+  if(p.transfer && (p.banks||[]).length) out.push({ key:'transfer', label:'Transfer Bank', sub:(p.banks||[]).map(b=>b.bank).join(', ') });
   if(p.qris) out.push({ key:'qris', label:'QRIS', sub:'Scan pakai e-wallet atau m-banking' });
-  if(p.payAtDealer!==false) out.push({ key:'dealer', label:'Bayar di Dealer', sub:'Bayar saat pemasangan / pengambilan' });
   return out;
 }
-function viewCheckout(){
-  clearInterval(slideTimer);
-  cart = cart.filter(it=>itemPrice(it)>0); saveCart();
+async function viewCheckout(){
+  await authReady();
+  if(!requireLogin('checkout')) return;
+  cart = cart.filter(it=>itemPrices(it).normal>0); saveCart();
   if(!cart.length){ location.hash = '#/cart'; return; }
+  await resolvePromo();
   const ships = shippingOptions(), pays = paymentOptions();
-  const saved = LS.get('buyer', {});
   const f = { ship: ships[0] ? ships[0].id : '', pay: pays[0] ? pays[0].key : '' };
-  const hasFilm = cart.some(i=>i.kind==='film');
-  const today = new Date(); today.setDate(today.getDate()+1);
-  const minDate = today.toISOString().slice(0,10);
+  const pr = profile || {};
+  const vals = { nm: pr.nama||'', wa: pr.wa||'', al: pr.alamat||'', dt:'', tm:'', nt:'' };
+  const tmr = new Date(); tmr.setDate(tmr.getDate()+1);
+  const minDate = `${tmr.getFullYear()}-${String(tmr.getMonth()+1).padStart(2,'0')}-${String(tmr.getDate()).padStart(2,'0')}`;
   const draw = ()=>{
-    const t = totals(); const ship = ships.find(s=>s.id===f.ship);
-    const fee = ship ? Number(ship.fee)||0 : 0;
+    const t = totals(); const ship = ships.find(s=>s.id===f.ship); const fee = ship ? Number(ship.fee)||0 : 0; const install = ship && ship.install!==false;
     app.innerHTML = `<h1 class="page-title">Checkout</h1>
       <div class="cols"><div>
         <div class="panel"><h2 style="margin:0 0 12px;font-size:16px">Data pembeli</h2>
-          <div class="two"><div class="field"><label for="nm">Nama lengkap</label><input class="inp" id="nm" autocomplete="name" value="${esc(saved.nama)}"></div>
-          <div class="field"><label for="wa">No. WhatsApp</label><input class="inp" id="wa" inputmode="tel" autocomplete="tel" value="${esc(saved.wa)}" placeholder="08xx"></div></div>
-          <div class="field"><label for="em">Email <span style="color:var(--muted);font-weight:500">(opsional)</span></label><input class="inp" id="em" type="email" autocomplete="email" value="${esc(saved.email)}"></div>
+          <div class="two"><div class="field"><label for="nm">Nama lengkap</label><input class="inp" id="nm" autocomplete="name"></div>
+          <div class="field"><label for="wa">No. WhatsApp</label><input class="inp" id="wa" inputmode="tel" autocomplete="tel" placeholder="08xx"></div></div>
+          <div class="field"><label for="al">Alamat ${install?'pemasangan':'pengiriman'}</label><textarea class="inp" id="al" autocomplete="street-address" placeholder="Jalan, nomor, RT/RW, kelurahan, kecamatan, kota"></textarea>
+            ${CAT.store.area?`<div class="hint">Area layanan: ${esc(CAT.store.area)}</div>`:''}</div>
         </div>
-        <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 12px;font-size:16px">Pengiriman &amp; pemasangan</h2>
+        <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 12px;font-size:16px">Pemasangan / pengiriman</h2>
           ${ships.length ? ships.map(s=>`<button class="radio-card" role="radio" aria-checked="${s.id===f.ship}" data-ship="${s.id}"><span class="dot"></span><span><span class="rc-t">${esc(s.name)}</span><br><span class="rc-s">${esc(s.note||'')}</span></span><span class="rc-p">${s.fee?rp(s.fee):'Gratis'}</span></button>`).join('')
-            : '<p class="err">Belum ada opsi pengiriman yang cocok untuk isi keranjang ini. Hubungi admin.</p>'}
-          ${ship && ship.needsAddress ? `<div class="field" style="margin-top:6px"><label for="al">Alamat lengkap</label><textarea class="inp" id="al" autocomplete="street-address">${esc(saved.alamat)}</textarea></div>` : ''}
-          ${hasFilm ? `<div class="field" style="margin-top:6px"><label for="dt">Tanggal pemasangan yang diinginkan</label><input class="inp" id="dt" type="date" min="${minDate}"><div class="hint">Admin akan konfirmasi jadwal lewat WhatsApp.</div></div>` : ''}
+            : '<p class="err">Belum ada opsi yang cocok untuk isi keranjang ini. Hubungi admin.</p>'}
+          ${install ? `<div class="two" style="margin-top:6px"><div class="field"><label for="dt">Tanggal pemasangan</label><input class="inp" id="dt" type="date" min="${minDate}"></div>
+            <div class="field"><label for="tm">Waktu</label><select class="inp" id="tm"><option value="">Pilih waktu</option><option>Pagi (09.00–12.00)</option><option>Siang (12.00–15.00)</option><option>Sore (15.00–18.00)</option></select></div></div>
+            <div class="hint" style="margin-top:-6px">Admin akan konfirmasi jadwal lewat WhatsApp.</div>` : ''}
         </div>
         <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 12px;font-size:16px">Metode pembayaran</h2>
           ${pays.length ? pays.map(p=>`<button class="radio-card" role="radio" aria-checked="${p.key===f.pay}" data-pay="${p.key}"><span class="dot"></span><span><span class="rc-t">${esc(p.label)}</span><br><span class="rc-s">${esc(p.sub)}</span></span></button>`).join('')
             : '<p class="err">Belum ada metode pembayaran. Hubungi admin.</p>'}
-          <div class="field" style="margin-top:6px"><label for="nt">Catatan untuk penjual <span style="color:var(--muted);font-weight:500">(opsional)</span></label><input class="inp" id="nt"></div>
+          <div class="field" style="margin-top:6px"><label for="nt">Catatan <span style="color:var(--muted);font-weight:500">(opsional)</span></label><input class="inp" id="nt" placeholder="mis. patokan rumah, parkir di basement"></div>
         </div>
       </div>
       <div class="panel sticky"><h2 style="margin:0 0 10px;font-size:16px">Ringkasan</h2>
-        ${t.lines.map(({it,amount,c})=>`<div class="sum-row" style="font-size:13px"><span>${esc(it.title)} × ${it.qty}</span><span>${rp(amount-c)}</span></div>`).join('')}
+        ${t.lines.map(({it,amount})=>`<div class="sum-row" style="font-size:13px"><span>${esc(it.title)} × ${it.qty}</span><span>${rp(amount)}</span></div>`).join('')}
         <div class="sum-row" style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px"><span>Subtotal</span><span>${rp(t.sub)}</span></div>
-        ${t.disc?`<div class="sum-row disc"><span>Potongan voucher</span><span>− ${rp(t.disc)}</span></div>`:''}
-        <div class="sum-row"><span>Pengiriman / layanan</span><span>${fee?rp(fee):'Gratis'}</span></div>
+        ${t.disc?`<div class="sum-row disc"><span>Kode promo ${esc(promoState.promo.code)}</span><span>− ${rp(t.disc)}</span></div>`:''}
+        <div class="sum-row"><span>${install?'Biaya pemasangan':'Ongkos kirim'}</span><span>${fee?rp(fee):'Gratis'}</span></div>
         <div class="sum-row total"><span>Total bayar</span><span>${rp(t.sub-t.disc+fee)}</span></div>
         <div id="cerr" class="err" role="alert"></div>
         <button class="btn block amber" id="place" style="margin-top:14px" ${ships.length&&pays.length?'':'disabled'}>Buat pesanan</button>
       </div></div>`;
-    const keep = ()=>{ ['nm','wa','em','al','dt','nt'].forEach(id=>{ const el = document.getElementById(id); if(el) keepVals[id] = el.value; }); };
-    Object.entries(keepVals).forEach(([id,v])=>{ const el = document.getElementById(id); if(el) el.value = v; });
+    Object.entries(vals).forEach(([k,v])=>{ const el = document.getElementById(k); if(el) el.value = v; });
+    const keep = ()=>Object.keys(vals).forEach(k=>{ const el = document.getElementById(k); if(el) vals[k] = el.value; });
     app.querySelectorAll('[data-ship]').forEach(b=>b.onclick = ()=>{ keep(); f.ship = b.dataset.ship; draw(); });
     app.querySelectorAll('[data-pay]').forEach(b=>b.onclick = ()=>{ keep(); f.pay = b.dataset.pay; draw(); });
-    document.getElementById('place').onclick = ()=>placeOrder(f, ship, fee, t);
+    document.getElementById('place').onclick = ()=>{ keep(); placeOrder(f, ship, fee, install, t, vals); };
   };
-  const keepVals = {};
   draw();
 }
-async function placeOrder(f, ship, fee, t){
-  const val = id=>{ const el = document.getElementById(id); return el ? el.value.trim() : ''; };
+async function placeOrder(f, ship, fee, install, t, v){
   const err = document.getElementById('cerr');
-  const nama = val('nm'), wa = val('wa').replace(/[^\d+]/g,'');
+  const nama = v.nm.trim(), wa = v.wa.replace(/[^\d+]/g,''), alamat = v.al.trim();
   if(!nama){ err.textContent = 'Isi nama lengkap.'; return; }
   if(wa.replace(/\D/g,'').length < 9){ err.textContent = 'Isi nomor WhatsApp yang aktif.'; return; }
-  if(ship.needsAddress && !val('al')){ err.textContent = 'Isi alamat pengiriman.'; return; }
+  if(alamat.length < 10){ err.textContent = 'Isi alamat lengkap.'; return; }
+  if(install && !v.dt){ err.textContent = 'Pilih tanggal pemasangan.'; return; }
+  if(install && !v.tm){ err.textContent = 'Pilih waktu pemasangan.'; return; }
   const pay = paymentOptions().find(p=>p.key===f.pay);
   const btn = document.getElementById('place'); btn.disabled = true; btn.textContent = 'Memproses...';
-  LS.set('buyer', { nama, wa, email:val('em'), alamat:val('al') });
   const d = new Date(); const pad = n=>String(n).padStart(2,'0');
-  const orderNo = `GA${String(d.getFullYear()).slice(2)}${pad(d.getMonth()+1)}${pad(d.getDate())}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
+  const orderNo = `TA${String(d.getFullYear()).slice(2)}${pad(d.getMonth()+1)}${pad(d.getDate())}-${Math.random().toString(36).slice(2,6).toUpperCase()}`;
   const order = {
-    orderNo, createdAt:d.toISOString(), status:'baru',
-    customer:{ nama, wa, email:val('em'), alamat:val('al'), mobil:[...new Set(cart.map(i=>i.model).filter(Boolean))].join(', ') },
-    items: t.lines.map(({it,price,amount,v,c})=>({ kind:it.kind, brand:it.brand, title:it.title, options:itemOptions(it), qty:it.qty, price, discount:c, total:amount-c, voucher: v ? `${v.name} (${vTag(v)})` : '' })),
-    subtotal:t.sub, discountTotal:t.disc, shipping:{ id:ship.id, name:ship.name, fee }, grandTotal:t.sub-t.disc+fee,
-    payment:{ method:pay.key, label:pay.label }, installDate: val('dt'), note: val('nt')
+    orderNo, uid:user.uid, createdAt:d.toISOString(), status:'baru',
+    customer:{ nama, wa, email:user.email, username:(profile||{}).username||'', alamat, mobil:[...new Set(cart.map(i=>i.car).filter(Boolean))].join(', ') },
+    items: t.lines.map(({it,price,normal,deal})=>({ kind:it.kind, title:it.title, options:itemOptions(it), qty:it.qty, price, normalPrice:normal, deal: deal ? dealTag(deal) : '' })),
+    subtotal:t.sub, promo: t.disc ? { code:promoState.promo.code, discount:t.disc } : null,
+    shipping:{ id:ship.id, name:ship.name, fee, install }, grandTotal:t.sub-t.disc+fee,
+    payment:{ method:pay.key, label:pay.label }, installDate: install ? v.dt : '', installTime: install ? v.tm : '', note: v.nt.trim()
   };
   try{
-    const res = await api('pos/orders', { method:'POST', body:JSON.stringify(order) });
-    const mine = LS.get('orders', []); mine.unshift({ key:res.name, orderNo, at:order.createdAt }); LS.set('orders', mine.slice(0,30));
-    cart = []; saveCart();
+    const res = await api('pos/orders', { method:'POST', body:JSON.stringify(order) }, true);
+    await api(`shop/customers/${user.uid}/orders/${res.name}`, { method:'PUT', body:'true' }, true).catch(()=>{});
+    await api(`shop/customers/${user.uid}`, { method:'PATCH', body:JSON.stringify({ wa, alamat }) }, true).then(()=>{ profile = Object.assign(profile||{}, { wa, alamat }); }).catch(()=>{});
+    cart = []; saveCart(); promoState = { code:'', promo:null, error:'' }; LS.del('promo');
     location.hash = '#/order/'+res.name;
-  }catch(e){
-    btn.disabled = false; btn.textContent = 'Buat pesanan';
-    err.textContent = 'Pesanan gagal terkirim. Periksa koneksi internet lalu coba lagi.';
-  }
+  }catch(e){ console.error(e); btn.disabled = false; btn.textContent = 'Buat pesanan'; err.textContent = 'Pesanan gagal terkirim. Periksa koneksi lalu coba lagi.'; }
 }
 
-const STEPS = [['baru','Dipesan'],['dibayar','Dibayar'],['diproses','Diproses'],['dikirim','Dikirim / Siap pasang'],['selesai','Selesai']];
-const STATUS_LABEL = { baru:'Menunggu pembayaran', dibayar:'Pembayaran dikonfirmasi', diproses:'Sedang diproses', dikirim:'Dikirim / siap dipasang', selesai:'Selesai', batal:'Dibatalkan' };
+/* ---------- pesanan ---------- */
+const STEPS = [['baru','Dipesan'],['dibayar','Dibayar'],['diproses','Dijadwalkan'],['dikirim','Teknisi berangkat'],['selesai','Selesai']];
+const STATUS_LABEL = { baru:'Menunggu pembayaran', dibayar:'Pembayaran dikonfirmasi', diproses:'Dijadwalkan', dikirim:'Teknisi berangkat / dikirim', selesai:'Selesai', batal:'Dibatalkan' };
 async function viewOrder(key){
-  clearInterval(slideTimer);
+  await authReady(); if(!requireLogin('order/'+key)) return;
   app.innerHTML = `<div class="skel" style="height:120px;margin-top:16px"></div><div class="skel" style="height:260px;margin-top:12px"></div>`;
-  let o; try{ o = await api('pos/orders/'+key); }catch(e){}
+  let o = null; try{ o = await api('pos/orders/'+key, null, true); }catch(e){}
   if(!o){ app.innerHTML = `<div class="empty"><h3>Pesanan tidak ditemukan</h3><a href="#/orders">Lihat pesanan saya</a></div>`; return; }
-  const idx = STEPS.findIndex(s=>s[0]===o.status);
-  const p = CAT.payments||{};
-  const waMsg = `Halo admin ${CAT.store.name}, saya sudah membuat pesanan ${o.orderNo} atas nama ${o.customer.nama}, total ${rp(o.grandTotal)}. Mohon diproses ya.`;
+  const idx = STEPS.findIndex(s=>s[0]===o.status); const p = CAT.payments||{};
+  const waMsg = `Halo admin ${CAT.store.name}, saya sudah membuat pesanan ${o.orderNo} atas nama ${o.customer.nama}, total ${rp(o.grandTotal)}.`;
   app.innerHTML = `<div class="ok-head"><h1>${o.status==='baru'?'Pesanan dibuat':esc(STATUS_LABEL[o.status]||'')}</h1><p>No. pesanan <b style="color:#fff">${esc(o.orderNo)}</b> · Total ${rp(o.grandTotal)}</p></div>
     ${o.status==='batal' ? '' : `<div class="panel" style="margin-top:12px"><div class="steps">${STEPS.map((s,i)=>`<div class="${i<=idx?'on':''}">${s[1]}</div>`).join('')}</div></div>`}
     ${o.adminNote?`<div class="panel" style="margin-top:12px"><b>Pesan dari admin</b><p style="margin:4px 0 0">${esc(o.adminNote)}</p></div>`:''}
     <div class="cols" style="margin-top:12px"><div>
-      ${o.status==='baru' && o.payment.method!=='dealer' ? `<div class="panel"><h2 style="margin:0 0 10px;font-size:16px">Cara bayar</h2>
+      ${o.status==='baru' && o.payment.method!=='cash' ? `<div class="panel"><h2 style="margin:0 0 10px;font-size:16px">Cara bayar</h2>
         ${o.payment.method==='transfer' ? (p.banks||[]).map(b=>`<div class="bank"><div><div style="font-size:12.5px;color:var(--muted)">${esc(b.bank)} · a.n. ${esc(b.name)}</div><b>${esc(b.no)}</b></div><button class="btn line" style="height:36px;padding:0 12px;font-size:13px" data-copy="${esc(b.no)}">Salin</button></div>`).join('') : ''}
         ${o.payment.method==='qris' && p.qris ? `<img class="qris" data-img="${p.qris}" alt="Kode QRIS" hidden>` : ''}
         <p style="margin:8px 0 12px">Bayar tepat <b>${rp(o.grandTotal)}</b>, lalu unggah bukti pembayaran.</p>
-        ${o.proof ? `<p style="color:var(--ok);font-weight:700;margin:0">✓ Bukti pembayaran terkirim. Admin akan segera memeriksa.</p>` : `<button class="btn block" id="proof">Unggah bukti pembayaran</button>`}
-      </div>` : ''}
-      ${o.status==='baru' && o.payment.method==='dealer' ? `<div class="panel"><p style="margin:0">Pembayaran dilakukan di dealer saat ${o.shipping.name.toLowerCase().includes('pasang')?'pemasangan':'pengambilan'}. Admin akan menghubungi kamu untuk konfirmasi jadwal.</p></div>`:''}
+        ${o.proof ? `<p style="color:var(--ok);font-weight:700;margin:0">✓ Bukti pembayaran terkirim.</p>` : `<button class="btn block" id="proof">Unggah bukti pembayaran</button>`}</div>` : ''}
+      ${o.status==='baru' && o.payment.method==='cash' ? `<div class="panel"><p style="margin:0">Siapkan uang tunai <b>${rp(o.grandTotal)}</b> untuk dibayarkan ke ${o.shipping.install?'teknisi saat pemasangan':'kurir saat barang tiba'}. Admin akan menghubungi kamu untuk konfirmasi jadwal.</p></div>`:''}
       <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 10px;font-size:16px">Detail pesanan</h2>
-        ${o.items.map(i=>`<div class="sum-row" style="align-items:flex-start"><span><b>${esc(i.title)}</b> × ${i.qty}<br><span style="font-size:12.5px;color:var(--muted)">${esc((i.options||[]).join(' · '))}${i.voucher?' · 🎟️ '+esc(i.voucher):''}</span></span><span>${rp(i.total)}</span></div>`).join('')}
+        ${o.items.map(i=>`<div class="sum-row" style="align-items:flex-start"><span><b>${esc(i.title)}</b> × ${i.qty}<br><span style="font-size:12.5px;color:var(--muted)">${esc((i.options||[]).join(' · '))}</span></span><span>${rp(i.price*i.qty)}</span></div>`).join('')}
         <div class="sum-row" style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px"><span>${esc(o.shipping.name)}</span><span>${o.shipping.fee?rp(o.shipping.fee):'Gratis'}</span></div>
-        ${o.discountTotal?`<div class="sum-row disc"><span>Total potongan voucher</span><span>− ${rp(o.discountTotal)}</span></div>`:''}
-        <div class="sum-row total"><span>Total</span><span>${rp(o.grandTotal)}</span></div>
-      </div></div>
+        ${o.promo?`<div class="sum-row disc"><span>Kode promo ${esc(o.promo.code)}</span><span>− ${rp(o.promo.discount)}</span></div>`:''}
+        <div class="sum-row total"><span>Total</span><span>${rp(o.grandTotal)}</span></div></div></div>
       <div class="panel sticky">
         <div class="sum-row"><span>Status</span><span class="status s-${esc(o.status)}">${esc(STATUS_LABEL[o.status]||o.status)}</span></div>
         <div class="sum-row"><span>Pembayaran</span><b>${esc(o.payment.label)}</b></div>
-        ${o.installDate?`<div class="sum-row"><span>Jadwal pasang</span><b>${new Date(o.installDate+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long',year:'numeric'})}</b></div>`:''}
-        ${CAT.store.wa?`<a class="btn block line" style="margin-top:12px" target="_blank" rel="noopener" href="${waLink(CAT.store.wa, waMsg)}">Konfirmasi via WhatsApp</a>`:''}
-        <a class="btn block" style="margin-top:8px" href="#/">Belanja lagi</a>
-      </div></div>`;
+        ${o.installDate?`<div class="sum-row"><span>Jadwal</span><b style="text-align:right">${new Date(o.installDate+'T00:00:00').toLocaleDateString('id-ID',{day:'numeric',month:'long'})}<br><span style="font-weight:600;font-size:12.5px">${esc(o.installTime||'')}</span></b></div>`:''}
+        <div class="sum-row" style="align-items:flex-start"><span>Alamat</span><span style="text-align:right;font-size:13px;max-width:60%">${esc(o.customer.alamat)}</span></div>
+        ${CAT.store.wa?`<a class="btn block line" style="margin-top:12px" target="_blank" rel="noopener" href="${waLink(CAT.store.wa, waMsg)}">Hubungi admin via WhatsApp</a>`:''}
+        <a class="btn block" style="margin-top:8px" href="#/">Belanja lagi</a></div></div>`;
   hydrate(app);
   app.querySelectorAll('[data-copy]').forEach(b=>b.onclick = ()=>navigator.clipboard.writeText(b.dataset.copy).then(()=>toast('Nomor rekening disalin')));
-  const pb = document.getElementById('proof');
-  if(pb) pb.onclick = ()=>uploadProof(key, pb);
+  const pb = document.getElementById('proof'); if(pb) pb.onclick = ()=>uploadProof(key, pb);
 }
 function uploadProof(key, btn){
   const inp = document.createElement('input'); inp.type='file'; inp.accept='image/*';
-  inp.onchange = ()=>{
-    const f = inp.files[0]; if(!f) return;
-    const rd = new FileReader();
+  inp.onchange = ()=>{ const f = inp.files[0]; if(!f) return; const rd = new FileReader();
     rd.onload = ()=>{ const img = new Image(); img.onload = async ()=>{
       const s = Math.min(1, 1100/img.width); const c = document.createElement('canvas'); c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
       const ctx = c.getContext('2d'); ctx.fillStyle='#fff'; ctx.fillRect(0,0,c.width,c.height); ctx.drawImage(img,0,0,c.width,c.height);
       btn.disabled = true; btn.textContent = 'Mengunggah...';
-      try{
-        await api('pos/proofs/'+key, { method:'PUT', body:JSON.stringify(c.toDataURL('image/jpeg',0.72)) });
-        await api('pos/orders/'+key, { method:'PATCH', body:JSON.stringify({ proof:true, proofAt:new Date().toISOString() }) });
-        toast('Bukti pembayaran terkirim'); viewOrder(key);
-      }catch(e){ btn.disabled = false; btn.textContent = 'Unggah bukti pembayaran'; toast('Gagal mengunggah. Coba lagi.'); }
+      try{ await api('pos/proofs/'+key, { method:'PUT', body:JSON.stringify(c.toDataURL('image/jpeg',0.72)) }, true);
+           await api('pos/orders/'+key, { method:'PATCH', body:JSON.stringify({ proof:true, proofAt:new Date().toISOString() }) }, true);
+           toast('Bukti pembayaran terkirim'); viewOrder(key); }
+      catch(e){ btn.disabled = false; btn.textContent = 'Unggah bukti pembayaran'; toast('Gagal mengunggah. Coba lagi.'); }
     }; img.src = rd.result; };
-    rd.readAsDataURL(f);
-  };
+    rd.readAsDataURL(f); };
   inp.click();
 }
 async function viewOrders(){
-  clearInterval(slideTimer);
-  const mine = LS.get('orders', []);
-  app.innerHTML = `<h1 class="page-title">Pesanan saya</h1>${mine.length ? `<div class="olist" id="olist">${mine.map(m=>`<a class="orow" href="#/order/${enc(m.key)}"><span><b>${esc(m.orderNo)}</b><br><span style="font-size:12.5px;color:var(--muted)">${new Date(m.at).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})}</span></span><span class="status" data-st="${esc(m.key)}">…</span></a>`).join('')}</div>`
-    : `<div class="empty"><h3>Belum ada pesanan</h3><p>Pesanan yang kamu buat di perangkat ini akan muncul di sini.</p><a class="btn" href="#/">Mulai belanja</a></div>`}`;
-  mine.forEach(async m=>{ try{ const o = await api('pos/orders/'+m.key); const el = app.querySelector(`[data-st="${CSS.escape(m.key)}"]`); if(el && o){ el.textContent = STATUS_LABEL[o.status]||o.status; el.className = 'status s-'+o.status; } }catch(e){} });
+  await authReady(); if(!requireLogin('orders')) return;
+  app.innerHTML = `<h1 class="page-title">Riwayat pembelian</h1><div class="skel" style="height:70px"></div>`;
+  let keys = []; try{ keys = Object.keys(await api(`shop/customers/${user.uid}/orders`, null, true) || {}); }catch(e){}
+  const orders = (await Promise.all(keys.map(k=>api('pos/orders/'+k, null, true).then(o=>o?Object.assign({ key:k }, o):null).catch(()=>null)))).filter(Boolean).sort((a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
+  app.innerHTML = `<h1 class="page-title">Riwayat pembelian</h1>${orders.length ? `<div class="olist">${orders.map(o=>`<a class="orow" href="#/order/${enc(o.key)}"><span><b>${esc(o.orderNo)}</b><br><span style="font-size:12.5px;color:var(--muted)">${new Date(o.createdAt).toLocaleDateString('id-ID',{day:'numeric',month:'short',year:'numeric'})} · ${esc(o.items.map(i=>i.title).join(', '))}</span><br><b style="color:var(--price)">${rp(o.grandTotal)}</b></span><span class="status s-${esc(o.status)}">${esc(STATUS_LABEL[o.status]||o.status)}</span></a>`).join('')}</div>`
+    : `<div class="empty"><h3>Belum ada pesanan</h3><p>Pesanan yang kamu buat akan tercatat di sini.</p><a class="btn" href="#/">Mulai belanja</a></div>`}`;
+}
+
+/* ---------- login, daftar, lupa password, akun ---------- */
+const RECOVERY_QS = ['Nama hewan peliharaan pertama kamu?','Kota kelahiran ibu kamu?','Nama sekolah dasar kamu?','Merek mobil pertama kamu?','Makanan favorit waktu kecil?'];
+function pwField(id, label, ac){ return `<div class="field"><label for="${id}">${label}</label><div class="pw"><input class="inp" id="${id}" type="password" autocomplete="${ac}"><button type="button" data-show="${id}">Lihat</button></div></div>`; }
+function bindPw(){ app.querySelectorAll('[data-show]').forEach(b=>b.onclick = ()=>{ const i = document.getElementById(b.dataset.show); i.type = i.type==='password'?'text':'password'; b.textContent = i.type==='password'?'Lihat':'Sembunyikan'; }); }
+function noAuthHtml(){ return `<div class="empty"><h3>Login belum tersedia</h3>Admin toko belum mengaktifkan login. Coba lagi nanti.</div>`; }
+async function viewLogin(next){
+  if(!auth){ app.innerHTML = noAuthHtml(); return; }
+  await authReady(); if(user){ location.hash = next ? '#/'+next : '#/account'; return; }
+  app.innerHTML = `<div class="panel auth-card"><h1>Masuk</h1><p class="sub">${next==='checkout'?'Masuk dulu untuk melanjutkan checkout.':'Masuk untuk belanja dan melihat riwayat pesanan.'}</p>
+    <div class="field"><label for="le">Email</label><input class="inp" id="le" type="email" autocomplete="email"></div>
+    ${pwField('lp','Password','current-password')}
+    <div style="text-align:right;margin:-4px 0 12px"><a href="#/forgot" style="font-size:13px;font-weight:700;color:var(--blue);text-decoration:none">Lupa password?</a></div>
+    <div id="lerr" class="err" role="alert"></div>
+    <button class="btn block" id="lbtn" style="margin-top:6px">Masuk</button>
+    <p class="auth-alt">Belum punya akun? <a href="#/register/${enc(next)}">Daftar</a></p></div>`;
+  bindPw();
+  const go = async ()=>{
+    const e = document.getElementById('le').value.trim(), p = document.getElementById('lp').value; const er = document.getElementById('lerr'); const b = document.getElementById('lbtn');
+    if(!e || !p){ er.textContent = 'Isi email dan password.'; return; }
+    b.disabled = true; b.textContent = 'Memproses...';
+    try{ await auth.signInWithEmailAndPassword(e, p); location.hash = next ? '#/'+next : '#/'; }
+    catch(x){ er.textContent = authErr(x); b.disabled = false; b.textContent = 'Masuk'; }
+  };
+  document.getElementById('lbtn').onclick = go; document.getElementById('lp').onkeydown = e=>{ if(e.key==='Enter') go(); };
+}
+async function viewRegister(next){
+  if(!auth){ app.innerHTML = noAuthHtml(); return; }
+  await authReady(); if(user){ location.hash = '#/account'; return; }
+  app.innerHTML = `<div class="panel auth-card"><h1>Daftar akun</h1><p class="sub">Satu akun untuk semua pesanan kamu.</p>
+    <div class="field"><label for="ru">Username</label><input class="inp" id="ru" autocomplete="username" placeholder="huruf kecil, angka, _"><div class="hint">3–20 karakter, contoh: budi_ex5</div></div>
+    <div class="field"><label for="rn">Nama lengkap</label><input class="inp" id="rn" autocomplete="name"></div>
+    <div class="field"><label for="re">Email</label><input class="inp" id="re" type="email" autocomplete="email"></div>
+    ${pwField('rp','Password','new-password')}
+    ${pwField('rp2','Ulangi password','new-password')}
+    <div class="field"><label for="rq">Pertanyaan pemulihan</label><select class="inp" id="rq">${RECOVERY_QS.map(q=>`<option>${esc(q)}</option>`).join('')}</select></div>
+    <div class="field"><label for="ra">Jawaban</label><input class="inp" id="ra" autocomplete="off"><div class="hint">Dipakai admin untuk memastikan identitas kamu kalau butuh bantuan akun.</div></div>
+    <div id="rerr" class="err" role="alert"></div>
+    <button class="btn block" id="rbtn" style="margin-top:6px">Daftar</button>
+    <p class="auth-alt">Sudah punya akun? <a href="#/login/${enc(next)}">Masuk</a></p></div>`;
+  bindPw();
+  document.getElementById('rbtn').onclick = async ()=>{
+    const g = id=>document.getElementById(id).value; const er = document.getElementById('rerr'); const b = document.getElementById('rbtn');
+    const username = g('ru').trim().toLowerCase(), nama = g('rn').trim(), email = g('re').trim(), pass = g('rp'), q = g('rq'), ans = g('ra').trim();
+    if(!/^[a-z0-9_]{3,20}$/.test(username)){ er.textContent = 'Username 3–20 karakter: huruf kecil, angka atau _.'; return; }
+    if(nama.length<3){ er.textContent = 'Isi nama lengkap.'; return; }
+    if(!/^\S+@\S+\.\S+$/.test(email)){ er.textContent = 'Format email tidak valid.'; return; }
+    if(pass.length<6){ er.textContent = 'Password minimal 6 karakter.'; return; }
+    if(pass!==g('rp2')){ er.textContent = 'Kedua password tidak sama.'; return; }
+    if(ans.length<2){ er.textContent = 'Isi jawaban pertanyaan pemulihan.'; return; }
+    b.disabled = true; b.textContent = 'Memproses...';
+    try{
+      const taken = await api('shop/usernames/'+username).catch(()=>null);
+      if(taken){ er.textContent = 'Username sudah dipakai, coba yang lain.'; b.disabled = false; b.textContent = 'Daftar'; return; }
+      const cred = await auth.createUserWithEmailAndPassword(email, pass); user = cred.user;
+      await cred.user.updateProfile({ displayName:nama }).catch(()=>{});
+      await api('shop/usernames/'+username, { method:'PUT', body:JSON.stringify(cred.user.uid) }, true);
+      const prof = { username, nama, email, wa:'', alamat:'', recoveryQ:q, recoveryAHash: await sha(ans.toLowerCase()), createdAt:new Date().toISOString() };
+      await api('shop/customers/'+cred.user.uid, { method:'PUT', body:JSON.stringify(prof) }, true);
+      profile = prof; toast('Akun berhasil dibuat'); location.hash = next ? '#/'+next : '#/';
+    }catch(x){ er.textContent = String(x.message).startsWith('HTTP') ? 'Akun dibuat, tapi profil gagal disimpan. Hubungi admin.' : authErr(x); b.disabled = false; b.textContent = 'Daftar'; }
+  };
+}
+function viewForgot(){
+  if(!auth){ app.innerHTML = noAuthHtml(); return; }
+  app.innerHTML = `<div class="panel auth-card"><h1>Lupa password</h1><p class="sub">Masukkan email akun kamu. Kami akan mengirim link untuk membuat password baru.</p>
+    <div id="fbox"><div class="field"><label for="fe">Email</label><input class="inp" id="fe" type="email" autocomplete="email"></div>
+    <div id="ferr" class="err" role="alert"></div><button class="btn block" id="fbtn" style="margin-top:6px">Kirim link reset</button></div>
+    <p class="auth-alt"><a href="#/login">Kembali ke halaman masuk</a></p></div>`;
+  document.getElementById('fbtn').onclick = async ()=>{
+    const e = document.getElementById('fe').value.trim(); const er = document.getElementById('ferr'); const b = document.getElementById('fbtn');
+    if(!/^\S+@\S+\.\S+$/.test(e)){ er.textContent = 'Format email tidak valid.'; return; }
+    b.disabled = true; b.textContent = 'Mengirim...';
+    try{ await auth.sendPasswordResetEmail(e); }catch(x){ if(!String(x.code).includes('user-not-found')){ er.textContent = authErr(x); b.disabled = false; b.textContent = 'Kirim link reset'; return; } }
+    document.getElementById('fbox').innerHTML = `<div class="ok-msg">Kalau <b>${esc(e)}</b> terdaftar, link reset password sudah dikirim. Cek kotak masuk dan folder spam.</div>`;
+  };
+}
+async function viewAccount(){
+  await authReady(); if(!requireLogin('account')) return;
+  const p = profile || {};
+  app.innerHTML = `<div class="acct-head"><div class="avatar">${esc((p.nama||user.email||'?').charAt(0).toUpperCase())}</div><div><b style="font-size:17px">${esc(p.nama||user.displayName||'')}</b><div style="color:#C7D0DA;font-size:13px">@${esc(p.username||'-')} · ${esc(user.email)}</div></div></div>
+    <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 12px;font-size:16px">Data untuk pemasangan</h2>
+      <div class="field"><label for="aw">No. WhatsApp</label><input class="inp" id="aw" inputmode="tel" value="${esc(p.wa)}"></div>
+      <div class="field"><label for="aa">Alamat</label><textarea class="inp" id="aa">${esc(p.alamat)}</textarea></div>
+      <button class="btn" id="asave">Simpan</button></div>
+    <div class="panel" style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
+      <a class="btn line block" href="#/orders">Riwayat pembelian</a>
+      <button class="btn line block" id="alogout" style="color:var(--price);border-color:var(--price)">Keluar</button></div>`;
+  document.getElementById('asave').onclick = async ()=>{
+    const wa = document.getElementById('aw').value.trim(), alamat = document.getElementById('aa').value.trim();
+    try{ await api('shop/customers/'+user.uid, { method:'PATCH', body:JSON.stringify({ wa, alamat }) }, true); profile = Object.assign(profile||{}, { wa, alamat }); toast('Data disimpan'); }catch(e){ toast('Gagal menyimpan'); }
+  };
+  document.getElementById('alogout').onclick = async ()=>{ await auth.signOut(); location.hash = '#/'; };
 }
 
 /* ---------- boot ---------- */
 async function boot(){
   saveCart();
-  if(!DB){ app.innerHTML = `<div class="empty"><h3>Toko belum terhubung</h3><p>Isi <code>DB_URL</code> di file toko.html dengan Database URL Firebase, atau buka toko lewat link dari Drive Desk.</p></div>`; return; }
+  if(!DB){ app.innerHTML = `<div class="empty"><h3>Toko belum terhubung</h3><p>Isi <code>DB_URL</code> di file toko.html, atau buka toko lewat link dari admin.</p></div>`; return; }
   app.innerHTML = `<div class="skel" style="aspect-ratio:12/5;margin-top:16px"></div><div class="grid" style="margin-top:20px">${'<div class="skel" style="aspect-ratio:3/4"></div>'.repeat(4)}</div>`;
   try{ CAT = await api('pos/catalog'); }catch(e){ CAT = null; }
-  if(!CAT){ app.innerHTML = `<div class="empty"><h3>Katalog belum tersedia</h3><p>Buka menu Toko Online di Drive Desk lalu tekan "Update katalog sekarang". Kalau masih kosong, periksa rules Firebase untuk path <code>pos</code>.</p><button class="btn" onclick="boot()">Coba lagi</button></div>`; return; }
-  CAT.film = CAT.film || { sides:[], packages:{}, brands:[] }; CAT.film.brands = CAT.film.brands||[]; CAT.carpets = CAT.carpets||[];
-  CAT.banners = CAT.banners||[]; CAT.vouchers = CAT.vouchers||[]; CAT.shipping = CAT.shipping||[]; CAT.payments = CAT.payments||{};
+  if(!CAT){ app.innerHTML = `<div class="empty"><h3>Katalog belum tersedia</h3><p>Toko sedang disiapkan. Coba beberapa saat lagi.</p><button class="btn" onclick="boot()">Coba lagi</button></div>`; return; }
+  CAT.film = CAT.film || { sides:[], packages:{}, brands:[] }; CAT.film.brands = CAT.film.brands||[];
+  ['carpets','products','banners','promos','shipping','categories','cars'].forEach(k=>{ CAT[k] = CAT[k]||[]; });
+  CAT.payments = CAT.payments||{}; CAT.store = CAT.store||{};
   CAT.film.brands.forEach(b=>{ b.prices = b.prices||{}; b.shades = b.shades||{}; b.images = b.images||[]; });
   CAT.carpets.forEach(c=>{ c.prices = c.prices||{}; c.packages = c.packages||[]; c.colors = c.colors||[]; c.images = c.images||[]; });
-  document.title = CAT.store.name || 'Toko Aksesoris';
-  document.getElementById('storeName').textContent = CAT.store.name || 'Toko Aksesoris';
+  CAT.products.forEach(x=>{ x.variants = x.variants||[]; x.images = x.images||[]; });
+  CAT.cars.forEach(c=>{ c.models = c.models||[]; });
+  document.title = CAT.store.name || 'Toko Aksesoris Mobil';
+  document.getElementById('storeName').textContent = CAT.store.name || 'Toko Aksesoris Mobil';
   if(CAT.store.logo){ const l = document.getElementById('logo'); l.dataset.img = CAT.store.logo; hydrate(document.querySelector('.top')); }
+  initAuth();
+  if(auth) await new Promise(r=>{ const off = auth.onAuthStateChanged(()=>{ off(); r(); }); setTimeout(r, 4000); });
+  booted = true;
   route();
 }
 boot();
+
 </script>
 </body>
 </html>
