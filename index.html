@@ -457,6 +457,9 @@ body[data-seg="frozen"] .hero-fb .kicker{color:#9BE3F7;background:rgba(127,216,2
 .dchip:focus-visible{outline:2.5px solid var(--amber);outline-offset:2px}
 .pcard.sold .pimg{opacity:.5}
 .tag.sold{background:var(--ink);color:#fff;left:8px;top:8px}
+.reset-mode .top .search,.reset-mode .top .icon-btn,.reset-mode .bnav,.reset-mode .segbar-wrap,.reset-mode .fab{display:none !important}
+.reset-mode .top .wrap{justify-content:center}
+.reset-mode .brand-name{display:inline !important;color:#fff;font-weight:800}
 </style>
 </head>
 <body>
@@ -1510,8 +1513,52 @@ async function refreshCatalog(){
 }
 document.addEventListener('visibilitychange', ()=>{ if(!document.hidden && CAT && Date.now()-catLoadedAt > 90000) refreshCatalog(); });
 
+/* ---------- reset password lewat link email ----------
+   Action URL di Firebase diarahkan ke halaman toko ini. Link email berbentuk
+   .../tokoacc/?mode=resetPassword&oobCode=...&apiKey=...  Halaman ini tidak butuh katalog/DB. */
+const RESET = (function(){
+  try{ const q = new URLSearchParams(location.search);
+    if(q.get('mode')==='resetPassword' && q.get('oobCode')){ const r = { code:q.get('oobCode'), apiKey:q.get('apiKey')||'' }; history.replaceState(null, '', location.pathname + '#/reset'); return r; } }catch(e){}
+  return null;
+})();
+function toStore(hash){ location.href = location.pathname + '?s=' + Date.now() + (DB ? '&db=' + encodeURIComponent(DB) : '') + (hash||''); }
+async function viewReset(){
+  const card = html=>{ app.innerHTML = `<div class="panel auth-card">${html}</div>`; };
+  const dead = ()=>{ card(`<h1>Link tidak berlaku</h1><p class="sub">Link reset sudah dipakai, kedaluwarsa (berlaku 1 jam), atau tidak lengkap. Minta link baru untuk melanjutkan.</p><button class="btn block" id="rsNew">Minta link baru</button>`); document.getElementById('rsNew').onclick = ()=>toStore('#/forgot'); };
+  if(!RESET || !RESET.code || !auth){ dead(); return; }
+  card(`<div class="skel" style="height:26px;width:60%"></div><div class="skel" style="height:46px;margin-top:16px"></div><div class="skel" style="height:46px;margin-top:12px"></div>`);
+  let email = '';
+  try{ email = await auth.verifyPasswordResetCode(RESET.code); }catch(x){ dead(); return; }
+  card(`<h1>Buat password baru</h1><p class="sub">Untuk akun <b>${esc(email)}</b></p>
+    ${pwField('np','Password baru','new-password')}${pwField('np2','Ulangi password baru','new-password')}
+    <div id="rserr" class="err" role="alert"></div><button class="btn block" id="rsbtn" style="margin-top:6px">Simpan password</button>`);
+  bindPw();
+  const go = async ()=>{
+    const a = document.getElementById('np').value, b = document.getElementById('np2').value, er = document.getElementById('rserr'), btn = document.getElementById('rsbtn');
+    if(a.length < 6){ er.textContent = 'Password minimal 6 karakter.'; return; }
+    if(a !== b){ er.textContent = 'Kedua password belum sama.'; return; }
+    btn.disabled = true; btn.textContent = 'Menyimpan...'; er.textContent = '';
+    try{ await auth.confirmPasswordReset(RESET.code, a); RESET.code = ''; }
+    catch(x){ const c = String((x && x.code) || ''); if(c.includes('expired') || c.includes('invalid-action')){ dead(); return; } er.textContent = authErr(x); btn.disabled = false; btn.textContent = 'Simpan password'; return; }
+    card(`<h1>Password berhasil diubah</h1><p class="sub">Silakan masuk dengan password baru kamu.</p><button class="btn block" id="rsGo">Masuk ke toko</button>`);
+    document.getElementById('rsGo').onclick = ()=>toStore('#/login');
+  };
+  document.getElementById('rsbtn').onclick = go;
+  ['np','np2'].forEach(id=>document.getElementById(id).onkeydown = e=>{ if(e.key==='Enter') go(); });
+}
+async function bootReset(){
+  document.body.classList.add('reset-mode');
+  try{
+    if(typeof firebase==='undefined' || !RESET.apiKey) throw new Error('sdk/key');
+    const a = firebase.apps.length ? firebase.app() : firebase.initializeApp({ apiKey:RESET.apiKey, authDomain:location.hostname });
+    auth = a.auth(); auth.languageCode = 'id';
+  }catch(e){ console.error('reset init', e); auth = null; }
+  document.title = 'Buat password baru';
+  viewReset();
+}
 async function boot(){
   saveCart();
+  if(RESET) return bootReset();
   if(!DB){ app.innerHTML = `<div class="empty"><h3>Toko belum terhubung</h3><p>Isi <code>DB_URL</code> di file toko.html, atau buka toko lewat link dari admin.</p></div>`; return; }
   app.innerHTML = `<div class="skel" style="aspect-ratio:12/5;margin-top:16px"></div><div class="grid" style="margin-top:20px">${'<div class="skel" style="aspect-ratio:3/4"></div>'.repeat(4)}</div>`;
   try{ CAT = await api('pos/catalog'); }catch(e){ CAT = null; }
