@@ -492,6 +492,7 @@ body[data-seg="frozen"] .hero-fb .kicker{color:#9BE3F7;background:rgba(127,216,2
   <a href="#/cart" data-nav="cart"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.5L21 8H6"/></svg>Keranjang<span class="count" id="cartCount2"></span></a>
   <a href="#/orders" data-nav="orders"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Pesanan</a>
 </nav>
+<script src="config.js"></script>
 <script>
 /* =====================================================================
    Toko aksesoris mobil — front end (independen, pemasangan di alamat pembeli).
@@ -499,7 +500,7 @@ body[data-seg="frozen"] .hero-fb .kicker{color:#9BE3F7;background:rgba(127,216,2
    (menu Toko Online) lewat Firebase Realtime Database.
    Isi DB_URL di bawah, atau buka toko dengan ?db=<database URL>.
    ===================================================================== */
-const DB_URL = '';
+const DB_URL = (window.TOKO_CONFIG && window.TOKO_CONFIG.dbUrl) || '';   /* diisi lewat config.js (unduh dari Drive Desk), atau tulis alamatnya langsung di sini */
 
 const LS = { get:(k,d)=>{ try{ const v = localStorage.getItem('toko:'+k); return v ? JSON.parse(v) : d; }catch(e){ return d; } },
              set:(k,v)=>{ try{ localStorage.setItem('toko:'+k, JSON.stringify(v)); }catch(e){} },
