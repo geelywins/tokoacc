@@ -460,6 +460,7 @@ body[data-seg="frozen"] .hero-fb .kicker{color:#9BE3F7;background:rgba(127,216,2
 .reset-mode .top .search,.reset-mode .top .icon-btn,.reset-mode .bnav,.reset-mode .segbar-wrap,.reset-mode .fab{display:none !important}
 .reset-mode .top .wrap{justify-content:center}
 .reset-mode .brand-name{display:inline !important;color:#fff;font-weight:800}
+.aff-info{font-size:13px;background:#FFF8E8;border:1px solid #F5DDA6;border-radius:10px;padding:9px 12px;color:#6B5310}
 </style>
 </head>
 <body>
@@ -1003,6 +1004,7 @@ function viewProduct(kind, id){
           : `
             ${(d.variants||[]).length>1||((d.variants||[])[0]||{}).name!=='Standar' ? `<div class="opt"><div class="opt-label">Variasi</div>${chipRow('variant', d.variants.filter(v=>v.price>0).map(v=>v.name), st.variant, vSub, vOut)}</div>`:''}
             ${p.segment==='frozen'?frozenInfoHtml(d):''}
+            ${d.source==='affiliate'?affInfoHtml(d):''}
             <div class="opt"><div class="opt-label">Jumlah</div><div class="qty"><button id="qm" aria-label="Kurangi">−</button><span>${st.qty}</span><button id="qp" aria-label="Tambah">+</button></div></div>`}
           ${d.desc?`<div class="opt"><div class="opt-label">Deskripsi</div><p class="desc">${esc(d.desc)}</p></div>`:''}
           <div class="buybar">
@@ -1038,6 +1040,9 @@ function viewProduct(kind, id){
     document.getElementById('buyNow').onclick = ()=>{ add(); location.hash = '#/cart'; };
   };
   draw();
+}
+function affInfoHtml(d){
+  return `<div class="opt"><div class="opt-label">Pengiriman</div><div class="aff-info">Produk ini dikirim dari toko mitra kami${d.eta?`, estimasi tiba <b>${esc(d.eta)}</b>`:''}. Bisa tiba terpisah dari produk lain.</div></div>`;
 }
 function frozenInfoHtml(d){
   const F = CAT.frozen||{}; const rows = [['Masa simpan', d.shelfLife],['Penyimpanan', d.storage],['Cara olah', d.howTo]].filter(r=>r[1]);
@@ -1164,7 +1169,8 @@ async function viewCheckout(segKey){
   };
   draw();
 }
-function orderItemsOut(t){ return t.lines.map(({it,price,normal,deal})=>({ kind:it.kind, pid:it.pid, variant:it.variant||'', title:it.title, options:itemOptions(it), qty:it.qty, price, normalPrice:normal, deal: deal ? dealTag(deal) : '' })); }
+function itemSrc(it){ const x = (CAT.products||[]).find(y=>y.id===it.pid); return x && x.source==='affiliate' ? 'affiliate' : 'own'; }
+function orderItemsOut(t){ return t.lines.map(({it,price,normal,deal})=>({ kind:it.kind, pid:it.pid, variant:it.variant||'', title:it.title, options:itemOptions(it), qty:it.qty, price, normalPrice:normal, deal: deal ? dealTag(deal) : '', src:itemSrc(it) })); }
 function clearOrdered(t){ const ks = new Set(t.lines.map(l=>l.it.key)); cart = cart.filter(i=>!ks.has(i.key)); saveCart(); promoState = { code:'', promo:null, error:'' }; LS.del('promo'); }
 async function placeOrder(f, ship, fee, install, t, v){
   const err = document.getElementById('cerr');
@@ -1475,7 +1481,7 @@ async function viewOrder(key){
         ${o.proof ? `<p style="color:var(--ok);font-weight:700;margin:0">✓ Bukti pembayaran terkirim.</p>` : `<button class="btn block" id="proof">Unggah bukti pembayaran</button>`}</div>` : ''}
       ${o.status==='baru' && o.payment.method==='cash' ? `<div class="panel"><p style="margin:0">Siapkan uang tunai <b>${rp(o.grandTotal)}</b> untuk dibayarkan ke ${o.shipping.install?'teknisi saat pemasangan':'kurir saat barang tiba'}. Admin akan menghubungi kamu untuk konfirmasi jadwal.</p></div>`:''}
       <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 10px;font-size:16px">Detail pesanan</h2>
-        ${o.items.map(i=>`<div class="sum-row" style="align-items:flex-start"><span><b>${esc(i.title)}</b> × ${i.qty}<br><span style="font-size:12.5px;color:var(--muted)">${esc((i.options||[]).join(' · '))}</span></span><span>${rp(i.price*i.qty)}</span></div>`).join('')}
+        ${o.items.map(i=>`<div class="sum-row" style="align-items:flex-start"><span><b>${esc(i.title)}</b> × ${i.qty}<br><span style="font-size:12.5px;color:var(--muted)">${esc((i.options||[]).join(' · '))}${i.src==='affiliate'?' · dikirim dari toko mitra':''}</span></span><span>${rp(i.price*i.qty)}</span></div>`).join('')}
         ${o.promo?`<div class="sum-row disc" style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px"><span>Kode promo ${esc(o.promo.code)}</span><span>− ${rp(o.promo.discount)}</span></div>`:''}
         ${fz ? `<div class="sum-row"${o.promo?'':' style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px"'}><span>Kemasan dingin</span><span>${o.packFee?rp(o.packFee):'Gratis'}</span></div>
           <div class="sum-row"><span>Ongkir ${esc(o.shipping.name)}</span><span>${pending?'<span class="st-note">dihitung admin</span>':rp(o.shipping.fee)}</span></div>`
