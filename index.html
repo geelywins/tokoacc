@@ -460,6 +460,7 @@ body[data-seg="frozen"] .hero-fb .kicker{color:#9BE3F7;background:rgba(127,216,2
 .reset-mode .top .search,.reset-mode .top .icon-btn,.reset-mode .bnav,.reset-mode .segbar-wrap,.reset-mode .fab{display:none !important}
 .reset-mode .top .wrap{justify-content:center}
 .reset-mode .brand-name{display:inline !important;color:#fff;font-weight:800}
+.aff-st{display:block;font-size:12.5px;color:#8A6D1A;margin-top:3px}.aff-ok{color:var(--ok)}
 .aff-info{font-size:13px;background:#FFF8E8;border:1px solid #F5DDA6;border-radius:10px;padding:9px 12px;color:#6B5310}
 </style>
 </head>
@@ -1169,6 +1170,13 @@ async function viewCheckout(segKey){
   };
   draw();
 }
+function affStatusHtml(o, ix){
+  const i = (o.items||[])[ix]; if(!i || i.src!=='affiliate' || o.status==='batal') return '';
+  const rec = (o.affOrders||{})['i'+ix];
+  if(!rec || !rec.done) return `<span class="aff-st">Produk toko mitra · sedang disiapkan</span>`;
+  if(!rec.resi) return `<span class="aff-st aff-ok">Sudah dipesan ke toko mitra · menunggu nomor resi</span>`;
+  return `<span class="aff-st aff-ok">Dikirim${rec.kurir?' via '+esc(rec.kurir):''} · Resi <b>${esc(rec.resi)}</b> <button type="button" class="link-btn" data-copyresi="${esc(rec.resi)}">Salin</button></span>`;
+}
 function itemSrc(it){ const x = (CAT.products||[]).find(y=>y.id===it.pid); return x && x.source==='affiliate' ? 'affiliate' : 'own'; }
 function orderItemsOut(t){ return t.lines.map(({it,price,normal,deal})=>({ kind:it.kind, pid:it.pid, variant:it.variant||'', title:it.title, options:itemOptions(it), qty:it.qty, price, normalPrice:normal, deal: deal ? dealTag(deal) : '', src:itemSrc(it) })); }
 function clearOrdered(t){ const ks = new Set(t.lines.map(l=>l.it.key)); cart = cart.filter(i=>!ks.has(i.key)); saveCart(); promoState = { code:'', promo:null, error:'' }; LS.del('promo'); }
@@ -1481,7 +1489,7 @@ async function viewOrder(key){
         ${o.proof ? `<p style="color:var(--ok);font-weight:700;margin:0">✓ Bukti pembayaran terkirim.</p>` : `<button class="btn block" id="proof">Unggah bukti pembayaran</button>`}</div>` : ''}
       ${o.status==='baru' && o.payment.method==='cash' ? `<div class="panel"><p style="margin:0">Siapkan uang tunai <b>${rp(o.grandTotal)}</b> untuk dibayarkan ke ${o.shipping.install?'teknisi saat pemasangan':'kurir saat barang tiba'}. Admin akan menghubungi kamu untuk konfirmasi jadwal.</p></div>`:''}
       <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 10px;font-size:16px">Detail pesanan</h2>
-        ${o.items.map(i=>`<div class="sum-row" style="align-items:flex-start"><span><b>${esc(i.title)}</b> × ${i.qty}<br><span style="font-size:12.5px;color:var(--muted)">${esc((i.options||[]).join(' · '))}${i.src==='affiliate'?' · dikirim dari toko mitra':''}</span></span><span>${rp(i.price*i.qty)}</span></div>`).join('')}
+        ${o.items.map((i,ix)=>`<div class="sum-row" style="align-items:flex-start"><span><b>${esc(i.title)}</b> × ${i.qty}<br><span style="font-size:12.5px;color:var(--muted)">${esc((i.options||[]).join(' · '))}${i.src==='affiliate'?' · dikirim dari toko mitra':''}</span>${affStatusHtml(o, ix)}</span><span>${rp(i.price*i.qty)}</span></div>`).join('')}
         ${o.promo?`<div class="sum-row disc" style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px"><span>Kode promo ${esc(o.promo.code)}</span><span>− ${rp(o.promo.discount)}</span></div>`:''}
         ${fz ? `<div class="sum-row"${o.promo?'':' style="border-top:1px solid var(--line);margin-top:6px;padding-top:10px"'}><span>Kemasan dingin</span><span>${o.packFee?rp(o.packFee):'Gratis'}</span></div>
           <div class="sum-row"><span>Ongkir ${esc(o.shipping.name)}</span><span>${pending?'<span class="st-note">dihitung admin</span>':rp(o.shipping.fee)}</span></div>`
@@ -1499,6 +1507,7 @@ async function viewOrder(key){
         <a class="btn block" style="margin-top:8px" href="#/">Belanja lagi</a></div></div>`;
   hydrate(app);
   app.querySelectorAll('[data-copy]').forEach(b=>b.onclick = ()=>navigator.clipboard.writeText(b.dataset.copy).then(()=>toast('Nomor rekening disalin')));
+  app.querySelectorAll('[data-copyresi]').forEach(b=>b.onclick = ()=>navigator.clipboard.writeText(b.dataset.copyresi).then(()=>toast('Nomor resi disalin')));
   const pb = document.getElementById('proof'); if(pb) pb.onclick = ()=>uploadProof(key, pb);
   const ib = document.getElementById('invBtn'); if(ib) ib.onclick = async ()=>{ ib.disabled = true; const t0 = ib.textContent; ib.textContent = 'Menyiapkan invoice...'; await invoiceOpen('save', o, invoiceInfoStore(key)); ib.disabled = false; ib.textContent = t0; };
   const rf = document.getElementById('ordRefresh'); if(rf) rf.onclick = ()=>viewOrder(key);
