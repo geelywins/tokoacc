@@ -487,6 +487,63 @@ body[data-seg="frozen"] .hero-fb .kicker{color:#9BE3F7;background:rgba(127,216,2
 .lb-img{max-width:100%;max-height:100%;object-fit:contain;transform-origin:center center;will-change:transform;-webkit-user-drag:none}
 .lb-nav{position:absolute;top:50%;margin-top:-21px;z-index:2}.lb-prev{left:10px}.lb-next{right:10px}
 .lb-hint{color:rgba(255,255,255,.6);font-size:12px;text-align:center;padding:8px 12px calc(14px + env(safe-area-inset-bottom,0px))}
+/* ===================== segmen Properti ===================== */
+body[data-seg="properti"]{--blue:#0F766E;--blue-soft:#DDF3EF;--grad-ink:linear-gradient(135deg,#071F1D 0%,#0E3B37 55%,#14746B 100%);--btn-a:#0F766E;--btn-b:#1AA595}
+body[data-seg="properti"] .top::after{background:linear-gradient(90deg,#FFB020,#2DBFAE 50%,#0F766E)}
+body[data-seg="properti"] .hero-fb .kicker{color:#9EEADD;background:rgba(45,191,174,.16);border-color:rgba(45,191,174,.45)}
+body[data-seg="properti"] .hero-fb::before{background:radial-gradient(circle,rgba(45,191,174,.35),transparent 65%)}
+body[data-seg="properti"] .hero-fb em{color:#FFB020;font-style:normal}
+.hero-pr .snow{width:100%;max-width:150px;margin:0 auto;display:block;animation:none;filter:drop-shadow(0 8px 18px rgba(0,0,0,.35))}
+/* navigasi bawah & header khusus properti */
+.bnav .bn-prop{display:none}
+body[data-seg="properti"] .bnav a:not(.bn-prop):not([data-nav="home"]){display:none}
+body[data-seg="properti"] .bnav .bn-prop{display:flex}
+body[data-seg="properti"] .top a.icon-btn[href="#/cart"]{display:none}
+.hide-fab .fab-wa{display:none}
+.pill{display:inline-block;font-size:11px;font-weight:800;padding:3px 9px;border-radius:20px;background:#EEF1F6;color:var(--ink-2)}
+.pill.lead{background:var(--blue-soft);color:var(--blue)}
+@media (max-width:420px){.segbar{gap:4px}.segbar button{font-size:12.5px;gap:5px;padding:8px 4px}.segbar button svg{width:16px;height:16px}}
+/* kartu & daftar */
+.prgrid{display:grid;grid-template-columns:1fr;gap:14px}
+@media (min-width:720px){.prgrid{grid-template-columns:repeat(2,1fr)}}
+@media (min-width:1000px){.prgrid{grid-template-columns:repeat(3,1fr)}}
+.prcard{all:unset;cursor:pointer;display:flex;flex-direction:column;background:var(--card);border-radius:var(--r-md);overflow:hidden;box-shadow:var(--shadow-sm);box-sizing:border-box}
+.prcard:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.prcard .pimg{aspect-ratio:4/3;display:flex;align-items:center;justify-content:center}
+.prcard .pimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.prcard.sold .pimg{opacity:.55}
+.prtype{position:absolute;right:8px;bottom:8px;background:rgba(22,32,43,.78);color:#fff;font-size:11px;font-weight:700;padding:3px 9px;border-radius:6px}
+.prprice{font-size:18px;font-weight:800;color:var(--price);letter-spacing:-.01em}
+.prprice small,.prnote{font-size:12px;font-weight:700;color:var(--muted);margin-left:2px}
+.prloc{display:flex;align-items:center;gap:5px;font-size:12.5px;color:var(--muted)}
+.prloc.big{font-size:14px;margin:2px 0 8px}
+.prspec{display:flex;flex-wrap:wrap;gap:6px 14px;margin-top:6px;padding-top:8px;border-top:1px solid var(--line)}
+.prspec i{font-style:normal;display:inline-flex;align-items:center;gap:5px;font-size:12.5px;font-weight:700;color:var(--ink-2)}
+.prfilter{display:flex;flex-direction:column;gap:10px;margin-bottom:14px}
+.prfilter .chips{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}.prfilter .chips::-webkit-scrollbar{display:none}
+.prfilter .chip{flex:none;white-space:nowrap;padding:7px 12px;font-size:13px}
+.chip[aria-pressed="true"]{border-color:var(--blue);background:var(--blue-soft);color:var(--blue)}
+.prsort{display:flex;align-items:center;gap:10px;font-size:13px;font-weight:700;color:var(--ink-2)}.prsort select{width:auto;flex:1;max-width:220px}
+/* detail */
+.gallery.gal-wide .main{aspect-ratio:4/3}
+.prtags{display:flex;gap:6px;flex-wrap:wrap;align-items:center;margin-bottom:8px}
+.prq{display:grid;grid-template-columns:repeat(auto-fit,minmax(92px,1fr));gap:8px;margin:14px 0 4px}
+.prq div{background:var(--blue-soft);border-radius:12px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;gap:2px;text-align:center}
+.prq span{color:var(--blue)}.prq b{font-size:15px}.prq small{font-size:11px;color:var(--ink-2)}
+.prdl{margin:0;display:grid;gap:0}
+.prdl div{display:grid;grid-template-columns:130px 1fr;gap:10px;padding:8px 2px;border-top:1px solid var(--line);font-size:13.5px}.prdl div:first-child{border-top:0}
+.prdl dt{color:var(--muted)}.prdl dd{margin:0;font-weight:700}
+.prchips{display:flex;flex-wrap:wrap;gap:6px}.prchips span{background:#F1F4F8;border-radius:20px;padding:5px 12px;font-size:12.5px;font-weight:600;color:var(--ink-2)}
+.prnear{margin:0;padding-left:18px;color:var(--ink-2);font-size:13.5px;line-height:1.7}
+.prlinks{display:flex;gap:8px;flex-wrap:wrap}.prlinks .btn{height:40px;font-size:13px}
+.kpr{background:#F6F9FB;border:1px solid var(--line);border-radius:14px;padding:12px}
+.detail>*{min-width:0}
+.kpr-out{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:4px}.kpr-out div:first-child{grid-column:1/-1}
+.kpr-out div{background:#fff;border-radius:10px;padding:8px;display:flex;flex-direction:column;gap:2px}.kpr-out small{font-size:11px;color:var(--muted)}.kpr-out b{font-size:14px;color:var(--ink)}
+.kpr-out div:first-child b{color:var(--price);font-size:15px}
+.prbar .btn{flex:1 1 0;min-width:0;height:46px;font-size:13.5px;padding:0 8px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prmini{display:flex;gap:12px;align-items:center}.prmini .pm-img{width:84px;height:68px;border-radius:10px;background:#DDE3EA;overflow:hidden;flex:none;display:flex;align-items:center;justify-content:center;position:relative}
+.prmini .pm-img img{width:100%;height:100%;object-fit:cover}.prmini .pm-img svg{width:34px;height:34px}
 </style>
 </head>
 <body>
@@ -506,6 +563,8 @@ body[data-seg="frozen"] .hero-fb .kicker{color:#9BE3F7;background:rgba(127,216,2
   <a href="#/promo" data-nav="promo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Promo</a>
   <a href="#/deal" data-nav="deal"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M12 2c1 4 5 5.5 5 10a5 5 0 0 1-10 0c0-2 1-3.5 2-4.5.5 2 1.5 3 3 3-1-3 0-6 0-8.5z"/></svg>Deal</a>
   <a href="#/cart" data-nav="cart"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 4h2l2.4 11.2a2 2 0 0 0 2 1.6h7.9a2 2 0 0 0 2-1.5L21 8H6"/></svg>Keranjang<span class="count" id="cartCount2"></span></a>
+  <a href="#/rumah" data-nav="rumah" class="bn-prop"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/></svg>Katalog</a>
+  <a href="#/appts" data-nav="appts" class="bn-prop"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Janji</a>
   <a href="#/orders" data-nav="orders"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/><path d="M9 8h6M9 12h6"/></svg>Pesanan</a>
 </nav>
 <script src="config.js"></script>
@@ -556,7 +615,8 @@ function catIco(c, size){ return `<span class="ci" style="--s:${size}px">${c && 
 let seg = LS.get('seg', 'otomotif');
 const SEG_ICON = {
   otomotif:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3.5 13.5 5.3 8.6A2 2 0 0 1 7.2 7.3h9.6a2 2 0 0 1 1.9 1.3l1.8 4.9M3 13.5h18v4H3z"/><path d="M6 17.5v2M18 17.5v2"/></svg>',
-  frozen:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5v19M4.2 7l15.6 10M19.8 7 4.2 17M9.2 4.2 12 6.5l2.8-2.3M9.2 19.8 12 17.5l2.8 2.3"/></svg>'
+  frozen:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2.5v19M4.2 7l15.6 10M19.8 7 4.2 17M9.2 4.2 12 6.5l2.8-2.3M9.2 19.8 12 17.5l2.8 2.3"/></svg>',
+  properti:'<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/></svg>'
 };
 function segKeys(){ return ((CAT&&CAT.segments)||[]).map(x=>x.key); }
 function segInfo(k){ return ((CAT&&CAT.segments)||[]).find(x=>x.key===k) || { key:k, name:k==='frozen'?'Frozen Food':'Otomotif', tagline:'' }; }
@@ -572,12 +632,12 @@ function renderSegBar(){
   wrap.hidden = false;
   el.innerHTML = list.map(x=>`<button type="button" role="tab" data-seg="${esc(x.key)}" aria-selected="${x.key===seg}">${SEG_ICON[x.key]||''}<span>${esc(x.name)}</span></button>`).join('');
 }
-function applySeg(){ const ks = segKeys(); if(ks.length && !ks.includes(seg)) seg = ks[0]; document.body.dataset.seg = seg; renderSegBar(); }
+function applySeg(){ const ks = segKeys(); if(ks.length && !ks.includes(seg)) seg = ks[0]; document.body.dataset.seg = seg; renderSegBar(); const qi = document.getElementById('q'); if(qi) qi.placeholder = seg==='properti' ? 'Cari rumah, lokasi, cluster...' : 'Cari kaca film, karpet...'; }
 function setSeg(k){ seg = k; LS.set('seg', k); applySeg(); }
 document.getElementById('segBar').addEventListener('click', e=>{
   const b = e.target.closest('[data-seg]'); if(!b || b.dataset.seg===seg) return;
   setSeg(b.dataset.seg);
-  if(/^#\/(c|search)\b/.test(location.hash)) location.hash = '#/'; else route();
+  if(/^#\/(c|search|rumah|janji|appts?)\b/.test(location.hash)) location.hash = '#/'; else route();
 });
 function products(){
   if(!CAT) return [];
@@ -754,6 +814,11 @@ document.addEventListener('click', e=>{
   q.addEventListener('input', ()=>{
     const v = q.value.trim().toLowerCase();
     if(!CAT || v.length<2){ close(); return; }
+    if(seg==='properti'){
+      const hp = propList().filter(x=>[x.title, x.area, x.city, x.type].join(' ').toLowerCase().includes(v)).slice(0, 6);
+      box.innerHTML = hp.map(x=>`<a href="#/rumah/${enc(x.id)}" role="option"><span class="s-ico">${x.images[0] ? `<img data-img="${x.images[0]}" alt="" hidden>` : PI.house}</span><span class="s-name">${esc(x.title)}</span><span class="s-price">${rpCompact(x.price)}</span></a>`).join('') + `<a class="s-all" href="#/search/${enc(q.value.trim())}">Lihat semua hasil “${esc(q.value.trim())}”</a>`;
+      box.hidden = false; hydrate(box); return;
+    }
     const hits = products().filter(p=>p.segment===seg && (p.name+' '+(p.brand||'')+' '+(catOf(p.categoryId).name||'')).toLowerCase().includes(v)).slice(0,6);
     box.innerHTML = hits.map(p=>`<a href="${productUrl(p)}" role="option"><span class="s-ico">${p.images[0]?`<img data-img="${p.images[0]}" alt="" hidden>`:catIco(catOf(p.categoryId),22)}</span><span class="s-name">${esc(p.name)}</span><span class="s-price">${rp(p.from)}</span></a>`).join('')
       + `<a class="s-all" href="#/search/${enc(q.value.trim())}">Lihat semua hasil “${esc(q.value.trim())}”</a>`;
@@ -766,8 +831,13 @@ document.addEventListener('click', e=>{
 })();
 
 /* tombol WhatsApp mengambang */
+function updateFab(){
+  const a = document.querySelector('.fab-wa'); if(!a || !CAT) return; const prop = seg === 'properti';
+  a.href = prop ? waLink((CAT.property && CAT.property.wa) || CAT.store.wa, `Halo, saya tertarik dengan properti di ${CAT.store.name || 'toko'}. Boleh minta info?`) : waLink(CAT.store.wa, `Halo ${CAT.store.name||'admin'}, saya mau tanya produk aksesoris.`);
+  document.body.classList.toggle('hide-fab', /^#\/(rumah\/|janji)/.test(location.hash));
+}
 function mountFab(){
-  if(!CAT || !CAT.store.wa || document.querySelector('.fab-wa')) return;
+  if(!CAT || !(CAT.store.wa || (CAT.property && CAT.property.wa)) || document.querySelector('.fab-wa')) return;
   const a = document.createElement('a'); a.className = 'fab-wa'; a.target = '_blank'; a.rel = 'noopener'; a.setAttribute('aria-label','Chat admin via WhatsApp');
   a.href = waLink(CAT.store.wa, `Halo ${CAT.store.name||'admin'}, saya mau tanya produk aksesoris.`);
   a.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1l-.8 1c-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.2-.4.2-.4.7-1.3.1-.2 0-.3 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.8 11.9 11.9 0 0 0 4.6 4c1.7.7 2.4.8 3.2.7.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>';
@@ -822,19 +892,23 @@ function route(){
   clearInterval(slideTimer); clearInterval(window.__ordPoll);
   const h = location.hash.replace(/^#/,'') || '/';
   const parts = h.split('/').filter(Boolean).map(decodeURIComponent);
-  const hideNav = ['p','checkout','login','register','forgot'].includes(parts[0]);
+  const hideNav = ['p','checkout','login','register','forgot','janji'].includes(parts[0]) || (parts[0]==='rumah' && !!parts[1]);
   document.body.classList.toggle('hide-bnav', hideNav);
-  document.body.classList.toggle('hide-seg', ['p','cart','checkout','login','register','forgot','order','orders','account','fav','refund'].includes(parts[0]));
-  const nav = !parts.length ? 'home' : parts[0]==='promo' ? 'promo' : parts[0]==='deal' ? 'deal' : parts[0]==='cart' ? 'cart' : (parts[0]==='orders'||parts[0]==='order') ? 'orders' : '';
+  document.body.classList.toggle('hide-seg', ['p','cart','checkout','login','register','forgot','order','orders','account','fav','refund','janji','appt','appts'].includes(parts[0]) || (parts[0]==='rumah' && !!parts[1]));
+  const nav = !parts.length ? 'home' : parts[0]==='promo' ? 'promo' : parts[0]==='deal' ? 'deal' : parts[0]==='cart' ? 'cart' : (parts[0]==='orders'||parts[0]==='order') ? 'orders' : parts[0]==='rumah' ? 'rumah' : (parts[0]==='appts'||parts[0]==='appt') ? 'appts' : '';
   document.querySelectorAll('.bnav a').forEach(a=>{ if(a.dataset.nav===nav) a.setAttribute('aria-current','page'); else a.removeAttribute('aria-current'); });
   window.scrollTo(0,0);
   app.classList.remove('fade'); void app.offsetWidth; app.classList.add('fade'); clearTimeout(window.__fadeT); window.__fadeT = setTimeout(()=>app.classList.remove('fade'), 450);
   if(!CAT) return;
-  mountFab();
+  mountFab(); updateFab();
   const [a, b, c] = parts;
   if(!a) return viewHome();
   if(a==='c') return viewList(b);
-  if(a==='search') return viewList('', b||'');
+  if(a==='search') return seg==='properti' ? viewPropList(b||'') : viewList('', b||'');
+  if(a==='rumah') return b ? viewProp(b) : viewPropList('');
+  if(a==='janji') return viewApptForm(b);
+  if(a==='appt') return viewAppt(b);
+  if(a==='appts') return viewAppts();
   if(a==='promo') return viewPromo();
   if(a==='deal') return viewDeal();
   if(a==='p') return viewProduct(b, c);
@@ -913,6 +987,7 @@ function bindCarousels(lists){
 
 /* ---------- beranda, kategori, promo, deal ---------- */
 function viewHome(){
+  if(seg==='properti') return viewHomeProp();
   const S = seg, info = segInfo(S);
   const bn = CAT.banners.filter(b=>!b.segment || b.segment==='all' || b.segment===S);
   const promo = bn.filter(b=>b.kind==='promo'), iklan = bn.filter(b=>b.kind==='iklan');
@@ -1083,6 +1158,256 @@ function lbOpenFromGallery(m){
 }
 document.addEventListener('click', e=>{ const m = e.target.closest && e.target.closest('.gallery .main.zoomable'); if(m) lbOpenFromGallery(m); });
 document.addEventListener('keydown', e=>{ if((e.key === 'Enter' || e.key === ' ') && e.target.matches && e.target.matches('.gallery .main.zoomable')){ e.preventDefault(); lbOpenFromGallery(e.target); } });
+/* ===================== segmen Properti: katalog rumah, WhatsApp, janji temu ===================== */
+const ICO = (d, sz)=>`<svg viewBox="0 0 24 24" width="${sz||15}" height="${sz||15}" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${d}</svg>`;
+const PI = {
+  pin: ICO('<path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/>', 14),
+  bed: ICO('<path d="M3 18v-7a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v7M3 15h18M7 9V6h4v3"/>'),
+  bath: ICO('<path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4zM6 12V6a2 2 0 0 1 4 0M7 19l-1 2M17 19l1 2"/>'),
+  land: ICO('<path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16" opacity=".55"/>'),
+  bld: ICO('<path d="M5 21V8l7-4 7 4v13M9 21v-6h6v6"/>'),
+  car: ICO('<path d="M3.5 14 5.3 9a2 2 0 0 1 1.9-1.3h9.6A2 2 0 0 1 18.7 9l1.8 5M3 14h18v4H3zM6.5 18v1.5M17.5 18v1.5"/>'),
+  house: '<svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#97A3B0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/></svg>',
+  houseBig: '<svg viewBox="0 0 24 24" class="snow" fill="none" stroke="#BFEFE8" stroke-width="1.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 11.5 12 4l9 7.5"/><path d="M5.5 10v10h13V10"/><path d="M10 20v-5.5h4V20"/><circle cx="17.5" cy="5.5" r="1.2" fill="#FFB020" stroke="none"/></svg>'
+};
+function propList(){ return CAT.properties || []; }
+function propById(id){ return propList().find(x=>x.id===id); }
+function propLoc(x){ return [x.area, x.city].filter(Boolean).join(', '); }
+function rpCompact(n){
+  n = Number(n) || 0;
+  if(n >= 1e9){ const v = n / 1e9; return 'Rp' + (v % 1 === 0 ? v.toFixed(0) : v.toFixed(2).replace(/0$/, '')).replace('.', ',') + ' M'; }
+  if(n >= 1e6){ const v = n / 1e6; return 'Rp' + (v % 1 === 0 ? v.toFixed(0) : v.toFixed(1)).replace('.', ',') + ' jt'; }
+  return rp(n);
+}
+function propWaNumber(x){ return (x && x.agentWa) || (CAT.property && CAT.property.wa) || CAT.store.wa || ''; }
+function propWaLink(x){
+  const url = location.href.split('#')[0].replace(/\?.*$/, '') + '#/rumah/' + enc(x.id);
+  return waLink(propWaNumber(x), `Halo${x.agentName ? ' ' + x.agentName : ''}, saya tertarik dengan ${x.title}${propLoc(x) ? ' di ' + propLoc(x) : ''} (${rp(x.price)}). Bisa minta info lebih lanjut? ${url}`);
+}
+function propCard(x){
+  const sold = x.status === 'terjual', book = x.status === 'booking';
+  return `<a class="prcard${sold ? ' sold' : ''}" href="#/rumah/${enc(x.id)}">
+    <div class="pimg">${x.images[0] ? `<img data-img="${x.images[0]}" alt="" hidden>` : ''}<div class="ph" aria-hidden="true">${PI.house}</div>
+      ${sold ? '<span class="tag sold">Terjual</span>' : book ? '<span class="tag">Booking</span>' : (x.badge ? `<span class="tag">${esc(x.badge)}</span>` : '')}<span class="prtype">${esc(x.type)}</span></div>
+    <div class="pbody"><span class="prprice">${rpCompact(x.price)}${x.priceNote ? ` <small>${esc(x.priceNote)}</small>` : ''}</span><span class="pname">${esc(x.title)}</span>
+      <span class="prloc">${PI.pin}${esc(propLoc(x))}</span>
+      <span class="prspec">${x.kt ? `<i title="Kamar tidur">${PI.bed}${x.kt}</i>` : ''}${x.km ? `<i title="Kamar mandi">${PI.bath}${x.km}</i>` : ''}${x.lt ? `<i title="Luas tanah">${PI.land}${x.lt} m²</i>` : ''}${x.lb ? `<i title="Luas bangunan">${PI.bld}${x.lb} m²</i>` : ''}</span></div></a>`;
+}
+function heroProp(){
+  const t = segInfo('properti').tagline || 'Lihat katalog lengkap dengan spesifikasi, lalu buat janji survei langsung.';
+  return `<section class="hero-fb hero-pr"><div><span class="kicker">Properti pilihan</span><h1>Temukan rumah<br><em>yang pas untuk keluarga</em></h1><p>${esc(t)}</p><a class="btn amber" href="#/rumah">Lihat katalog</a></div><div class="hero-car">${PI.houseBig}</div></section>`;
+}
+function trustProp(){
+  return `<div class="trust"><div><i style="background:#DDF3EF">💬</i><span><b>Tanya via WhatsApp</b>Konsultasi tanpa biaya</span></div><div><i style="background:#FFF1D6">📅</i><span><b>Janji survei</b>Pilih tanggal &amp; jam</span></div><div><i style="background:#E8F0FF">🧮</i><span><b>Simulasi cicilan</b>Perkiraan KPR</span></div></div>`;
+}
+function setupPropSeg(){ if(seg !== 'properti') setSeg('properti'); }
+function propUnavailable(){ app.innerHTML = `<div class="empty"><h3>Segmen properti belum tersedia</h3><a href="#/">Kembali ke beranda</a></div>`; }
+function viewHomeProp(){
+  const info = segInfo('properti'); const nama = profile && profile.nama ? profile.nama.split(' ')[0] : '';
+  const bn = CAT.banners.filter(b=>!b.segment || b.segment==='all' || b.segment==='properti'); const promo = bn.filter(b=>b.kind==='promo'), iklan = bn.filter(b=>b.kind==='iklan');
+  const list = propList().slice().sort((a,b)=>(a.status==='terjual') - (b.status==='terjual') || String(b.createdAt).localeCompare(String(a.createdAt)));
+  const types = [...new Set(propList().map(x=>x.type))];
+  app.innerHTML = `<div class="hello"><div><b>${nama ? `Halo, ${esc(nama)} 👋` : 'Selamat datang 👋'}</b><span>${esc(info.tagline || '')}</span></div>${user ? `<a href="#/appts">📅 Janji saya</a>` : `<a href="#/login">Masuk</a>`}</div>
+    ${promo.length ? carousel(promo, 'promo') : heroProp()}
+    ${trustProp()}
+    ${types.length > 1 ? `<div class="chips" style="margin:14px 0 0">${types.map(t=>`<a class="chip" href="#/rumah" data-ptype="${esc(t)}">${esc(t)}</a>`).join('')}</div>` : ''}
+    <div class="sec-head"><h2>Properti terbaru</h2><a href="#/rumah">Lihat semua</a></div>
+    ${list.length ? `<div class="prgrid">${list.slice(0, 6).map(propCard).join('')}</div>` : `<div class="empty"><h3>Properti segera hadir</h3>Katalog akan tampil begitu admin menambahkan rumah.</div>`}
+    ${iklan.length ? carousel(iklan, 'iklan', { ratio:'8/3', label:'Iklan', auto:false, cls:'car-ads' }) : ''}
+    <p class="foot">${esc(info.name || 'Properti')} · ${esc(CAT.store.name)}${propWaNumber() ? ` · <a href="${waLink(propWaNumber(), 'Halo, saya mau tanya properti')}" target="_blank" rel="noopener">Chat agen</a>` : ''}</p>`;
+  hydrate(app); bindCarousels({ promo, iklan });
+  app.querySelectorAll('[data-ptype]').forEach(a=>a.addEventListener('click', ()=>{ propF.type = a.dataset.ptype; }));
+}
+let propF = { type:'', kt:0, price:'', sort:'baru' };
+const PRICE_BANDS = [['', 'Semua harga'], ['lt500', '< Rp500 jt'], ['500-1000', 'Rp500 jt – 1 M'], ['1000-2000', 'Rp1 – 2 M'], ['gt2000', '> Rp2 M']];
+function priceIn(x, band){ const j = x.price / 1e6; return !band || (band==='lt500' ? j < 500 : band==='500-1000' ? (j >= 500 && j < 1000) : band==='1000-2000' ? (j >= 1000 && j < 2000) : j >= 2000); }
+function viewPropList(q){
+  if(!(CAT.segments || []).some(s=>s.key==='properti')) return propUnavailable();
+  setupPropSeg();
+  q = (q || '').trim(); const qi = document.getElementById('q'); if(qi && q) qi.value = q;
+  let ps = propList().filter(x=>(!propF.type || x.type===propF.type) && (!propF.kt || x.kt >= propF.kt) && priceIn(x, propF.price));
+  if(q){ const s = q.toLowerCase(); ps = ps.filter(x=>[x.title, x.area, x.city, x.type, x.address, x.desc].join(' ').toLowerCase().includes(s)); }
+  const cmp = { baru:(a,b)=>String(b.createdAt).localeCompare(String(a.createdAt)), murah:(a,b)=>a.price - b.price, mahal:(a,b)=>b.price - a.price, luas:(a,b)=>b.lb - a.lb };
+  ps = ps.slice().sort((a,b)=>(a.status==='terjual') - (b.status==='terjual') || cmp[propF.sort](a, b));
+  const types = [...new Set(propList().map(x=>x.type))];
+  app.innerHTML = `<h1 class="page-title">${q ? `Hasil untuk “${esc(q)}”` : 'Katalog ' + esc(segInfo('properti').name || 'Properti')}</h1>
+    <div class="prfilter" aria-label="Filter properti">
+      ${types.length > 1 ? `<div class="chips" role="group" aria-label="Tipe">${[''].concat(types).map(t=>`<button class="chip" data-ftype="${esc(t)}" aria-pressed="${propF.type===t}">${esc(t || 'Semua tipe')}</button>`).join('')}</div>` : ''}
+      <div class="chips" role="group" aria-label="Kamar tidur">${[[0, 'Semua KT'], [2, '2+ KT'], [3, '3+ KT'], [4, '4+ KT']].map(([n, l])=>`<button class="chip" data-fkt="${n}" aria-pressed="${propF.kt===n}">${l}</button>`).join('')}</div>
+      <div class="chips" role="group" aria-label="Harga">${PRICE_BANDS.map(([k, l])=>`<button class="chip" data-fprice="${k}" aria-pressed="${propF.price===k}">${esc(l)}</button>`).join('')}</div>
+      <label class="prsort">Urutkan <select class="inp" id="propSort">${[['baru', 'Terbaru'], ['murah', 'Harga terendah'], ['mahal', 'Harga tertinggi'], ['luas', 'Bangunan terluas']].map(([k, l])=>`<option value="${k}" ${propF.sort===k?'selected':''}>${l}</option>`).join('')}</select></label>
+    </div>
+    ${ps.length ? `<p class="count-note">${ps.length} properti</p><div class="prgrid">${ps.map(propCard).join('')}</div>` : `<div class="empty"><h3>Belum ada properti yang cocok</h3><p>Ubah filter, atau tanyakan langsung lewat WhatsApp.</p>${propWaNumber() ? `<a class="btn" target="_blank" rel="noopener" href="${waLink(propWaNumber(), 'Halo, saya sedang mencari rumah. Bisa dibantu?')}">Tanya lewat WhatsApp</a>` : ''}</div>`}`;
+  hydrate(app);
+  const redo = ()=>viewPropList(q);
+  app.querySelectorAll('[data-ftype]').forEach(b=>b.onclick = ()=>{ propF.type = b.dataset.ftype; redo(); });
+  app.querySelectorAll('[data-fkt]').forEach(b=>b.onclick = ()=>{ propF.kt = Number(b.dataset.fkt); redo(); });
+  app.querySelectorAll('[data-fprice]').forEach(b=>b.onclick = ()=>{ propF.price = b.dataset.fprice; redo(); });
+  const so = document.getElementById('propSort'); if(so) so.onchange = ()=>{ propF.sort = so.value; redo(); };
+}
+function kprCalc(price, dpPct, years, rate){
+  const loan = price * (1 - dpPct / 100), n = years * 12, r = rate / 100 / 12;
+  return { dp: price * dpPct / 100, loan, monthly: r > 0 ? loan * r / (1 - Math.pow(1 + r, -n)) : loan / n };
+}
+function viewProp(id){
+  if(!(CAT.segments || []).some(s=>s.key==='properti')) return propUnavailable();
+  const x = propById(id);
+  if(!x){ app.innerHTML = `<div class="empty"><h3>Properti tidak tersedia</h3><a href="#/rumah">Lihat katalog</a></div>`; return; }
+  setupPropSeg();
+  const P = CAT.property || {}; const sold = x.status === 'terjual', book = x.status === 'booking';
+  const rate = Number(P.kprRate) || 0; const showKpr = rate > 0 && x.price > 0 && (!x.payment.length || x.payment.includes('KPR'));
+  const specs = [['Tipe', x.type], ['Kondisi', x.condition], ['Sertifikat', x.cert], ['Luas tanah', x.lt ? x.lt + ' m²' : ''], ['Luas bangunan', x.lb ? x.lb + ' m²' : ''], ['Jumlah lantai', x.floors || ''], ['Listrik', x.elec ? x.elec + ' watt' : ''], ['Sumber air', x.water],
+    ['Arah hadap', x.facing], ['Tahun dibangun', x.yearBuilt || ''], ['Furnished', x.furnished], ['Cara pembelian', x.payment.join(', ')]].filter(r=>r[1] !== '' && r[1] != null);
+  const tiles = [[PI.bed, x.kt, 'Kamar tidur'], [PI.bath, x.km, 'Kamar mandi'], [PI.land, x.lt ? x.lt + ' m²' : '', 'Luas tanah'], [PI.bld, x.lb ? x.lb + ' m²' : '', 'Luas bangunan'], [PI.car, x.carport, 'Carport']].filter(t=>t[1]);
+  app.innerHTML = `<button class="back" onclick="history.length>1?history.back():location.hash='#/rumah'">‹ Kembali</button>
+    <div class="detail">
+      ${gallery(x.images, PI.house)}
+      <div class="panel">
+        <div class="prtags">${sold ? '<span class="status s-batal">Terjual</span>' : book ? '<span class="status">Sedang booking</span>' : '<span class="status s-selesai">Tersedia</span>'}<span class="pill">${esc(x.type)}</span>${x.badge ? `<span class="pill lead">${esc(x.badge)}</span>` : ''}</div>
+        <h1 class="d-title">${esc(x.title)}</h1>
+        <div class="prloc big">${PI.pin}${esc(propLoc(x) || x.city)}</div>
+        <div><span class="d-price">${rp(x.price)}</span>${x.priceNote ? ` <span class="prnote">${esc(x.priceNote)}</span>` : ''}</div>
+        <div class="d-actions"><button data-share="${esc(x.title)}">${SHARE}<span>Bagikan</span></button></div>
+        ${tiles.length ? `<div class="prq">${tiles.map(t=>`<div><span>${t[0]}</span><b>${esc(t[1])}</b><small>${t[2]}</small></div>`).join('')}</div>` : ''}
+        ${specs.length ? `<div class="opt"><div class="opt-label">Spesifikasi</div><dl class="prdl">${specs.map(r=>`<div><dt>${esc(r[0])}</dt><dd>${esc(r[1])}</dd></div>`).join('')}</dl></div>` : ''}
+        ${x.facilities.length ? `<div class="opt"><div class="opt-label">Fasilitas rumah</div><div class="prchips">${x.facilities.map(f=>`<span>${esc(f)}</span>`).join('')}</div></div>` : ''}
+        ${x.nearby.length ? `<div class="opt"><div class="opt-label">Fasilitas sekitar</div><ul class="prnear">${x.nearby.map(f=>`<li>${esc(f)}</li>`).join('')}</ul></div>` : ''}
+        ${x.desc ? `<div class="opt"><div class="opt-label">Deskripsi</div><p class="desc">${esc(x.desc)}</p></div>` : ''}
+        ${(x.address || x.mapUrl || x.videoUrl) ? `<div class="opt"><div class="opt-label">Lokasi</div>${x.address ? `<p class="desc" style="margin:0 0 8px">${esc(x.address)}</p>` : ''}<div class="prlinks">${x.mapUrl ? `<a class="btn line" target="_blank" rel="noopener noreferrer" href="${esc(x.mapUrl)}">Buka di Google Maps ↗</a>` : ''}${x.videoUrl ? `<a class="btn line" target="_blank" rel="noopener noreferrer" href="${esc(x.videoUrl)}">Tonton video tur ↗</a>` : ''}</div></div>` : ''}
+        ${showKpr ? `<div class="opt"><div class="opt-label">Simulasi cicilan <span>perkiraan</span></div>
+          <div class="kpr"><div class="two"><div class="field"><label for="kprDp">Uang muka (DP)</label><select class="inp" id="kprDp">${[10, 20, 30, 40, 50].map(n=>`<option value="${n}" ${n===20?'selected':''}>${n}%</option>`).join('')}</select></div>
+          <div class="field"><label for="kprYr">Tenor</label><select class="inp" id="kprYr">${[5, 10, 15, 20, 25, 30].map(n=>`<option value="${n}" ${n===15?'selected':''}>${n} tahun</option>`).join('')}</select></div></div>
+          <div class="kpr-out" id="kprOut" aria-live="polite"></div><div class="hint">Bunga simulasi ${String(rate).replace('.', ',')}% per tahun, tetap. Bunga dan syarat sebenarnya mengikuti bank.</div></div></div>` : ''}
+        ${x.agentName || propWaNumber(x) ? `<div class="opt"><div class="opt-label">Agen</div><p class="desc" style="margin:0">${esc(x.agentName || 'Admin ' + (CAT.store.name || ''))}</p></div>` : ''}
+        ${P.disclaimer ? `<p class="aff-disc" style="margin:14px 0 80px">${esc(P.disclaimer)}</p>` : '<div style="height:80px"></div>'}
+        <div class="buybar prbar">
+          ${propWaNumber(x) ? `<a class="btn line" id="prWa" target="_blank" rel="noopener" href="${propWaLink(x)}">Hubungi WhatsApp</a>` : ''}
+          ${sold ? '<button class="btn" disabled>Sudah terjual</button>' : `<a class="btn amber" id="prAppt" href="#/janji/${enc(x.id)}">Buat janji survei</a>`}
+        </div>
+      </div></div>`;
+  const g = app.querySelector('.gallery'); if(g) g.classList.add('gal-wide');
+  hydrate(app);
+  app.querySelectorAll('[data-g]').forEach(b=>b.onclick = async ()=>{ app.querySelectorAll('[data-g]').forEach(y=>y.setAttribute('aria-current', y===b)); const m = document.getElementById('gMain'); if(m){ m.src = await imgSrc(b.dataset.g); m.hidden = false; } });
+  if(showKpr){
+    const dp = document.getElementById('kprDp'), yr = document.getElementById('kprYr'), out = document.getElementById('kprOut');
+    const upd = ()=>{ const r = kprCalc(x.price, Number(dp.value), Number(yr.value), rate); out.innerHTML = `<div><small>Perkiraan cicilan</small><b>${rp(r.monthly)}</b><small>per bulan</small></div><div><small>Uang muka</small><b>${rp(r.dp)}</b></div><div><small>Pokok pinjaman</small><b>${rp(r.loan)}</b></div>`; };
+    dp.onchange = yr.onchange = upd; upd();
+  }
+}
+
+/* ---- janji temu ---- */
+function apptSlots(iso){ const P = CAT.property || {}; const lim = new Date(Date.now() + (Number(P.leadHours) || 0) * 3600000); return (P.slots || []).filter(sl=>{ const st = slotStart(iso, sl); return !st || st >= lim; }); }
+function apptDates(){
+  const P = CAT.property || {}; const out = []; const now = new Date(); const want = Math.max(1, Number(P.horizonDays) || 14);
+  for(let i = 0; out.length < want && i < 90; i++){
+    const d = new Date(now.getFullYear(), now.getMonth(), now.getDate() + i); const iso = ymd(d);
+    if((P.closedWeekdays || []).includes(d.getDay()) || (P.closedDates || []).includes(iso)) continue;
+    const slots = apptSlots(iso); if(!slots.length) continue; out.push({ iso, d, i, slots });
+  }
+  return out;
+}
+const APPT_STEPS = [['baru', 'Menunggu konfirmasi'], ['dikonfirmasi', 'Dikonfirmasi'], ['selesai', 'Selesai']];
+const APPT_LABEL = { baru:'Menunggu konfirmasi', dikonfirmasi:'Dikonfirmasi', selesai:'Selesai', batal:'Dibatalkan' };
+function apptDateText(iso){ const d = new Date(String(iso) + 'T00:00:00'); return isNaN(d) ? '-' : d.toLocaleDateString('id-ID', { weekday:'long', day:'numeric', month:'long', year:'numeric' }); }
+async function viewApptForm(id){
+  await authReady(); if(!requireLogin('janji/' + id)) return;
+  if(!(CAT.segments || []).some(s=>s.key==='properti')) return propUnavailable();
+  const x = propById(id);
+  if(!x){ app.innerHTML = `<div class="empty"><h3>Properti tidak tersedia</h3><a href="#/rumah">Lihat katalog</a></div>`; return; }
+  if(x.status === 'terjual'){ app.innerHTML = `<div class="empty"><h3>Properti ini sudah terjual</h3><p>Lihat properti lain di katalog.</p><a class="btn" href="#/rumah">Lihat katalog</a></div>`; return; }
+  setupPropSeg();
+  const P = CAT.property || {}; const dates = apptDates(); const pr = profile || {};
+  const vals = { nm:pr.nama || '', wa:pr.wa || '', nt:'' }; const f = { date:dates[0] ? dates[0].iso : '', slot:'', people:'2', pay:'Belum tahu' };
+  const draw = ()=>{
+    const day = dates.find(d=>d.iso===f.date) || dates[0]; if(day) f.date = day.iso; if(day && !day.slots.includes(f.slot)) f.slot = '';
+    const dLabel = d=> d.i === 0 ? 'Hari ini' : d.i === 1 ? 'Besok' : d.d.toLocaleDateString('id-ID', { weekday:'short' });
+    app.innerHTML = `<button class="back" onclick="history.length>1?history.back():location.hash='#/rumah/${enc(id)}'">‹ Kembali</button><h1 class="page-title">Buat janji lihat rumah</h1>
+      <div class="cols"><div>
+        <div class="panel prmini"><div class="pm-img">${x.images[0] ? `<img data-img="${x.images[0]}" alt="" hidden>` : PI.house}</div><div><b>${esc(x.title)}</b><div class="prloc">${PI.pin}${esc(propLoc(x))}</div><b style="color:var(--price)">${rp(x.price)}</b></div></div>
+        <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 12px;font-size:16px">Data kamu</h2>
+          <div class="two"><div class="field"><label for="nm">Nama lengkap</label><input class="inp" id="nm" autocomplete="name"></div><div class="field"><label for="wa">No. WhatsApp</label><input class="inp" id="wa" inputmode="tel" autocomplete="tel" placeholder="08xx"></div></div>
+          <div class="two"><div class="field"><label for="pp">Jumlah orang yang ikut</label><select class="inp" id="pp">${['1', '2', '3', '4', '5'].map(n=>`<option value="${n}" ${n===f.people?'selected':''}>${n}${n==='5' ? '+' : ''} orang</option>`).join('')}</select></div>
+          <div class="field"><label for="py">Rencana pembelian</label><select class="inp" id="py">${['Belum tahu', 'Cash', 'KPR', 'Cash bertahap'].map(n=>`<option ${n===f.pay?'selected':''}>${n}</option>`).join('')}</select></div></div></div>
+        <div class="panel" style="margin-top:12px"><h2 style="margin:0 0 4px;font-size:16px">Pilih jadwal</h2>
+          ${dates.length ? `<div class="opt-sub" style="margin:8px 0">Tanggal</div><div class="datestrip" role="radiogroup" aria-label="Tanggal janji">${dates.map(d=>`<button type="button" class="dchip" role="radio" aria-checked="${d.iso===f.date}" data-date="${d.iso}"><b>${esc(dLabel(d))}</b><small>${esc(d.d.toLocaleDateString('id-ID', { day:'numeric', month:'short' }))}</small></button>`).join('')}</div>
+            <div class="opt-sub" style="margin:8px 0">Jam</div>${chipRow('slot', day.slots, f.slot)}`
+            : '<p class="err">Belum ada jadwal yang tersedia. Hubungi agen lewat WhatsApp.</p>'}
+          <div class="field" style="margin-top:12px"><label for="nt">Catatan <span style="color:var(--muted);font-weight:500">(opsional)</span></label><input class="inp" id="nt" placeholder="mis. ingin lihat dapur dan carport"></div>
+          ${P.meetNote ? `<div class="hint">${esc(P.meetNote)} Janji berlaku setelah dikonfirmasi admin lewat WhatsApp.</div>` : '<div class="hint">Janji berlaku setelah dikonfirmasi admin lewat WhatsApp.</div>'}</div>
+      </div>
+      <div class="panel sticky"><h2 style="margin:0 0 10px;font-size:16px">Ringkasan janji</h2>
+        <div class="sum-row"><span>Properti</span><b style="text-align:right;max-width:60%">${esc(x.title)}</b></div>
+        <div class="sum-row"><span>Tanggal</span><b>${f.date ? esc(apptDateText(f.date)) : '-'}</b></div><div class="sum-row"><span>Jam</span><b>${f.slot ? esc(f.slot) : '-'}</b></div>
+        <div id="cerr" class="err" role="alert"></div>
+        <button class="btn block amber" id="place" style="margin-top:14px" ${dates.length ? '' : 'disabled'}>Kirim permintaan janji</button>
+        <p class="cart-note" style="margin:8px 0 0">Tidak ada pembayaran. Ini hanya permintaan jadwal.</p>
+        <div id="fallback"></div>
+      </div></div>`;
+    hydrate(app);
+    ['nm', 'wa', 'nt'].forEach(k=>{ const el = document.getElementById(k); if(el) el.value = vals[k]; });
+    const keep = ()=>{ ['nm', 'wa', 'nt'].forEach(k=>{ const el = document.getElementById(k); if(el) vals[k] = el.value; }); f.people = document.getElementById('pp').value; f.pay = document.getElementById('py').value; };
+    app.querySelectorAll('[data-date]').forEach(b=>b.onclick = ()=>{ keep(); f.date = b.dataset.date; f.slot = ''; draw(); });
+    app.querySelectorAll('[data-slot]').forEach(b=>b.onclick = ()=>{ keep(); f.slot = b.dataset.slot; draw(); });
+    const pl = document.getElementById('place'); if(pl) pl.onclick = ()=>{ keep(); submitAppt(x, f, vals); };
+  };
+  draw();
+}
+async function submitAppt(x, f, vals){
+  const err = document.getElementById('cerr'), btn = document.getElementById('place');
+  const nama = vals.nm.trim(), wa = vals.wa.replace(/[^\d+]/g, '');
+  if(!nama){ err.textContent = 'Isi nama lengkap.'; return; }
+  if(wa.replace(/\D/g, '').length < 9){ err.textContent = 'Isi nomor WhatsApp yang aktif.'; return; }
+  if(!f.date || !f.slot){ err.textContent = 'Pilih tanggal dan jam.'; return; }
+  if(!apptSlots(f.date).includes(f.slot)){ err.textContent = 'Jam yang dipilih sudah lewat, pilih jam lain.'; return; }
+  err.textContent = ''; btn.disabled = true; btn.textContent = 'Mengirim...';
+  const doc = { uid:user.uid, createdAt:new Date().toISOString(), status:'baru', date:f.date, slot:f.slot, people:Number(f.people) || 1, payPlan:f.pay, note:vals.nt.trim(),
+    property:{ id:x.id, title:x.title, city:x.city, price:x.price }, customer:{ nama, wa, email:user.email } };
+  try{
+    const res = await api('pos/appointments', { method:'POST', body:JSON.stringify(doc) }, true);
+    await api(`shop/customers/${user.uid}/appts/${res.name}`, { method:'PUT', body:'true' }, true).catch(()=>{});
+    await api(`shop/customers/${user.uid}`, { method:'PATCH', body:JSON.stringify({ wa }) }, true).then(()=>{ profile = Object.assign(profile || {}, { wa }); }).catch(()=>{});
+    location.hash = '#/appt/' + res.name;
+  }catch(e){
+    console.error(e); btn.disabled = false; btn.textContent = 'Kirim permintaan janji';
+    err.textContent = 'Permintaan belum terkirim ke sistem. Kamu tetap bisa kirim jadwal ini lewat WhatsApp.';
+    const msg = `Halo, saya ${nama}. Saya ingin membuat janji melihat ${x.title} pada ${apptDateText(f.date)} pukul ${f.slot} (${f.people} orang). ${vals.nt.trim() ? 'Catatan: ' + vals.nt.trim() : ''}`.trim();
+    const fb = document.getElementById('fallback'); if(fb && propWaNumber(x)) fb.innerHTML = `<a class="btn block line" style="margin-top:10px" target="_blank" rel="noopener" href="${waLink(propWaNumber(x), msg)}">Kirim lewat WhatsApp</a>`;
+  }
+}
+async function viewAppt(key){
+  await authReady(); if(!requireLogin('appt/' + key)) return;
+  app.innerHTML = `<div class="skel" style="height:120px;margin-top:16px"></div><div class="skel" style="height:220px;margin-top:12px"></div>`;
+  let a = null; try{ a = await api('pos/appointments/' + key, null, true); }catch(e){}
+  if(!a){ app.innerHTML = `<div class="empty"><h3>Janji tidak ditemukan</h3><a href="#/appts">Lihat janji saya</a></div>`; return; }
+  const pr = a.property || {}; const x = propById(pr.id); const idx = APPT_STEPS.findIndex(s=>s[0]===a.status); const cancelled = a.status === 'batal';
+  const num = propWaNumber(x || {}); const wmsg = `Halo, saya ${(a.customer || {}).nama || ''}. Terkait janji melihat ${pr.title} pada ${apptDateText(a.date)} pukul ${a.slot}.`;
+  app.innerHTML = `<div class="ok-head"><h1>${a.status==='baru' ? 'Permintaan janji terkirim' : esc(APPT_LABEL[a.status] || a.status)}</h1><p>${esc(apptDateText(a.date))} · pukul <b style="color:#fff">${esc(a.slot)}</b></p></div>
+    ${cancelled ? '' : `<div class="panel" style="margin-top:12px"><div class="steps steps3">${APPT_STEPS.map((s, i)=>`<div class="${i <= idx ? 'on' : ''}">${s[1]}</div>`).join('')}</div></div>`}
+    ${a.status==='baru' ? `<div class="panel" style="margin-top:12px"><b>Menunggu konfirmasi admin</b><p style="margin:4px 0 0;color:var(--ink-2)">Admin akan mengonfirmasi jadwal lewat WhatsApp. Kamu juga bisa menghubungi agen langsung.</p></div>` : ''}
+    ${a.adminNote ? `<div class="panel" style="margin-top:12px"><b>Pesan dari admin</b><p style="margin:4px 0 0">${esc(a.adminNote)}</p></div>` : ''}
+    <div class="cols" style="margin-top:12px"><div class="panel"><h2 style="margin:0 0 10px;font-size:16px">Detail janji</h2>
+        <div class="sum-row"><span>Properti</span><b style="text-align:right;max-width:62%">${esc(pr.title || '-')}</b></div>
+        <div class="sum-row"><span>Lokasi</span><span style="text-align:right">${esc([x && x.area, pr.city].filter(Boolean).join(', ') || '-')}</span></div>
+        <div class="sum-row"><span>Tanggal</span><b>${esc(apptDateText(a.date))}</b></div><div class="sum-row"><span>Jam</span><b>${esc(a.slot)}</b></div>
+        <div class="sum-row"><span>Jumlah orang</span><b>${a.people || 1} orang</b></div>${a.payPlan ? `<div class="sum-row"><span>Rencana beli</span><b>${esc(a.payPlan)}</b></div>` : ''}${a.note ? `<div class="sum-row" style="align-items:flex-start"><span>Catatan</span><span style="text-align:right;max-width:62%">${esc(a.note)}</span></div>` : ''}
+        <div class="sum-row"><span>Status</span><span class="status s-${cancelled ? 'batal' : esc(a.status)}">${esc(APPT_LABEL[a.status] || a.status)}</span></div></div>
+      <div class="panel sticky">${num ? `<a class="btn block line" target="_blank" rel="noopener" href="${waLink(num, wmsg)}">Hubungi agen via WhatsApp</a>` : ''}
+        ${x ? `<a class="btn block line" style="margin-top:8px" href="#/rumah/${enc(x.id)}">Lihat rumah</a>` : ''}
+        <button class="btn block line" style="margin-top:8px" id="apRefresh">Cek status terbaru</button>
+        ${(a.status==='baru' || a.status==='dikonfirmasi') ? `<button class="btn block line" style="margin-top:8px;color:var(--price);border-color:var(--price)" id="apCancel">Batalkan janji</button>` : ''}
+        <a class="btn block" style="margin-top:8px" href="#/appts">Semua janji saya</a></div></div>`;
+  const rf = document.getElementById('apRefresh'); if(rf) rf.onclick = ()=>viewAppt(key);
+  const cn = document.getElementById('apCancel');
+  if(cn) cn.onclick = async ()=>{ if(!confirm('Batalkan janji ini?')) return; cn.disabled = true; try{ await api('pos/appointments/' + key + '/status', { method:'PUT', body:JSON.stringify('batal') }, true); toast('Janji dibatalkan'); viewAppt(key); }catch(e){ cn.disabled = false; toast('Gagal membatalkan. Hubungi agen lewat WhatsApp.'); } };
+}
+async function viewAppts(){
+  await authReady(); if(!requireLogin('appts')) return;
+  app.innerHTML = `<h1 class="page-title">Janji temu saya</h1><div class="skel" style="height:70px"></div>`;
+  let keys = []; try{ keys = Object.keys(await api(`shop/customers/${user.uid}/appts`, null, true) || {}); }catch(e){}
+  const list = (await Promise.all(keys.map(k=>api('pos/appointments/' + k, null, true).then(a=>a ? Object.assign({ key:k }, a) : null).catch(()=>null)))).filter(Boolean).sort((a, b)=>String(b.createdAt).localeCompare(String(a.createdAt)));
+  app.innerHTML = `<h1 class="page-title">Janji temu saya</h1>${list.length ? `<div class="olist">${list.map(a=>`<a class="orow" href="#/appt/${enc(a.key)}"><span><b>${esc((a.property || {}).title || '-')}</b><br><span style="font-size:12.5px;color:var(--muted)">${esc(apptDateText(a.date))} · ${esc(a.slot)} · ${a.people || 1} orang</span></span><span class="status s-${a.status==='batal' ? 'batal' : esc(a.status)}">${esc(APPT_LABEL[a.status] || a.status)}</span></a>`).join('')}</div>`
+    : `<div class="empty"><h3>Belum ada janji</h3><p>Pilih rumah di katalog lalu buat janji untuk melihatnya.</p><a class="btn" href="#/rumah">Lihat katalog</a></div>`}`;
+}
 function chipRow(attr, list, sel, sub, disabled){ return `<div class="chips" role="group">${list.map(x=>`<button class="chip" data-${attr}="${esc(x)}" aria-pressed="${x===sel}" ${disabled&&disabled(x)?'disabled':''}>${esc(x)}${sub?`<small>${sub(x)}</small>`:''}</button>`).join('')}</div>`; }
 /* produk affiliate mode "arahkan ke toko asal": pembeli checkout di marketplace lewat link affiliate */
 function viewProductRedirect(p){
@@ -2026,6 +2351,7 @@ async function viewAccount(){
       <button class="btn" id="asave">Simpan</button></div>
     <div class="panel" style="margin-top:12px;display:flex;flex-direction:column;gap:8px">
       <a class="btn line block" href="#/orders">Riwayat pembelian</a>
+      ${CAT.property ? '<a class="btn line block" href="#/appts">📅 Janji temu saya</a>' : ''}
       <a class="btn line block" href="#/fav">🤍 Favorit saya</a>
       <button class="btn line block" id="alogout" style="color:var(--price);border-color:var(--price)">Keluar</button></div>`;
   document.getElementById('asave').onclick = async ()=>{
@@ -2054,6 +2380,8 @@ function prepCatalog(){
   CAT.carpets.forEach(c=>{ c.prices = c.prices||{}; c.packages = c.packages||[]; c.colors = c.colors||[]; c.images = c.images||[]; });
   CAT.products.forEach(x=>{ x.variants = x.variants||[]; x.images = x.images||[]; });
   CAT.cars.forEach(c=>{ c.models = c.models||[]; });
+  CAT.properties = Object.values(CAT.properties || {}).map(x=>Object.assign({}, x, { images:Object.values(x.images || []), payment:Object.values(x.payment || []), facilities:Object.values(x.facilities || []), nearby:Object.values(x.nearby || []) }));
+  if(CAT.property){ const P = CAT.property; P.slots = Object.values(P.slots || []); P.closedWeekdays = Object.values(P.closedWeekdays || []).map(Number); P.closedDates = Object.values(P.closedDates || []); }
   applySeg();
 }
 async function refreshCatalog(){
