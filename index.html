@@ -1369,7 +1369,8 @@ async function submitAppt(x, f, vals){
     location.hash = '#/appt/' + res.name;
   }catch(e){
     console.error(e); btn.disabled = false; btn.textContent = 'Kirim permintaan janji';
-    err.textContent = 'Permintaan belum terkirim ke sistem. Kamu tetap bisa kirim jadwal ini lewat WhatsApp.';
+    const em = String((e && e.message) || ''); const denied = /HTTP (401|403)/.test(em);
+    err.textContent = em === 'not-signed-in' ? 'Sesi login habis. Masuk lagi, lalu kirim ulang.' : denied ? 'Janji belum bisa disimpan karena izin database belum diperbarui oleh admin. Kamu tetap bisa kirim jadwal ini lewat WhatsApp.' : (/Failed to fetch|NetworkError|Load failed/i.test(em) || !em ? 'Koneksi internet terputus, permintaan belum terkirim.' : 'Permintaan belum terkirim (' + em + ').') + ' Coba lagi, atau kirim jadwal ini lewat WhatsApp.';
     const msg = `Halo, saya ${nama}. Saya ingin membuat janji melihat ${x.title} pada ${apptDateText(f.date)} pukul ${f.slot} (${f.people} orang). ${vals.nt.trim() ? 'Catatan: ' + vals.nt.trim() : ''}`.trim();
     const fb = document.getElementById('fallback'); if(fb && propWaNumber(x)) fb.innerHTML = `<a class="btn block line" style="margin-top:10px" target="_blank" rel="noopener" href="${waLink(propWaNumber(x), msg)}">Kirim lewat WhatsApp</a>`;
   }
