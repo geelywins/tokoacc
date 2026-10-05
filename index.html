@@ -605,8 +605,8 @@ body[data-seg="mobil"] .top a.icon-btn[href="#/cart"]{display:none}
 </header>
 <main id="app" class="wrap" aria-live="polite"><div class="seo-shell"><h1>LapakMu – Aksesoris Mobil, Mobil Baru &amp; Bekas, Properti</h1>
 <p>Belanja kaca film, karpet custom, dash cam, dan aksesoris mobil. Cari mobil baru dan bekas, serta rumah. Lihat katalog lengkap, hubungi kami lewat WhatsApp, dan buat janji survei atau test drive.</p>
-<p><a href="/katalog/">Lihat katalog lengkap</a></p><p class="seo-load">Memuat toko…</p></div>
-<noscript><p>Toko ini membutuhkan JavaScript. Lihat katalog tanpa JavaScript di <a href="/katalog/">halaman katalog</a>.</p></noscript></main>
+<p><a href="/katalog/">Lihat katalog lengkap</a> · <a href="/panduan/">Panduan &amp; tips</a></p><p class="seo-load">Memuat toko…</p></div>
+<noscript><p>Toko ini membutuhkan JavaScript. Lihat katalog tanpa JavaScript di <a href="/katalog/">halaman katalog</a> atau baca <a href="/panduan/">panduan kami</a>.</p></noscript></main>
 <nav class="bnav" id="bnav" aria-label="Navigasi">
   <a href="#/" data-nav="home"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M3 11 12 4l9 7v9a1 1 0 0 1-1 1h-5v-6h-6v6H4a1 1 0 0 1-1-1z"/></svg>Beranda</a>
   <a href="#/promo" data-nav="promo"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M20.6 13.4 13.4 20.6a2 2 0 0 1-2.8 0L3 13V3h10l7.6 7.6a2 2 0 0 1 0 2.8z"/><circle cx="7.5" cy="7.5" r="1.5"/></svg>Promo</a>
@@ -1079,7 +1079,7 @@ function viewHome(){
     ${deals.length?`<div class="sec-head"><h2>🔥 Lagi Deal</h2><a href="#/deal">Lihat semua</a></div><div class="grid">${deals.slice(0,4).map(card).join('')}</div>`:''}
     ${sections.join('')}
     ${!ps.length?`<div class="empty"><h3>${S==='frozen'?'Produk frozen food segera hadir':'Katalog sedang disiapkan'}</h3>Produk akan tampil begitu admin mengisi harga.</div>`:''}
-    <p class="foot">${esc(S==='frozen' ? (info.name||'Frozen Food') : CAT.store.name)}${where}${CAT.store.wa?` · <a href="${waLink(CAT.store.wa,'Halo, saya mau tanya produk')}" target="_blank" rel="noopener">Chat admin</a>`:''}<span class="stamp">Katalog v${CAT.v||1}${CAT.updatedAt?' · '+new Date(CAT.updatedAt).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span></p>`;
+    <p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(S==='frozen' ? (info.name||'Frozen Food') : CAT.store.name)}${where}${CAT.store.wa?` · <a href="${waLink(CAT.store.wa,'Halo, saya mau tanya produk')}" target="_blank" rel="noopener">Chat admin</a>`:''}<span class="stamp">Katalog v${CAT.v||1}${CAT.updatedAt?' · '+new Date(CAT.updatedAt).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span></p>`;
   hydrate(app); bindCarousels({ promo, iklan });
 }
 let listSort = 'rek';
@@ -1286,7 +1286,7 @@ function viewHomeProp(){
     <div class="sec-head"><h2>Properti terbaru</h2><a href="#/rumah">Lihat semua</a></div>
     ${list.length ? `<div class="prgrid">${list.slice(0, 6).map(propCard).join('')}</div>` : `<div class="empty"><h3>Properti segera hadir</h3>Katalog akan tampil begitu admin menambahkan rumah.</div>`}
     ${iklan.length ? carousel(iklan, 'iklan', { ratio:'8/3', label:'Iklan', auto:false, cls:'car-ads' }) : ''}
-    <p class="foot">${esc(info.name || 'Properti')} · ${esc(CAT.store.name)}${propWaNumber() ? ` · <a href="${waLink(propWaNumber(), 'Halo, saya mau tanya properti')}" target="_blank" rel="noopener">Chat agen</a>` : ''}</p>`;
+    <p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(info.name || 'Properti')} · ${esc(CAT.store.name)}${propWaNumber() ? ` · <a href="${waLink(propWaNumber(), 'Halo, saya mau tanya properti')}" target="_blank" rel="noopener">Chat agen</a>` : ''}</p>`;
   hydrate(app); bindCarousels({ promo, iklan });
   app.querySelectorAll('[data-ptype]').forEach(a=>a.addEventListener('click', ()=>{ propF.type = a.dataset.ptype; }));
 }
@@ -1532,7 +1532,7 @@ function viewHomeMobil(){
     ${list.length ? `<div class="prgrid">${list.slice(0, 6).map(unitCard).join('')}</div>` : `<div class="empty"><h3>Unit segera hadir</h3>Katalog akan tampil begitu admin menambahkan mobil.</div>`}
     ${P.tradeIn !== false && unitWaNumber() ? `<div class="tradecta"><div><b>Mau tukar tambah atau jual mobil kamu?</b><span>Kirim data mobilmu lewat WhatsApp, kami bantu taksir.</span></div><a class="btn amber" target="_blank" rel="noopener" href="${unitTradeLink()}">Tukar tambah</a></div>` : ''}
     ${iklan.length ? carousel(iklan, 'iklan', { ratio:'8/3', label:'Iklan', auto:false, cls:'car-ads' }) : ''}
-    <p class="foot">${esc(info.name || 'Mobil')} · ${esc(CAT.store.name)}${unitWaNumber() ? ` · <a href="${waLink(unitWaNumber(), 'Halo, saya mau tanya mobil')}" target="_blank" rel="noopener">Chat sales</a>` : ''}</p>`;
+    <p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(info.name || 'Mobil')} · ${esc(CAT.store.name)}${unitWaNumber() ? ` · <a href="${waLink(unitWaNumber(), 'Halo, saya mau tanya mobil')}" target="_blank" rel="noopener">Chat sales</a>` : ''}</p>`;
   hydrate(app); bindCarousels({ promo, iklan });
   app.querySelectorAll('[data-cond]').forEach(a=>a.addEventListener('click', ()=>{ unitF.cond = a.dataset.cond; }));
   app.querySelectorAll('[data-brand]').forEach(a=>a.addEventListener('click', ()=>{ unitF.brand = a.dataset.brand; }));
