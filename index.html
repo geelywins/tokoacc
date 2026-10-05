@@ -590,6 +590,14 @@ body[data-seg="mobil"] .top a.icon-btn[href="#/cart"]{display:none}
 .prmore{background:#fff;border:1px solid var(--line);border-radius:12px;padding:10px 12px}.prmore summary{cursor:pointer;font-weight:700;font-size:13.5px}.prmore[open] summary{margin-bottom:10px}.prmore .chips{margin:6px 0 8px}
 .unitcard .prspec i svg{opacity:.7}
 .seo-shell{padding:28px 4px;max-width:640px}.seo-shell h1{font-size:22px;line-height:1.25;margin:0 0 10px;letter-spacing:-.01em}.seo-shell p{color:var(--ink-2);line-height:1.6;margin:0 0 10px}.seo-shell a{color:var(--blue);font-weight:700}.seo-load{color:var(--muted)}
+.artgrid{display:grid;gap:12px;grid-template-columns:1fr}@media(min-width:720px){.artgrid{grid-template-columns:repeat(3,1fr)}}
+.artcard{all:unset;cursor:pointer;display:flex;gap:12px;background:var(--card);border-radius:var(--r-md);box-shadow:var(--shadow-sm);overflow:hidden;box-sizing:border-box}
+.artcard:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.artcard .aimg{flex:none;width:104px;background:#DDE3EA;position:relative}.artcard .aimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.artcard .abody{padding:12px 12px 12px 0;display:flex;flex-direction:column;gap:4px;min-width:0}.artcard .aimg+.abody{padding-left:0}.artcard:not(:has(.aimg)) .abody{padding-left:14px}
+.artcard .acat{font-size:11px;font-weight:800;color:var(--blue);text-transform:uppercase;letter-spacing:.04em}
+.artcard b{font-size:14.5px;line-height:1.35;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}
+.artcard .adesc{font-size:12.5px;color:var(--muted);line-height:1.45;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 </style>
 </head>
 <body>
@@ -1079,7 +1087,7 @@ function viewHome(){
     ${deals.length?`<div class="sec-head"><h2>🔥 Lagi Deal</h2><a href="#/deal">Lihat semua</a></div><div class="grid">${deals.slice(0,4).map(card).join('')}</div>`:''}
     ${sections.join('')}
     ${!ps.length?`<div class="empty"><h3>${S==='frozen'?'Produk frozen food segera hadir':'Katalog sedang disiapkan'}</h3>Produk akan tampil begitu admin mengisi harga.</div>`:''}
-    <p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(S==='frozen' ? (info.name||'Frozen Food') : CAT.store.name)}${where}${CAT.store.wa?` · <a href="${waLink(CAT.store.wa,'Halo, saya mau tanya produk')}" target="_blank" rel="noopener">Chat admin</a>`:''}<span class="stamp">Katalog v${CAT.v||1}${CAT.updatedAt?' · '+new Date(CAT.updatedAt).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span></p>`;
+    ${panduanSection()}<p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(S==='frozen' ? (info.name||'Frozen Food') : CAT.store.name)}${where}${CAT.store.wa?` · <a href="${waLink(CAT.store.wa,'Halo, saya mau tanya produk')}" target="_blank" rel="noopener">Chat admin</a>`:''}<span class="stamp">Katalog v${CAT.v||1}${CAT.updatedAt?' · '+new Date(CAT.updatedAt).toLocaleString('id-ID',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'}):''}</span></p>`;
   hydrate(app); bindCarousels({ promo, iklan });
 }
 let listSort = 'rek';
@@ -1274,6 +1282,13 @@ function trustProp(){
 }
 function setupPropSeg(){ if(seg !== 'properti') setSeg('properti'); }
 function propUnavailable(){ app.innerHTML = `<div class="empty"><h3>Segmen properti belum tersedia</h3><a href="#/">Kembali ke beranda</a></div>`; }
+function artSegOf(c){ return /mobil/i.test(c) ? 'mobil' : /properti|rumah/i.test(c) ? 'properti' : /kaca|aksesoris/i.test(c) ? 'otomotif' : ''; }
+function panduanSection(){
+  const all = CAT.articles || []; if(!all.length) return '';
+  const mine = all.filter(a=>!artSegOf(a.category) || artSegOf(a.category) === seg);
+  const list = (seg === 'otomotif' ? mine.concat(all.filter(a=>!mine.includes(a))) : mine).slice(0, 3); if(!list.length) return '';
+  return `<div class="sec-head"><h2>Panduan &amp; tips</h2><a href="/panduan/">Lihat semua</a></div><div class="artgrid">${list.map(a=>`<a class="artcard" href="/panduan/${enc(a.slug)}/">${a.image ? `<div class="aimg"><img data-img="${a.image}" alt="${esc(a.title)}" hidden></div>` : ''}<div class="abody"><span class="acat">${esc(a.category || 'Panduan')}</span><b>${esc(a.title)}</b><span class="adesc">${esc(a.desc)}</span></div></a>`).join('')}</div>`;
+}
 function viewHomeProp(){
   const info = segInfo('properti'); const nama = profile && profile.nama ? profile.nama.split(' ')[0] : '';
   const bn = CAT.banners.filter(b=>!b.segment || b.segment==='all' || b.segment==='properti'); const promo = bn.filter(b=>b.kind==='promo'), iklan = bn.filter(b=>b.kind==='iklan');
@@ -1286,7 +1301,7 @@ function viewHomeProp(){
     <div class="sec-head"><h2>Properti terbaru</h2><a href="#/rumah">Lihat semua</a></div>
     ${list.length ? `<div class="prgrid">${list.slice(0, 6).map(propCard).join('')}</div>` : `<div class="empty"><h3>Properti segera hadir</h3>Katalog akan tampil begitu admin menambahkan rumah.</div>`}
     ${iklan.length ? carousel(iklan, 'iklan', { ratio:'8/3', label:'Iklan', auto:false, cls:'car-ads' }) : ''}
-    <p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(info.name || 'Properti')} · ${esc(CAT.store.name)}${propWaNumber() ? ` · <a href="${waLink(propWaNumber(), 'Halo, saya mau tanya properti')}" target="_blank" rel="noopener">Chat agen</a>` : ''}</p>`;
+    ${panduanSection()}<p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(info.name || 'Properti')} · ${esc(CAT.store.name)}${propWaNumber() ? ` · <a href="${waLink(propWaNumber(), 'Halo, saya mau tanya properti')}" target="_blank" rel="noopener">Chat agen</a>` : ''}</p>`;
   hydrate(app); bindCarousels({ promo, iklan });
   app.querySelectorAll('[data-ptype]').forEach(a=>a.addEventListener('click', ()=>{ propF.type = a.dataset.ptype; }));
 }
@@ -1532,7 +1547,7 @@ function viewHomeMobil(){
     ${list.length ? `<div class="prgrid">${list.slice(0, 6).map(unitCard).join('')}</div>` : `<div class="empty"><h3>Unit segera hadir</h3>Katalog akan tampil begitu admin menambahkan mobil.</div>`}
     ${P.tradeIn !== false && unitWaNumber() ? `<div class="tradecta"><div><b>Mau tukar tambah atau jual mobil kamu?</b><span>Kirim data mobilmu lewat WhatsApp, kami bantu taksir.</span></div><a class="btn amber" target="_blank" rel="noopener" href="${unitTradeLink()}">Tukar tambah</a></div>` : ''}
     ${iklan.length ? carousel(iklan, 'iklan', { ratio:'8/3', label:'Iklan', auto:false, cls:'car-ads' }) : ''}
-    <p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(info.name || 'Mobil')} · ${esc(CAT.store.name)}${unitWaNumber() ? ` · <a href="${waLink(unitWaNumber(), 'Halo, saya mau tanya mobil')}" target="_blank" rel="noopener">Chat sales</a>` : ''}</p>`;
+    ${panduanSection()}<p class="foot"><a href="/panduan/">Panduan &amp; tips</a> · ${esc(info.name || 'Mobil')} · ${esc(CAT.store.name)}${unitWaNumber() ? ` · <a href="${waLink(unitWaNumber(), 'Halo, saya mau tanya mobil')}" target="_blank" rel="noopener">Chat sales</a>` : ''}</p>`;
   hydrate(app); bindCarousels({ promo, iklan });
   app.querySelectorAll('[data-cond]').forEach(a=>a.addEventListener('click', ()=>{ unitF.cond = a.dataset.cond; }));
   app.querySelectorAll('[data-brand]').forEach(a=>a.addEventListener('click', ()=>{ unitF.brand = a.dataset.brand; }));
@@ -2615,6 +2630,7 @@ function prepCatalog(){
   CAT.cars.forEach(c=>{ c.models = c.models||[]; });
   CAT.properties = Object.values(CAT.properties || {}).map(x=>Object.assign({}, x, { images:Object.values(x.images || []), payment:Object.values(x.payment || []), facilities:Object.values(x.facilities || []), nearby:Object.values(x.nearby || []) }));
   if(CAT.property){ const P = CAT.property; P.slots = Object.values(P.slots || []); P.closedWeekdays = Object.values(P.closedWeekdays || []).map(Number); P.closedDates = Object.values(P.closedDates || []); }
+  CAT.articles = Object.values(CAT.articles || {});
   CAT.units = Object.values(CAT.units || {}).map(x=>Object.assign({}, x, { images:Object.values(x.images || []), features:Object.values(x.features || []), highlights:Object.values(x.highlights || []) }));
   if(CAT.mobil){ const P = CAT.mobil; P.slots = Object.values(P.slots || []); P.closedWeekdays = Object.values(P.closedWeekdays || []).map(Number); P.closedDates = Object.values(P.closedDates || []); }
   applySeg();
