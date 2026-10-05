@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://lapakmu.store/sitemap.xml
